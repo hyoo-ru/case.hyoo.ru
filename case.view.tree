@@ -13,11 +13,12 @@ $hyoo_case $mol_book2
 	-
 	domain $hyoo_case_domain / *
 		scheme *
-			scheme / \scheme
+			scheme / \property
 			name * ru \Схема
 			type \link
 			target / \scheme
 			entities / \scheme
+			back / \instances
 			properties /
 				\scheme
 				\name
@@ -30,17 +31,26 @@ $hyoo_case $mol_book2
 			entities / \scheme
 			main true
 		entity *
-			scheme / \scheme
+			scheme / \entity
 			name * ru \Сущность
 			properties /
+				\scheme
 				\name
 				\color
 				\properties
+				\instances
 		color *
 			scheme / \scheme
 			name * ru \Цвет
 			type \color
 			entities / \scheme
+		instances *
+			scheme / \property
+			name * ru \Экземпляры
+			type \link
+			target / \entity
+			back / \scheme
+			entities / \entity
 		properties *
 			scheme / \scheme
 			name * ru \Свойства
@@ -108,6 +118,8 @@ $hyoo_case $mol_book2
 				\pt
 				\pa
 				\pm
+			instances /
+				\pppp
 		pt *
 			scheme / \property
 			name * ru \Название
@@ -138,6 +150,8 @@ $hyoo_case $mol_book2
 				\mp
 				\md
 				\mu
+			instances /
+				\mmmm
 		mn *
 			scheme / \property
 			name * ru \Номер
@@ -178,6 +192,8 @@ $hyoo_case $mol_book2
 				\ue
 				\um
 				\ud
+			instances /
+				\uuuu
 		un *
 			scheme / \property
 			name * ru \Имя
@@ -214,6 +230,10 @@ $hyoo_case $mol_book2
 				\dr
 				\dm
 				\du
+			instances /
+				\xxxx
+				\yyyy
+				\zzzz
 		dt *
 			scheme / \property
 			name * ru \Название
@@ -248,46 +268,46 @@ $hyoo_case $mol_book2
 			target / \uuu
 			back / \ud
 			entities / \ddd
-		oooo *
+		pppp *
 			scheme / \ppp
 			pt * ru \Онлайн
 			pa * ru \До конца эпидемии встречаемся онлайн
-			pm / \ssss
-		ssss *
+			pm / \mmmm
+		mmmm *
 			scheme / \mmm
 			mn \#66
 			mt \https://youtube.com/piterjs
-			mp / \oooo
+			mp / \pppp
 			mu / \uuuu
 			md /
-				\cccc
+				\xxxx
 				\yyyy
-				\dddd
+				\zzzz
 		uuuu *
 			scheme / \uuu
 			un * ru \Василий Пупкин
 			ue \pupa@example.org
-			um / \ssss
+			um / \mmmm
 			ud /
-				\cccc
+				\xxxx
 				\yyyy
-		cccc *
+		xxxx *
 			scheme / \ddd
 			dt * ru \Как победить копипасту?
 			do * ru \Расскажу о своём ноу-хау.
 			dr 40
 			du / \uuuu
-			dm / \ssss
+			dm / \mmmm
 		yyyy *
 			scheme / \ddd
 			dt * ru \Слепое программирование
 			do * ru \Настоящее кунг-фу программирования.
 			dr 30
 			du / \uuuu
-			dm / \ssss
-		dddd *
+			dm / \mmmm
+		zzzz *
 			scheme / \ddd
 			dt * ru \Зависимость от программирования
 			do * ru \Обмениваемся опытом слезания с кодинга.
 			dr 60
-			dm / \ssss
+			dm / \mmmm

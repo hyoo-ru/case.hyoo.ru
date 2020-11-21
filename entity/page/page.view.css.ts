@@ -13,7 +13,7 @@ namespace $.$$ {
 		},
 
 		Property_list: {
-			padding: $mol_gap.block,
+			// padding: $mol_gap.block,
 		},
 
 		Property: {

@@ -67,7 +67,20 @@ namespace $ {
 
 		@ $mol_mem
 		property_all() {
-			return ( this.value( 'properties' ) as string[] ?? [] ).map( id => this.domain().entity( id ) )
+			const domain = this.domain()
+			return ( this.value( 'properties' ) as string[] ?? [] ).map( id => domain.entity( id ) )
+		}
+
+		@ $mol_mem
+		instance_all() {
+			const domain = this.domain()
+			return ( this.value( 'instances' ) as string[] ?? [] ).map( id => domain.entity( id ) )
+		}
+		
+		instance_new() {
+			const inst = this.domain().entity_new()
+			this.property( 'instances' ).target_join( inst )
+			return inst
 		}
 
 		property_main() {

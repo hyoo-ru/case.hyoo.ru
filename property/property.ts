@@ -40,8 +40,10 @@ namespace $ {
 			return this.value( index as never, next as never ) as string ?? ''
 		}
 
-		list( next?: string[] ): string[] {
-			return this.data( next ) as any ?? []
+		list( next?: $hyoo_case_entity[] ): $hyoo_case_entity[] {
+			const domain = this.domain()
+			const arg = next === undefined ? undefined : next.map( item => item.id() )
+			return ( ( this.data( arg ) as any ?? [] ) as string[] ).map( id => domain.entity( id ) )
 		}
 
 		target( index: number ) {
@@ -52,20 +54,19 @@ namespace $ {
 			return this.target( index ).property( this.scheme().back() )
 		}
 
-		populate() {
-			const target = this.domain().entity_new()
-			target.property( 'scheme' ).list([ this.scheme().target().id() ])
-			this.join( target )
+		target_new() {
+			const target = this.scheme().target().instance_new()
+			this.target_join( target )
 			return target
 		}
 
-		join( target: $hyoo_case_entity ) {
-			this.list([ ... this.list(), target.id() ])
+		target_join( target: $hyoo_case_entity ) {
+			this.list([ ... this.list(), target ])
 			const back = target.property( this.scheme().back() )
-			back.list([ ... back.list(), this.entity().id() ])
+			back.list([ ... back.list(), this.entity() ])
 		}
 
-		tear( index: number ) {
+		target_tear( index: number ) {
 			
 			if( index < 0 ) return
 
@@ -75,7 +76,7 @@ namespace $ {
 			list.splice( index, 1 )
 			this.list( list )
 
-			back.tear( back.list().indexOf( this.entity().id() ) )
+			back.target_tear( back.list().indexOf( this.entity() ) )
 
 		}
 

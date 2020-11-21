@@ -13,7 +13,8 @@ namespace $.$$ {
 		@ $mol_mem
 		label() {
 			return [
-				this.title(),
+				this.Title(),
+				... this.type() === 'link' && this.editable() && this.pick_options().length ? [ this.Pick() ] : [],
 				... this.type() === 'link' ? [ this.Add() ] : [],
 			]
 		}
@@ -70,13 +71,31 @@ namespace $.$$ {
 
 		drop( index: number, event?: Event ) {
 			event?.preventDefault()
-			return this.property().tear( index )
+			return this.property().target_tear( index )
 		}
 
 		add() {
 			const prop = this.property()
-			const target = prop.populate()
+			const target = prop.target_new()
 			this.$.$hyoo_case_route_go( prop.entity(), target, true )
+		}
+
+		pick_options() {
+			const exists = new Set( this.property().list() )
+			return this.property().scheme().target().instance_all()
+			.filter( inst => !exists.has( inst ) )
+			.map( inst => inst.id() )
+		}
+
+		entity( id: string ) {
+			return this.property().domain().entity( id )
+		}
+
+		pick( id: string ) {
+			if( id ) {
+				this.property().target_join( this.entity( id ) )
+			}
+			return ''
 		}
 
 	}

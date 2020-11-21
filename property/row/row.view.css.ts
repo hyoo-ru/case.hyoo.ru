@@ -18,10 +18,8 @@ namespace $.$$ {
 			},
 		},
 
-		Add: {
-			margin: rem(-.5),
-			position: 'relative',
-			bottom: rem(.5),
+		Title: {
+			padding: $mol_gap.text
 		},
 
 	} )

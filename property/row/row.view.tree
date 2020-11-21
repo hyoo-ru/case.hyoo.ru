@@ -2,7 +2,15 @@ $hyoo_case_property_row $mol_labeler
 	editable false
 	property $hyoo_case_property
 	label /
-		<= title
+		<= Title $mol_view
+			sub /
+				<= title
+		<= Pick $mol_select
+			value?val <=> pick?val \
+			options <= pick_options /string
+			option_content!id /
+				<= Pick_option!id $hyoo_case_entity_snippet
+					entity <= entity!id $hyoo_case_entity
 		<= Add $mol_button_minor
 			click?event <=> add?event null
 			sub /
