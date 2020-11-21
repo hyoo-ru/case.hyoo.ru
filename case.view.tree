@@ -55,7 +55,7 @@ $hyoo_case $mol_book2
 			scheme / \scheme
 			name * ru \Свойства
 			type \link
-			target / \scheme
+			target / \property
 			back / \entity
 			entities / \scheme
 		property *
@@ -95,19 +95,19 @@ $hyoo_case $mol_book2
 			scheme / \scheme
 			name * ru \Указывает на тип
 			type \link
-			target / \scheme
+			target / \entity
 			entities / \scheme
 		back *
 			scheme / \scheme
 			name * ru \Обратное свойство в целевом типе
 			type \link
-			target / \scheme
+			target / \property
 			entities / \scheme
 		entities *
 			scheme / \scheme
 			name * ru \Сущность
 			type \link
-			target / \scheme
+			target / \entity
 			back / \properties
 			entities / \scheme
 		ppp *

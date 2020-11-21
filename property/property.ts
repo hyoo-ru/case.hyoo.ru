@@ -21,10 +21,14 @@ namespace $ {
 		locale( lang: string, next? : string ) {
 
 			if( next !== undefined ) {
-				this.data({
-					... this.data() as {},
-					[ lang ]: next,
-				})
+				if( this.scheme().locale() ) {
+					this.data({
+						... this.data() as {},
+						[ lang ]: next,
+					})
+				} else {
+					this.data( next )
+				}
 			}
 
 			let value = this.data()
@@ -61,6 +65,7 @@ namespace $ {
 		}
 
 		target_join( target: $hyoo_case_entity ) {
+			if( this.list().includes( target ) ) return
 			this.list([ ... this.list(), target ])
 			const back = target.property( this.scheme().back() )
 			back.list([ ... back.list(), this.entity() ])
