@@ -407,13 +407,113 @@ $hyoo_case_entity_snippet $mol_view
 	Property!id $hyoo_case_property_snippet
 		property <= property!id $hyoo_case_property
 
+$mol_meter $mol_plugin
+	zoom 1
+	-
+	width?val 0
+	height?val 0
+	-
+	left?val 0
+	right?val 0
+	bottom?val 0
+	top?val 0
+
+$mol_pop $mol_view
+	event * keydown?event <=> keydown?event null
+	showed?val false
+	plugins /$mol_plugin
+		<= Meter $mol_meter
+			top => top
+			bottom => bottom
+			left => left
+			right => right
+	sub /
+		<= Anchor null
+		<= Bubble $mol_pop_bubble
+			align <= align \bottom_center
+			content <= bubble_content /$mol_view_content
+			height_max <= height_max 9999
+
+$mol_pop_bubble $mol_scroll
+	sub <= content /$mol_view_content
+	style *
+		^
+		maxHeight <= height_max 9999
+	attr *
+		^
+		mol_pop_align <= align \
+		tabindex 0
+
+$mol_nav $mol_plugin
+	cycle?val false
+	-
+	mod_ctrl false
+	mod_shift false
+	mod_alt false
+	-
+	keys_x?val /
+	keys_y?val /
+	-
+	current_x?val \
+	current_y?val \
+	-
+	event_up?event null
+	event_down?event null
+	event_left?event null
+	event_right?event null
+	event *
+		^
+		keydown?event <=> event_key?event null
+
+$mol_select $mol_pop
+	dictionary *
+	options /string
+	value?val \
+	Option_row!id $mol_button_minor
+		event_click?event <=> event_select!id?event null
+		sub <= option_content!id /
+			<= Option_label!id $mol_dimmer
+				haystack <= option_label!id \
+				needle <= filter_pattern?val \
+	No_options $mol_view
+		sub /
+			<= no_options_message @ \No options
+	plugins /
+		^
+		<= Nav $mol_nav
+			keys_y <= nav_components /$mol_view
+			current_y?component <=> option_focused?component null
+			cycle?val <=> nav_cycle?val true
+	showed?val <=> options_showed?val false
+	Anchor <= Trigger $mol_button_minor
+		click?event <=> open?event null
+		sub <= trigger_content /$mol_view_content
+	bubble_content /
+		<= Menu $mol_list
+			rows <= menu_content /$mol_view
+	option_content_current /$mol_view_content
+	Filter $mol_string
+		value?val <=> filter_pattern?val \
+		hint <= filter_hint <= hint @ \Search..
+		submit?event <=> submit?event null
+		enabled <= enabled true
+	Trigger_icon $mol_icon_chevron
+
 $mol_icon_cross $mol_icon path \M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z
 
 $hyoo_case_property_row $mol_labeler
 	editable false
 	property $hyoo_case_property
 	label /
-		<= title
+		<= Title $mol_view
+			sub /
+				<= title
+		<= Pick $mol_select
+			value?val <=> pick?val \
+			options <= pick_options /string
+			option_content!id /
+				<= Pick_option!id $hyoo_case_entity_snippet
+					entity <= entity!id $hyoo_case_entity
 		<= Add $mol_button_minor
 			click?event <=> add?event null
 			sub /
@@ -504,11 +604,12 @@ $hyoo_case $mol_book2
 	-
 	domain $hyoo_case_domain / *
 		scheme *
-			scheme / \scheme
+			scheme / \property
 			name * ru \Схема
 			type \link
 			target / \scheme
 			entities / \scheme
+			back / \instances
 			properties /
 				\scheme
 				\name
@@ -521,17 +622,26 @@ $hyoo_case $mol_book2
 			entities / \scheme
 			main true
 		entity *
-			scheme / \scheme
+			scheme / \entity
 			name * ru \Сущность
 			properties /
+				\scheme
 				\name
 				\color
 				\properties
+				\instances
 		color *
 			scheme / \scheme
 			name * ru \Цвет
 			type \color
 			entities / \scheme
+		instances *
+			scheme / \property
+			name * ru \Экземпляры
+			type \link
+			target / \entity
+			back / \scheme
+			entities / \entity
 		properties *
 			scheme / \scheme
 			name * ru \Свойства
@@ -599,6 +709,8 @@ $hyoo_case $mol_book2
 				\pt
 				\pa
 				\pm
+			instances /
+				\pppp
 		pt *
 			scheme / \property
 			name * ru \Название
@@ -629,6 +741,8 @@ $hyoo_case $mol_book2
 				\mp
 				\md
 				\mu
+			instances /
+				\mmmm
 		mn *
 			scheme / \property
 			name * ru \Номер
@@ -669,6 +783,8 @@ $hyoo_case $mol_book2
 				\ue
 				\um
 				\ud
+			instances /
+				\uuuu
 		un *
 			scheme / \property
 			name * ru \Имя
@@ -705,6 +821,10 @@ $hyoo_case $mol_book2
 				\dr
 				\dm
 				\du
+			instances /
+				\xxxx
+				\yyyy
+				\zzzz
 		dt *
 			scheme / \property
 			name * ru \Название
@@ -739,49 +859,49 @@ $hyoo_case $mol_book2
 			target / \uuu
 			back / \ud
 			entities / \ddd
-		oooo *
+		pppp *
 			scheme / \ppp
 			pt * ru \Онлайн
 			pa * ru \До конца эпидемии встречаемся онлайн
-			pm / \ssss
-		ssss *
+			pm / \mmmm
+		mmmm *
 			scheme / \mmm
 			mn \#66
 			mt \https://youtube.com/piterjs
-			mp / \oooo
+			mp / \pppp
 			mu / \uuuu
 			md /
-				\cccc
+				\xxxx
 				\yyyy
-				\dddd
+				\zzzz
 		uuuu *
 			scheme / \uuu
 			un * ru \Василий Пупкин
 			ue \pupa@example.org
-			um / \ssss
+			um / \mmmm
 			ud /
-				\cccc
+				\xxxx
 				\yyyy
-		cccc *
+		xxxx *
 			scheme / \ddd
 			dt * ru \Как победить копипасту?
 			do * ru \Расскажу о своём ноу-хау.
 			dr 40
 			du / \uuuu
-			dm / \ssss
+			dm / \mmmm
 		yyyy *
 			scheme / \ddd
 			dt * ru \Слепое программирование
 			do * ru \Настоящее кунг-фу программирования.
 			dr 30
 			du / \uuuu
-			dm / \ssss
-		dddd *
+			dm / \mmmm
+		zzzz *
 			scheme / \ddd
 			dt * ru \Зависимость от программирования
 			do * ru \Обмениваемся опытом слезания с кодинга.
 			dr 60
-			dm / \ssss
+			dm / \mmmm
 
 $mol_view_tree_test_attributes_super $mol_view
 	some *

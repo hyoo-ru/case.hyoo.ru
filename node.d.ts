@@ -1164,6 +1164,8 @@ declare namespace $ {
         unit(): string;
         back(): string;
         property_all(): $hyoo_case_entity[];
+        instance_all(): $hyoo_case_entity[];
+        instance_new(): $hyoo_case_entity;
         property_main(): $hyoo_case_entity[];
     }
 }
@@ -1177,12 +1179,12 @@ declare namespace $ {
         filled(): boolean;
         locale(lang: string, next?: string): string;
         item(index: number, next?: string): string;
-        list(next?: string[]): string[];
+        list(next?: $hyoo_case_entity[]): $hyoo_case_entity[];
         target(index: number): $hyoo_case_entity;
         back(index: number): $hyoo_case_property;
-        populate(): $hyoo_case_entity;
-        join(target: $hyoo_case_entity): void;
-        tear(index: number): void;
+        target_new(): $hyoo_case_entity;
+        target_join(target: $hyoo_case_entity): void;
+        target_tear(index: number): void;
     }
 }
 
@@ -2393,6 +2395,181 @@ declare namespace $.$$ {
 }
 
 declare namespace $ {
+    class $mol_meter extends $mol_plugin {
+        zoom(): number;
+        width(val?: any): any;
+        height(val?: any): any;
+        left(val?: any): any;
+        right(val?: any): any;
+        bottom(val?: any): any;
+        top(val?: any): any;
+    }
+}
+
+declare namespace $.$$ {
+    class $mol_meter extends $.$mol_meter {
+        rect(): {
+            left: number;
+            top: number;
+            right: number;
+            bottom: number;
+            width: number;
+            height: number;
+            zoom: number;
+        };
+        top(): number;
+        bottom(): number;
+        left(): number;
+        right(): number;
+        width(): number;
+        height(): number;
+        zoom(): number;
+    }
+}
+
+declare namespace $ {
+    class $mol_pop extends $mol_view {
+        event(): {
+            keydown: (event?: any) => any;
+        };
+        showed(val?: any): any;
+        plugins(): readonly $mol_plugin[];
+        sub(): readonly any[];
+        keydown(event?: any): any;
+        Meter(): $$.$mol_meter;
+        top(): number;
+        bottom(): number;
+        left(): number;
+        right(): number;
+        Anchor(): any;
+        align(): string;
+        bubble_content(): readonly (string | number | boolean | $mol_view | Node)[];
+        height_max(): number;
+        Bubble(): $mol_pop_bubble;
+    }
+    class $mol_pop_bubble extends $mol_scroll {
+        sub(): readonly (string | number | boolean | $mol_view | Node)[];
+        style(): {
+            maxHeight: number;
+        };
+        attr(): {
+            mol_pop_align: string;
+            tabindex: number;
+        };
+        content(): readonly (string | number | boolean | $mol_view | Node)[];
+        height_max(): number;
+        align(): string;
+    }
+}
+
+declare namespace $ {
+}
+
+declare namespace $.$$ {
+    class $mol_pop extends $.$mol_pop {
+        sub(): any[];
+        height_max(): number;
+        align(): string;
+        keydown(event: KeyboardEvent): void;
+    }
+}
+
+declare namespace $ {
+    class $mol_nav extends $mol_plugin {
+        cycle(val?: any): any;
+        mod_ctrl(): boolean;
+        mod_shift(): boolean;
+        mod_alt(): boolean;
+        keys_x(val?: any): any;
+        keys_y(val?: any): any;
+        current_x(val?: any): any;
+        current_y(val?: any): any;
+        event_up(event?: any): any;
+        event_down(event?: any): any;
+        event_left(event?: any): any;
+        event_right(event?: any): any;
+        event(): {
+            keydown: (event?: any) => any;
+        };
+        event_key(event?: any): any;
+    }
+}
+
+declare namespace $.$$ {
+    class $mol_nav extends $.$mol_nav {
+        event_key(event?: KeyboardEvent): undefined;
+        event_up(event?: KeyboardEvent): undefined;
+        event_down(event?: KeyboardEvent): undefined;
+        event_left(event?: KeyboardEvent): undefined;
+        event_right(event?: KeyboardEvent): undefined;
+        index_y(): any;
+        index_x(): any;
+    }
+}
+
+declare namespace $ {
+    class $mol_select extends $mol_pop {
+        dictionary(): {};
+        options(): readonly string[];
+        value(val?: any): any;
+        Option_row(id: any): $mol_button_minor;
+        No_options(): $mol_view;
+        plugins(): readonly any[];
+        showed(val?: any): any;
+        Anchor(): $mol_button_minor;
+        bubble_content(): readonly any[];
+        option_content_current(): readonly (string | number | boolean | $mol_view | Node)[];
+        Filter(): $$.$mol_string;
+        Trigger_icon(): $mol_icon_chevron;
+        event_select(id: any, event?: any): any;
+        option_label(id: any): string;
+        filter_pattern(val?: any): any;
+        Option_label(id: any): $$.$mol_dimmer;
+        option_content(id: any): readonly any[];
+        no_options_message(): string;
+        nav_components(): readonly $mol_view[];
+        option_focused(component?: any): any;
+        nav_cycle(val?: any): any;
+        Nav(): $$.$mol_nav;
+        options_showed(val?: any): any;
+        open(event?: any): any;
+        trigger_content(): readonly (string | number | boolean | $mol_view | Node)[];
+        Trigger(): $mol_button_minor;
+        menu_content(): readonly $mol_view[];
+        Menu(): $$.$mol_list;
+        hint(): string;
+        filter_hint(): string;
+        submit(event?: any): any;
+        enabled(): boolean;
+    }
+}
+
+declare namespace $ {
+    function $mol_match_text<Variant>(query: string, values: (variant: Variant) => string[]): (variant: Variant) => boolean;
+}
+
+declare namespace $ {
+}
+
+declare namespace $.$$ {
+    class $mol_select extends $.$mol_select {
+        filter_pattern(next?: string): string;
+        open(): void;
+        options_showed(next?: boolean): boolean;
+        options(): readonly string[];
+        options_filtered(): readonly string[];
+        option_label(id: string): any;
+        option_rows(): $mol_view[];
+        option_focused(component?: $mol_view): $mol_view | $mol_string;
+        event_select(id: string, event?: MouseEvent): void;
+        nav_components(): ($mol_view | $mol_string)[];
+        option_content_current(): readonly any[];
+        trigger_content(): any[];
+        menu_content(): ($mol_view | $mol_string)[];
+    }
+}
+
+declare namespace $ {
     class $mol_icon_cross extends $mol_icon {
         path(): string;
     }
@@ -2409,6 +2586,12 @@ declare namespace $ {
         Numb(): $$.$mol_number;
         Text_view(): $mol_view;
         Link_view(id: any): $$.$mol_link;
+        Title(): $mol_view;
+        pick(val?: any): any;
+        pick_options(): readonly string[];
+        entity(id: any): $hyoo_case_entity;
+        Pick_option(id: any): $$.$hyoo_case_entity_snippet;
+        Pick(): $$.$mol_select;
         add(event?: any): any;
         Add_icon(): $mol_icon_plus;
         Add(): $mol_button_minor;
@@ -2438,7 +2621,7 @@ declare namespace $.$$ {
     class $hyoo_case_property_row extends $.$hyoo_case_property_row {
         title(): string;
         type(): "" | "string" | "boolean" | "text" | "type" | "integer" | "float" | "duration" | "color" | "link";
-        label(): (string | $mol_button_minor)[];
+        label(): ($mol_view | $mol_select)[];
         content(): ($mol_view | $mol_string)[] | ($mol_view | $mol_textarea)[] | ($mol_view | $mol_number)[] | $mol_check_box[];
         link_content(id: number): ($mol_button_minor | $hyoo_case_entity_snippet)[];
         text(next?: string): string;
@@ -2448,6 +2631,9 @@ declare namespace $.$$ {
         link_entity(index: number): $hyoo_case_entity;
         drop(index: number, event?: Event): void;
         add(): void;
+        pick_options(): string[];
+        entity(id: string): $hyoo_case_entity;
+        pick(id: string): string;
     }
 }
 
@@ -2498,6 +2684,9 @@ declare namespace $ {
 }
 
 declare namespace $.$$ {
+}
+
+declare namespace $.$$ {
     class $hyoo_case_entity_page extends $.$hyoo_case_entity_page {
         scheme(): $hyoo_case_entity;
         property_list(): $hyoo_case_property_row[];
@@ -2505,9 +2694,6 @@ declare namespace $.$$ {
         config_arg(): Record<string, string | null>;
         close_arg(): Record<string, string | null>;
     }
-}
-
-declare namespace $.$$ {
 }
 
 declare namespace $ {
