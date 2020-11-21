@@ -14,7 +14,7 @@ namespace $.$$ {
 		label() {
 			return [
 				this.title(),
-				... [ 'link_set', 'link_list' ].includes( this.type() ) ? [ this.Add() ] : [],
+				... this.type() === 'link' ? [ this.Add() ] : [],
 			]
 		}
 		
@@ -29,9 +29,8 @@ namespace $.$$ {
 				case "text": return [ this.editable() ? this.Text() : this.Text_view() ]
 				case "integer": return [ this.editable() ? this.Numb() : this.Text_view() ]
 				case "float": return [ this.editable() ? this.Numb() : this.Text_view() ]
-				case "link": return [ this.Link_view( 0 ) ]
-				case "link_set": return this.property().list().map( ( _, i )=> this.Link_view( i ) )
-				case "link_list": return this.property().list().map( ( _, i )=> this.Link_view( i ) )
+				case "boolean": return [ this.Bool() ]
+				case "link": return this.property().list().map( ( _, i )=> this.Link_view( i ) )
 				default: return [ this.editable() ? this.String() : this.Text_view() ]
 			}
 		}
@@ -49,6 +48,10 @@ namespace $.$$ {
 
 		numb( next? : number ) {
 			return this.property().data( next ) ?? 0
+		}
+
+		bool( next? : boolean ) {
+			return this.property().data( next ) === true
 		}
 
 		@ $mol_mem_key
@@ -73,7 +76,7 @@ namespace $.$$ {
 		add() {
 			const prop = this.property()
 			const target = prop.populate()
-			this.$.$hyoo_case_route_go( prop.entity(), target )
+			this.$.$hyoo_case_route_go( prop.entity(), target, true )
 		}
 
 	}

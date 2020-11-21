@@ -9,6 +9,8 @@ $hyoo_case_property_row $mol_labeler
 				<= Add_icon $mol_icon_plus
 	Text $mol_textarea
 		value?val <=> text?val \
+	Bool $mol_check_box
+		checked?val <=> bool?val false
 	String $mol_string
 		value?val <=> text?val \
 	Numb $mol_number

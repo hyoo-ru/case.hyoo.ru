@@ -7,10 +7,9 @@ namespace $ {
 	> {
 
 		id() { return '' }
-		registry() { return undefined as any as $hyoo_case_registry }
+		domain() { return undefined as any as $hyoo_case_domain }
 
-		domain() { return this.registry().domain() }
-		scheme() { return this.registry().scheme() }
+		scheme() { return this.property( 'scheme' ).target( 0 ) }
 
 		@ $mol_mem_key
 		property( id: string ) {
@@ -35,7 +34,7 @@ namespace $ {
 		}
 
 		target() {
-			return this.domain().scheme().entity( String( this.value( 'target' ) ) )
+			return this.domain().entity( String( this.value( 'target' ) ) )
 		}
 
 		color() {
@@ -43,7 +42,7 @@ namespace $ {
 		}
 
 		type() {
-			return String( this.value( 'type' ) ) as 'type' | 'string' | 'text' | 'integer' | 'float' | 'duration' | 'color' | 'link' | 'link_set' | 'link_list' | ''
+			return String( this.value( 'type' ) ) as 'type' | 'string' | 'text' | 'integer' | 'float' | 'boolean' | 'duration' | 'color' | 'link' | ''
 		}
 
 		locale() {
@@ -68,15 +67,11 @@ namespace $ {
 
 		@ $mol_mem
 		property_all() {
-			return ( this.value( 'property' ) as string[] ?? [] ).map( id => this.domain().scheme().entity( id ) )
+			return ( this.value( 'properties' ) as string[] ?? [] ).map( id => this.domain().entity( id ) )
 		}
 
 		property_main() {
 			return this.property_all().filter( prop => prop.main() )
-		}
-
-		registry_sub() {
-			return this.domain().registry( this.id() )
 		}
 
 	}

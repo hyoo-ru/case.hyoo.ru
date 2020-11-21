@@ -11,9 +11,12 @@ namespace $ {
 		id() { return '' }
 		entity() { return undefined as any as $hyoo_case_entity }
 
-		registry() { return this.entity().registry() }
-		domain() { return this.registry().domain() }
-		scheme() { return this.domain().scheme().entity( this.id() ) }
+		domain() { return this.entity().domain() }
+		scheme() { return this.domain().entity( this.id() ) }
+
+		filled() {
+			return this.data() != null
+		}
 
 		locale( lang: string, next? : string ) {
 
@@ -42,7 +45,7 @@ namespace $ {
 		}
 
 		target( index: number ) {
-			return this.domain().registry( this.scheme().target().id() ).entity( this.item( index ) )
+			return this.domain().entity( this.item( index ) )
 		}
 
 		back( index: number ) {
@@ -50,7 +53,8 @@ namespace $ {
 		}
 
 		populate() {
-			const target = this.scheme().target().registry_sub().entity_new()
+			const target = this.domain().entity_new()
+			target.property( 'scheme' ).list([ this.scheme().target().id() ])
 			this.join( target )
 			return target
 		}

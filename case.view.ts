@@ -5,10 +5,9 @@ namespace $.$$ {
 			const params = this.$.$mol_state_arg.dict()
 			return [
 				this.Menu(),
-				... Object.keys( params ).map( reg => {
-					const entity = this.domain().registry( reg ).entity( params[ reg ] )
-					return this.Entity_page( entity )
-				} )
+				... Object.keys( params ).map(
+					id => this.Entity_page( id ),
+				)
 			]
 		}
 
@@ -17,8 +16,13 @@ namespace $.$$ {
 			return this.$.$mol_store_local.sub( '$hyoo_case' , super.domain() )
 		}
 
-		entity( entity: $hyoo_case_entity ) {
-			return entity
+		entity( id: string ) {
+			return this.domain().entity( id )
+		}
+
+		editable( id: string, next?: boolean ) {
+			const arg = next === undefined ? undefined : next ? 'edit' : '' 
+			return this.$.$mol_state_arg.value( id, arg ) === 'edit'
 		}
 
 	}

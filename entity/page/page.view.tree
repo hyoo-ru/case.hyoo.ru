@@ -1,13 +1,19 @@
 $hyoo_case_entity_page $mol_page
 	entity $hyoo_case_entity
 	head /
+		<= Snippet_scheme $hyoo_case_entity_snippet
+			entity <= scheme $hyoo_case_entity
 		<= Snippet $hyoo_case_entity_snippet
 			entity <= entity
 			title => title
 		<= Tools
 	tools /
+		<= Config $mol_link
+			arg <= config_arg *
+			sub /
+				<= Config_icon $mol_icon_settings
 		<= Edit $mol_check_icon
-			Icon <= Edit_icon $mol_icon_settings
+			Icon <= Edit_icon $mol_icon_edit
 			checked?val <=> editable?val true
 		<= Close $mol_link
 			arg <= close_arg *

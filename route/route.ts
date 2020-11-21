@@ -3,35 +3,43 @@ namespace $ {
 	export function $hyoo_case_route_arg(
 		this: $mol_ambient_context,
 		source: $hyoo_case_entity,
-		target: $hyoo_case_entity,
+		target: $hyoo_case_entity | null,
+		editable?: boolean,
 	) {
 
-		const key_source = source.scheme().id()
-		const key_target = target.scheme().id()
+		if( !target ) return { [ source.id() ]: null }
 
-		const arg = { ... this.$.$mol_state_arg.dict() } as Record< string, string|null >
+		const domain = source.domain()
+		
+		const arg = { ... this.$.$mol_state_arg.dict() }
 		let keys = Object.keys( arg )
 		
-		for( const key of keys.slice( keys.indexOf( key_source ) + 1 ) ) {
-			arg[ key ] = null
-		}
-
-		keys = keys.slice( 0, keys.indexOf( key_source ) + 1 )
-
-		for( const key of keys.slice( 0, keys.indexOf( key_target ) + 1 ) ) {
-			arg[ key ] = null
-		}
-
-		const save = {}
-		for( let key in arg ) {
-			if( arg[ key ] !== null ) {
-				save[ key ] = arg[ key ]
-			}
-		}
-
-		const add = { [ key_target ]: target.id() }
+		const scheme_source = source.scheme()
+		const index_source = keys.findIndex( id => domain.entity( id ).scheme() === scheme_source )
+		keys.splice( index_source + 1, 1000 )
 		
-		return { ... save, ... arg, ... add }
+		const scheme_target = target.scheme()
+		const index_target = keys.findIndex( id => domain.entity( id ).scheme() === scheme_target )
+
+		keys.splice( 0, index_target + 1 )
+		keys.push( target.id() )
+		
+		if( editable !== this.undefined ) {
+			arg[ target.id() ] = editable ? 'edit' : ''
+		}
+
+		const res = {} as Record< string, string|null >
+
+		for( let key of keys ) {
+			res[ key ] = arg[ key ] || ''
+		}
+
+		for( let key in arg ) {
+			if( key in res ) continue
+			res[ key ] = null
+		}
+
+		return res
 
 	}
 
@@ -39,9 +47,10 @@ namespace $ {
 		this: $mol_ambient_context,
 		source: $hyoo_case_entity,
 		target: $hyoo_case_entity,
+		editable = false,
 	) {
 		return this.$mol_state_arg.make_link(
-			this.$hyoo_case_route_arg( source, target ),
+			this.$hyoo_case_route_arg( source, target, editable ),
 		)
 	}
 
@@ -49,8 +58,9 @@ namespace $ {
 		this: $mol_ambient_context,
 		source: $hyoo_case_entity,
 		target: $hyoo_case_entity,
+		editable = false,
 	) {
-		this.$.$mol_dom_context.location.href = this.$hyoo_case_route_link( source, target )
+		this.$.$mol_dom_context.location.href = this.$hyoo_case_route_link( source, target, editable )
 	}
 
 }

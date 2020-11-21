@@ -9,228 +9,285 @@ $hyoo_case $mol_book2
 			<= Lights $mol_lights_toggle
 	Entity_page!id $hyoo_case_entity_page
 		entity <= entity!id $hyoo_case_entity
+		editable?val <=> editable!id?val false
 	-
 	domain $hyoo_case_domain / *
 		scheme *
-			scheme *
-				scheme \scheme
-				type \link
-				target \scheme
-				entity \scheme
-				property /
-					\name
-					\color
-					\main
-					\type
-					\property
-					\target
-					\back
-					\entity
-			name *
-				name * ru \Название
-				type \string
-				locale true
-				entity \scheme
-				main true
-			color *
-				name * ru \Цвет
-				type \color
-				entity \scheme
-			main *
-				name * ru \Основное
-				type \boolean
-				entity \scheme
-			type *
-				name * ru \Тип
-				type \type
-				entity \scheme
-			property *
-				name * ru \Аттрибуты
-				type \link_set
-				target \scheme
-				back \entity
-				entity \scheme
-			target *
-				name * ru \Указывает на тип
-				type \link
-				target \scheme
-				entity \scheme
-			back *
-				name * ru \Обратный аттрибут в целевом типе
-				type \link
-				target \scheme
-				entity \scheme
-			entity *
-				name * ru \Сущность
-				type \link
-				target \scheme
-				back \property
-				entity \scheme
-			ppp *
-				name * ru \Площадка
-				color \green
-				property /
-					\pt
-					\pa
-					\pm
-			pt *
-				name * ru \Название
-				type \string
-				locale true
-				entity \ppp
-				main true
-			pa *
-				name * ru \Адрес
-				type \string
-				locale true
-				entity \ppp
-			pm *
-				name * ru \Митапы
-				type \link_set
-				target \mmm
-				back \mp
-				entity \ppp
-			mmm *
-				name * ru \Митап
-				color \red
-				property /
-					\mn
-					\mt
-					\mp
-					\md
-					\mu
-			mn *
-				name * ru \Номер
-				type \string
-				entity \mmm
-				main true
-			mt *
-				name * ru \Трансляция
-				type \string
-				entity \mmm
-			mp *
-				type \link
-				target \ppp
-				back \pm
-				entity \mmm
-			md *
-				name * ru \Выступления
-				type \link_set
-				target \ddd
-				back \dm
-				entity \mmm
-			mu *
-				name * ru \Ведущие
-				type \link_set
-				target \uuu
-				back \um
-				entity \mmm
-			uuu *
-				name * ru \Персона
-				color \blue
-				property /
-					\un
-					\ue
-					\um
-					\ud
-			un *
-				name * ru \Имя
-				type \string
-				locale true
-				entity \uuu
-				main true
-			ue *
-				name * ru \Почта
-				type \string
-				entity \uuu
-			um *
-				name * ru \Ведущий митапов
-				type \link_set
-				target \mmm
-				back \mu
-				entity \uuu
-			ud *
-				name * ru \Выступления
-				type \link_set
-				target \ddd
-				back \du
-				entity \uuu
-			ddd *
-				name * ru \Выступление
-				color \magenta
-				property /
-					\dt
-					\do
-					\dr
-					\dm
-					\du
-			dt *
-				name * ru \Название
-				type \string
-				locale true
-				entity \ddd
-				main true
-			do *
-				name * ru \Описание
-				type \text
-				locale true
-				entity \ddd
-			dr *
-				name * ru \Длительность
-				type \integer
-				unit \minute
-				suggest true
-				entity \ddd
-				main true
-			dm *
-				type \link
-				target \mmm
-				back \md
-				entity \ddd
-			du *
-				name * ru \Докладчики
-				type \link_set
-				target \uuu
-				back \ud
-				entity \ddd
+			scheme / \scheme
+			name * ru \Схема
+			type \link
+			target / \scheme
+			entities / \scheme
+			properties /
+				\scheme
+				\name
+				\properties
+		name *
+			scheme / \scheme
+			name * ru \Название
+			type \string
+			locale true
+			entities / \scheme
+			main true
+		entity *
+			scheme / \scheme
+			name * ru \Сущность
+			properties /
+				\name
+				\color
+				\properties
+		color *
+			scheme / \scheme
+			name * ru \Цвет
+			type \color
+			entities / \scheme
+		properties *
+			scheme / \scheme
+			name * ru \Свойства
+			type \link
+			target / \scheme
+			back / \entity
+			entities / \scheme
+		property *
+			scheme / \scheme
+			name * ru \Свойство
+			properties /
+				\scheme
+				\name
+				\min
+				\max
+				\main
+				\type
+				\target
+				\back
+				\entities
+		min *
+			scheme / \property
+			name * ru \Минимальное число
+			type \integer
+			entities / \property
+		max *
+			scheme / \property
+			name * ru \Максимальное число
+			type \integer
+			entities / \property
+		main *
+			scheme / \scheme
+			name * ru \Основное
+			type \boolean
+			entities / \scheme
+		type *
+			scheme / \scheme
+			name * ru \Тип
+			type \type
+			entities / \scheme
+		target *
+			scheme / \scheme
+			name * ru \Указывает на тип
+			type \link
+			target / \scheme
+			entities / \scheme
+		back *
+			scheme / \scheme
+			name * ru \Обратное свойство в целевом типе
+			type \link
+			target / \scheme
+			entities / \scheme
+		entities *
+			scheme / \scheme
+			name * ru \Сущность
+			type \link
+			target / \scheme
+			back / \properties
+			entities / \scheme
 		ppp *
-			oooo *
-				pt * ru \Онлайн
-				pa * ru \До конца эпидемии встречаемся онлайн
-				pm / \ssss
+			scheme / \entity
+			name * ru \Площадка
+			color \green
+			properties /
+				\pt
+				\pa
+				\pm
+		pt *
+			scheme / \property
+			name * ru \Название
+			type \string
+			locale true
+			entities / \ppp
+			main true
+		pa *
+			scheme / \property
+			name * ru \Адрес
+			type \string
+			locale true
+			entities / \ppp
+		pm *
+			scheme / \property
+			name * ru \Митапы
+			type \link
+			target / \mmm
+			back / \mp
+			entities / \ppp
 		mmm *
-			ssss *
-				mn \#66
-				mt \https://youtube.com/piterjs
-				mp / \oooo
-				mu / \uuuu
-				md /
-					\cccc
-					\yyyy
-					\dddd
+			scheme / \entity
+			name * ru \Митап
+			color \red
+			properties /
+				\mn
+				\mt
+				\mp
+				\md
+				\mu
+		mn *
+			scheme / \property
+			name * ru \Номер
+			type \string
+			entities / \mmm
+			main true
+		mt *
+			scheme / \property
+			name * ru \Трансляция
+			type \string
+			entities / \mmm
+		mp *
+			scheme / \property
+			type \link
+			target / \ppp
+			back / \pm
+			entities / \mmm
+		md *
+			scheme / \property
+			name * ru \Выступления
+			type \link
+			target / \ddd
+			back / \dm
+			entities / \mmm
+		mu *
+			scheme / \property
+			name * ru \Ведущие
+			type \link
+			target / \uuu
+			back / \um
+			entities / \mmm
 		uuu *
-			uuuu *
-				un * ru \Василий Пупкин
-				ue \pupa@example.org
-				um / \ssss
-				ud /
-					\cccc
-					\yyyy
+			scheme / \entity
+			name * ru \Персона
+			color \blue
+			properties /
+				\un
+				\ue
+				\um
+				\ud
+		un *
+			scheme / \property
+			name * ru \Имя
+			type \string
+			locale true
+			entities / \uuu
+			main true
+		ue *
+			scheme / \property
+			name * ru \Почта
+			type \string
+			entities / \uuu
+		um *
+			scheme / \property
+			name * ru \Ведущий митапов
+			type \link
+			target / \mmm
+			back / \mu
+			entities / \uuu
+		ud *
+			scheme / \property
+			name * ru \Выступления
+			type \link
+			target / \ddd
+			back / \du
+			entities / \uuu
 		ddd *
-			cccc *
-				dt * ru \Как победить копипасту?
-				do * ru \Расскажу о своём ноу-хау.
-				dr 40
-				du / \uuuu
-				dm / \ssss
-			yyyy *
-				dt * ru \Слепое программирование
-				do * ru \Настоящее кунг-фу программирования.
-				dr 30
-				du / \uuuu
-				dm / \ssss
-			dddd *
-				dt * ru \Зависимость от программирования
-				do * ru \Обмениваемся опытом слезания с кодинга.
-				dr 60
-				dm / \ssss
+			scheme / \entity
+			name * ru \Выступление
+			color \magenta
+			properties /
+				\dt
+				\do
+				\dr
+				\dm
+				\du
+		dt *
+			scheme / \property
+			name * ru \Название
+			type \string
+			locale true
+			entities / \ddd
+			main true
+		do *
+			scheme / \property
+			name * ru \Описание
+			type \text
+			locale true
+			entities / \ddd
+		dr *
+			scheme / \property
+			name * ru \Длительность
+			type \integer
+			unit \minute
+			suggest true
+			entities / \ddd
+			main true
+		dm *
+			scheme / \property
+			type \link
+			target / \mmm
+			back / \md
+			entities / \ddd
+		du *
+			scheme / \property
+			name * ru \Докладчики
+			type \link
+			target / \uuu
+			back / \ud
+			entities / \ddd
+		oooo *
+			scheme / \ppp
+			pt * ru \Онлайн
+			pa * ru \До конца эпидемии встречаемся онлайн
+			pm / \ssss
+		ssss *
+			scheme / \mmm
+			mn \#66
+			mt \https://youtube.com/piterjs
+			mp / \oooo
+			mu / \uuuu
+			md /
+				\cccc
+				\yyyy
+				\dddd
+		uuuu *
+			scheme / \uuu
+			un * ru \Василий Пупкин
+			ue \pupa@example.org
+			um / \ssss
+			ud /
+				\cccc
+				\yyyy
+		cccc *
+			scheme / \ddd
+			dt * ru \Как победить копипасту?
+			do * ru \Расскажу о своём ноу-хау.
+			dr 40
+			du / \uuuu
+			dm / \ssss
+		yyyy *
+			scheme / \ddd
+			dt * ru \Слепое программирование
+			do * ru \Настоящее кунг-фу программирования.
+			dr 30
+			du / \uuuu
+			dm / \ssss
+		dddd *
+			scheme / \ddd
+			dt * ru \Зависимость от программирования
+			do * ru \Обмениваемся опытом слезания с кодинга.
+			dr 60
+			dm / \ssss
