@@ -7,9 +7,10 @@ namespace $.$$ {
 
 		@ $mol_mem
 		property_list() {
-			let props = this.entity().scheme().property_all()
+			let props = this.entity().property_all()
 			if( !this.editable() ) {
-				props = props.filter( prop => this.entity().property( prop.id() ).filled() )
+				props = props.filter( prop => !prop.scheme().main() )
+				props = props.filter( prop => prop.filled() )
 			}
 			return props.map( property => this.Property( property.id() ) )
 		}

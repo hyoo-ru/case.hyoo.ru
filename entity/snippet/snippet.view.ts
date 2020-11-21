@@ -3,17 +3,17 @@ namespace $.$$ {
 
 		title() {
 
-			const main = this.entity().scheme().property_main()
+			const main = this.entity().property_main()
 			if( main.length === 0 ) return this.entity().id()
 
-			return main.map( prop => this.entity().property( prop.id() ).locale( $mol_locale.lang() ) ).join( ' ' )
+			return main.map( prop => prop.locale( $mol_locale.lang() ) ).join( ' ' )
 
 			// return this.entity().scheme().name( $mol_locale.lang() ) + ' ' + this.entity().id()
 		}
 
 		property_list() {
 			
-			const main = this.entity().scheme().property_main()
+			const main = this.entity().property_main()
 			if( main.length === 0 ) return [ this.entity().id() ]
 
 			return main.map( prop => this.Property( prop.id() ) )

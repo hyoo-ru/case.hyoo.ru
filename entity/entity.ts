@@ -67,8 +67,17 @@ namespace $ {
 
 		@ $mol_mem
 		property_all() {
-			const domain = this.domain()
-			return ( this.value( 'properties' ) as string[] ?? [] ).map( id => domain.entity( id ) )
+
+			const schemes = this.property( 'scheme' ).list()
+			const props = [] as $hyoo_case_property[]
+			
+			for( const scheme of schemes ) {
+				for( const prop of scheme.property( 'properties' ).list() ) {
+					props.push( this.property( prop.id() ) )
+				}
+			}
+			
+			return props
 		}
 
 		@ $mol_mem
@@ -84,7 +93,11 @@ namespace $ {
 		}
 
 		property_main() {
-			return this.property_all().filter( prop => prop.main() )
+			return this.property_all().filter( prop => prop.scheme().main() )
+		}
+
+		property_least() {
+			return this.property_all().filter( prop => !prop.scheme().main() )
 		}
 
 	}
