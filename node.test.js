@@ -3984,9 +3984,14 @@ var $;
             return String(this.value('back'));
         }
         property_all() {
-            var _a;
-            const domain = this.domain();
-            return ((_a = this.value('properties')) !== null && _a !== void 0 ? _a : []).map(id => domain.entity(id));
+            const schemes = this.property('scheme').list();
+            const props = [];
+            for (const scheme of schemes) {
+                for (const prop of scheme.property('properties').list()) {
+                    props.push(this.property(prop.id()));
+                }
+            }
+            return props;
         }
         instance_all() {
             var _a;
@@ -3999,7 +4004,10 @@ var $;
             return inst;
         }
         property_main() {
-            return this.property_all().filter(prop => prop.main());
+            return this.property_all().filter(prop => prop.scheme().main());
+        }
+        property_least() {
+            return this.property_all().filter(prop => !prop.scheme().main());
         }
     }
     __decorate([
@@ -7444,13 +7452,13 @@ var $;
     (function ($$) {
         class $hyoo_case_entity_snippet extends $.$hyoo_case_entity_snippet {
             title() {
-                const main = this.entity().scheme().property_main();
+                const main = this.entity().property_main();
                 if (main.length === 0)
                     return this.entity().id();
-                return main.map(prop => this.entity().property(prop.id()).locale($.$mol_locale.lang())).join(' ');
+                return main.map(prop => prop.locale($.$mol_locale.lang())).join(' ');
             }
             property_list() {
-                const main = this.entity().scheme().property_main();
+                const main = this.entity().property_main();
                 if (main.length === 0)
                     return [this.entity().id()];
                 return main.map(prop => this.Property(prop.id()));
@@ -8898,9 +8906,10 @@ var $;
                 return this.entity().scheme();
             }
             property_list() {
-                let props = this.entity().scheme().property_all();
+                let props = this.entity().property_all();
                 if (!this.editable()) {
-                    props = props.filter(prop => this.entity().property(prop.id()).filled());
+                    props = props.filter(prop => !prop.scheme().main());
+                    props = props.filter(prop => prop.filled());
                 }
                 return props.map(property => this.Property(property.id()));
             }

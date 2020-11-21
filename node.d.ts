@@ -1163,10 +1163,11 @@ declare namespace $ {
         main(): boolean;
         unit(): string;
         back(): string;
-        property_all(): $hyoo_case_entity[];
+        property_all(): $hyoo_case_property[];
         instance_all(): $hyoo_case_entity[];
         instance_new(): $hyoo_case_entity;
-        property_main(): $hyoo_case_entity[];
+        property_main(): $hyoo_case_property[];
+        property_least(): $hyoo_case_property[];
     }
 }
 
