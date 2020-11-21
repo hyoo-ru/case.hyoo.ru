@@ -1,0 +1,84 @@
+namespace $ {
+
+	export class $hyoo_case_entity extends $mol_store<
+		Record< string,
+			ReturnType< $hyoo_case_property['data'] >
+		>
+	> {
+
+		id() { return '' }
+		registry() { return undefined as any as $hyoo_case_registry }
+
+		domain() { return this.registry().domain() }
+		scheme() { return this.registry().scheme() }
+
+		@ $mol_mem_key
+		property( id: string ) {
+
+			const store = new $hyoo_case_property
+			
+			store.id = $mol_const( id )
+			store.entity = $mol_const( this )
+			
+			return this.sub( id , store )
+		}
+
+		@ $mol_mem
+		property_list() {
+			return Object.keys( this.data() )
+		}
+
+		name( lang: string ): string {
+			const name = this.value( 'name' )
+			if( name === undefined ) return this.target().name( lang )
+			return String( name[ lang ] )
+		}
+
+		target() {
+			return this.domain().scheme().entity( String( this.value( 'target' ) ) )
+		}
+
+		color() {
+			return String( this.value( 'color' ) )
+		}
+
+		type() {
+			return String( this.value( 'type' ) ) as 'type' | 'string' | 'text' | 'integer' | 'float' | 'duration' | 'color' | 'link' | 'link_set' | 'link_list' | ''
+		}
+
+		locale() {
+			return Boolean( this.value( 'locale' ) )
+		}
+
+		suggest() {
+			return Boolean( this.value( 'suggest' ) )
+		}
+
+		main() {
+			return Boolean( this.value( 'main' ) )
+		}
+
+		unit() {
+			return String( this.value( 'unit' ) )
+		}
+
+		back() {
+			return String( this.value( 'back' ) )
+		}
+
+		@ $mol_mem
+		property_all() {
+			return ( this.value( 'property' ) as string[] ?? [] ).map( id => this.domain().scheme().entity( id ) )
+		}
+
+		property_main() {
+			return this.property_all().filter( prop => prop.main() )
+		}
+
+		registry_sub() {
+			return this.domain().registry( this.id() )
+		}
+
+	}
+
+}

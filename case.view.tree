@@ -1,0 +1,236 @@
+$hyoo_case $mol_book2
+	plugins /
+		<= Theme $mol_theme_auto
+	Menu $mol_page
+		title @ \Business case
+		tools /
+			<= Sources $mol_link_source
+				uri \https://github.com/hyoo-ru/case.hyoo.ru
+			<= Lights $mol_lights_toggle
+	Entity_page!id $hyoo_case_entity_page
+		entity <= entity!id $hyoo_case_entity
+	-
+	domain $hyoo_case_domain / *
+		scheme *
+			scheme *
+				scheme \scheme
+				type \link
+				target \scheme
+				entity \scheme
+				property /
+					\name
+					\color
+					\main
+					\type
+					\property
+					\target
+					\back
+					\entity
+			name *
+				name * ru \Название
+				type \string
+				locale true
+				entity \scheme
+				main true
+			color *
+				name * ru \Цвет
+				type \color
+				entity \scheme
+			main *
+				name * ru \Основное
+				type \boolean
+				entity \scheme
+			type *
+				name * ru \Тип
+				type \type
+				entity \scheme
+			property *
+				name * ru \Аттрибуты
+				type \link_set
+				target \scheme
+				back \entity
+				entity \scheme
+			target *
+				name * ru \Указывает на тип
+				type \link
+				target \scheme
+				entity \scheme
+			back *
+				name * ru \Обратный аттрибут в целевом типе
+				type \link
+				target \scheme
+				entity \scheme
+			entity *
+				name * ru \Сущность
+				type \link
+				target \scheme
+				back \property
+				entity \scheme
+			ppp *
+				name * ru \Площадка
+				color \green
+				property /
+					\pt
+					\pa
+					\pm
+			pt *
+				name * ru \Название
+				type \string
+				locale true
+				entity \ppp
+				main true
+			pa *
+				name * ru \Адрес
+				type \string
+				locale true
+				entity \ppp
+			pm *
+				name * ru \Митапы
+				type \link_set
+				target \mmm
+				back \mp
+				entity \ppp
+			mmm *
+				name * ru \Митап
+				color \red
+				property /
+					\mn
+					\mt
+					\mp
+					\md
+					\mu
+			mn *
+				name * ru \Номер
+				type \string
+				entity \mmm
+				main true
+			mt *
+				name * ru \Трансляция
+				type \string
+				entity \mmm
+			mp *
+				type \link
+				target \ppp
+				back \pm
+				entity \mmm
+			md *
+				name * ru \Выступления
+				type \link_set
+				target \ddd
+				back \dm
+				entity \mmm
+			mu *
+				name * ru \Ведущие
+				type \link_set
+				target \uuu
+				back \um
+				entity \mmm
+			uuu *
+				name * ru \Персона
+				color \blue
+				property /
+					\un
+					\ue
+					\um
+					\ud
+			un *
+				name * ru \Имя
+				type \string
+				locale true
+				entity \uuu
+				main true
+			ue *
+				name * ru \Почта
+				type \string
+				entity \uuu
+			um *
+				name * ru \Ведущий митапов
+				type \link_set
+				target \mmm
+				back \mu
+				entity \uuu
+			ud *
+				name * ru \Выступления
+				type \link_set
+				target \ddd
+				back \du
+				entity \uuu
+			ddd *
+				name * ru \Выступление
+				color \magenta
+				property /
+					\dt
+					\do
+					\dr
+					\dm
+					\du
+			dt *
+				name * ru \Название
+				type \string
+				locale true
+				entity \ddd
+				main true
+			do *
+				name * ru \Описание
+				type \text
+				locale true
+				entity \ddd
+			dr *
+				name * ru \Длительность
+				type \integer
+				unit \minute
+				suggest true
+				entity \ddd
+				main true
+			dm *
+				type \link
+				target \mmm
+				back \md
+				entity \ddd
+			du *
+				name * ru \Докладчики
+				type \link_set
+				target \uuu
+				back \ud
+				entity \ddd
+		ppp *
+			oooo *
+				pt * ru \Онлайн
+				pa * ru \До конца эпидемии встречаемся онлайн
+				pm / \ssss
+		mmm *
+			ssss *
+				mn \#66
+				mt \https://youtube.com/piterjs
+				mp / \oooo
+				mu / \uuuu
+				md /
+					\cccc
+					\yyyy
+					\dddd
+		uuu *
+			uuuu *
+				un * ru \Василий Пупкин
+				ue \pupa@example.org
+				um / \ssss
+				ud /
+					\cccc
+					\yyyy
+		ddd *
+			cccc *
+				dt * ru \Как победить копипасту?
+				do * ru \Расскажу о своём ноу-хау.
+				dr 40
+				du / \uuuu
+				dm / \ssss
+			yyyy *
+				dt * ru \Слепое программирование
+				do * ru \Настоящее кунг-фу программирования.
+				dr 30
+				du / \uuuu
+				dm / \ssss
+			dddd *
+				dt * ru \Зависимость от программирования
+				do * ru \Обмениваемся опытом слезания с кодинга.
+				dr 60
+				dm / \ssss

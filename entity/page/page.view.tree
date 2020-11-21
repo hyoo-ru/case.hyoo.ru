@@ -1,0 +1,21 @@
+$hyoo_case_entity_page $mol_page
+	entity $hyoo_case_entity
+	head /
+		<= Snippet $hyoo_case_entity_snippet
+			entity <= entity
+			title => title
+		<= Tools
+	tools /
+		<= Edit $mol_check_icon
+			Icon <= Edit_icon $mol_icon_settings
+			checked?val <=> editable?val true
+		<= Close $mol_link
+			arg <= close_arg *
+			sub /
+				<= Close_icon $mol_icon_cross
+	body /
+		<= Property_list $mol_list
+			rows <= property_list /$mol_view
+	Property!id $hyoo_case_property_row
+		property <= property!id $hyoo_case_property
+		editable <= editable

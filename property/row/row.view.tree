@@ -1,0 +1,26 @@
+$hyoo_case_property_row $mol_labeler
+	editable false
+	property $hyoo_case_property
+	label /
+		<= title
+		<= Add $mol_button_minor
+			click?event <=> add?event null
+			sub /
+				<= Add_icon $mol_icon_plus
+	Text $mol_textarea
+		value?val <=> text?val \
+	String $mol_string
+		value?val <=> text?val \
+	Numb $mol_number
+		value?val <=> numb?val 0
+	Text_view $mol_view sub / <= text
+	Link_view!id $mol_link
+		arg <= link_arg!id *
+		sub <= link_content!id /
+			<= Link_snippet!id $hyoo_case_entity_snippet
+				entity <= link_entity!id $hyoo_case_entity
+			<= Drop!id $mol_button_minor
+				click?event <=> drop!id?event null
+				sub /
+					<= Drop_icon!id $mol_icon_cross
+

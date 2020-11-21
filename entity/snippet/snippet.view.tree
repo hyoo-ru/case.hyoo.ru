@@ -1,0 +1,5 @@
+$hyoo_case_entity_snippet $mol_view
+	entity $hyoo_case_entity
+	sub <= property_list /
+	Property!id $hyoo_case_property_snippet
+		property <= property!id $hyoo_case_property
