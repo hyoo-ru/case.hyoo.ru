@@ -4046,7 +4046,12 @@ var $;
         }
         locale(lang, next) {
             if (next !== undefined) {
-                this.data(Object.assign(Object.assign({}, this.data()), { [lang]: next }));
+                if (this.scheme().locale()) {
+                    this.data(Object.assign(Object.assign({}, this.data()), { [lang]: next }));
+                }
+                else {
+                    this.data(next);
+                }
             }
             let value = this.data();
             if (value && (typeof value === 'object')) {
@@ -4076,6 +4081,8 @@ var $;
             return target;
         }
         target_join(target) {
+            if (this.list().includes(target))
+                return;
             this.list([...this.list(), target]);
             const back = target.property(this.scheme().back());
             back.list([...back.list(), this.entity()]);
@@ -9201,7 +9208,7 @@ var $;
                     },
                     type: "link",
                     target: [
-                        "scheme"
+                        "property"
                     ],
                     back: [
                         "entity"
@@ -9286,7 +9293,7 @@ var $;
                     },
                     type: "link",
                     target: [
-                        "scheme"
+                        "entity"
                     ],
                     entities: [
                         "scheme"
@@ -9301,7 +9308,7 @@ var $;
                     },
                     type: "link",
                     target: [
-                        "scheme"
+                        "property"
                     ],
                     entities: [
                         "scheme"
@@ -9316,7 +9323,7 @@ var $;
                     },
                     type: "link",
                     target: [
-                        "scheme"
+                        "entity"
                     ],
                     back: [
                         "properties"
