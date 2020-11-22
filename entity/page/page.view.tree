@@ -10,12 +10,15 @@ $hyoo_case_entity_page $mol_page
 	tools /
 		<= Config $mol_link
 			arg <= config_arg *
+			hint @ \Configurate properties
 			sub /
 				<= Config_icon $mol_icon_settings
 		<= Edit $mol_check_icon
+			hint @ \Edit mode
 			Icon <= Edit_icon $mol_icon_edit
 			checked?val <=> editable?val true
 		<= Close $mol_link
+			hint @ \Close page
 			arg <= close_arg *
 			sub /
 				<= Close_icon $mol_icon_cross
