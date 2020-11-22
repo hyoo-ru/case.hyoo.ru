@@ -8391,6 +8391,7 @@ var $;
         }
         Add() {
             const obj = new this.$.$mol_button_minor();
+            obj.hint = () => this.$.$mol_locale.text('$hyoo_case_property_row_Add_hint');
             obj.click = (event) => this.add(event);
             obj.sub = () => [
                 this.Add_icon()
@@ -8435,6 +8436,7 @@ var $;
         }
         Drop(id) {
             const obj = new this.$.$mol_button_minor();
+            obj.hint = () => this.$.$mol_locale.text('$hyoo_case_property_row_Drop_hint');
             obj.click = (event) => this.drop(id, event);
             obj.sub = () => [
                 this.Drop_icon(id)
@@ -8787,6 +8789,7 @@ var $;
         Config() {
             const obj = new this.$.$mol_link();
             obj.arg = () => this.config_arg();
+            obj.hint = () => this.$.$mol_locale.text('$hyoo_case_entity_page_Config_hint');
             obj.sub = () => [
                 this.Config_icon()
             ];
@@ -8803,6 +8806,7 @@ var $;
         }
         Edit() {
             const obj = new this.$.$mol_check_icon();
+            obj.hint = () => this.$.$mol_locale.text('$hyoo_case_entity_page_Edit_hint');
             obj.Icon = () => this.Edit_icon();
             obj.checked = (val) => this.editable(val);
             return obj;
@@ -8816,6 +8820,7 @@ var $;
         }
         Close() {
             const obj = new this.$.$mol_link();
+            obj.hint = () => this.$.$mol_locale.text('$hyoo_case_entity_page_Close_hint');
             obj.arg = () => this.close_arg();
             obj.sub = () => [
                 this.Close_icon()

@@ -515,6 +515,7 @@ $hyoo_case_property_row $mol_labeler
 				<= Pick_option!id $hyoo_case_entity_snippet
 					entity <= entity!id $hyoo_case_entity
 		<= Add $mol_button_minor
+			hint @ \Add new
 			click?event <=> add?event null
 			sub /
 				<= Add_icon $mol_icon_plus
@@ -533,6 +534,7 @@ $hyoo_case_property_row $mol_labeler
 			<= Link_snippet!id $hyoo_case_entity_snippet
 				entity <= link_entity!id $hyoo_case_entity
 			<= Drop!id $mol_button_minor
+				hint @ \Drop link
 				click?event <=> drop!id?event null
 				sub /
 					<= Drop_icon!id $mol_icon_cross
@@ -556,12 +558,15 @@ $hyoo_case_entity_page $mol_page
 	tools /
 		<= Config $mol_link
 			arg <= config_arg *
+			hint @ \Configurate properties
 			sub /
 				<= Config_icon $mol_icon_settings
 		<= Edit $mol_check_icon
+			hint @ \Edit mode
 			Icon <= Edit_icon $mol_icon_edit
 			checked?val <=> editable?val true
 		<= Close $mol_link
+			hint @ \Close page
 			arg <= close_arg *
 			sub /
 				<= Close_icon $mol_icon_cross

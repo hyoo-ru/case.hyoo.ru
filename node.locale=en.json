@@ -1,5 +1,10 @@
 {
 	"$hyoo_case_Menu_title": "Business case",
+	"$hyoo_case_entity_page_Close_hint": "Close page",
+	"$hyoo_case_entity_page_Config_hint": "Configurate properties",
+	"$hyoo_case_entity_page_Edit_hint": "Edit mode",
+	"$hyoo_case_property_row_Add_hint": "Add new",
+	"$hyoo_case_property_row_Drop_hint": "Drop link",
 	"$mol_lights_toggle_hint": "Toggle lights",
 	"$mol_link_source_hint": "Source code",
 	"$mol_select_hint": "Search..",
