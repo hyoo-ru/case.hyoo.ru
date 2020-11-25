@@ -3707,7 +3707,7 @@ var $;
     class $hyoo_case_entity extends $.$mol_store {
         id() { return ''; }
         domain() { return undefined; }
-        scheme() { return this.property('scheme').target(0); }
+        scheme() { return this.property('scheme').links(); }
         property(id) {
             const store = new $.$hyoo_case_property;
             store.id = $.$mol_const(id);
@@ -3718,13 +3718,15 @@ var $;
             return Object.keys(this.data());
         }
         name(lang) {
+            var _a, _b;
             const name = this.value('name');
-            if (name === undefined)
-                return this.target().name(lang);
+            if (name === undefined) {
+                return (_b = (_a = this.target().find(t => t.name(lang))) === null || _a === void 0 ? void 0 : _a.name(lang)) !== null && _b !== void 0 ? _b : this.id();
+            }
             return String(name[lang]);
         }
         target() {
-            return this.domain().entity(String(this.value('target')));
+            return this.property('target').links();
         }
         color() {
             return String(this.value('color'));
@@ -3741,6 +3743,9 @@ var $;
         main() {
             return Boolean(this.value('main'));
         }
+        least() {
+            return this.type() === 'link' || !this.main();
+        }
         unit() {
             return String(this.value('unit'));
         }
@@ -3748,10 +3753,10 @@ var $;
             return String(this.value('back'));
         }
         property_all() {
-            const schemes = this.property('scheme').list();
+            const schemes = this.property('scheme').links();
             const props = [];
             for (const scheme of schemes) {
-                for (const prop of scheme.property('properties').list()) {
+                for (const prop of scheme.property('properties').links()) {
                     props.push(this.property(prop.id()));
                 }
             }
@@ -3762,16 +3767,11 @@ var $;
             const domain = this.domain();
             return ((_a = this.value('instances')) !== null && _a !== void 0 ? _a : []).map(id => domain.entity(id));
         }
-        instance_new() {
-            const inst = this.domain().entity_new();
-            this.property('instances').target_join(inst);
-            return inst;
-        }
         property_main() {
             return this.property_all().filter(prop => prop.scheme().main());
         }
         property_least() {
-            return this.property_all().filter(prop => !prop.scheme().main());
+            return this.property_all().filter(prop => prop.scheme().least());
         }
     }
     __decorate([
@@ -3816,42 +3816,41 @@ var $;
             }
             return String(value !== null && value !== void 0 ? value : '');
         }
-        item(index, next) {
-            var _a;
-            return (_a = this.value(index, next)) !== null && _a !== void 0 ? _a : '';
-        }
-        list(next) {
+        links(next) {
             var _a;
             const domain = this.domain();
             const arg = next === undefined ? undefined : next.map(item => item.id());
             return ((_a = this.data(arg)) !== null && _a !== void 0 ? _a : []).map(id => domain.entity(id));
         }
-        target(index) {
-            return this.domain().entity(this.item(index));
-        }
         back(index) {
-            return this.target(index).property(this.scheme().back());
+            var _a, _b;
+            return (_b = (_a = this.links()[index]) === null || _a === void 0 ? void 0 : _a.property(this.scheme().back())) !== null && _b !== void 0 ? _b : null;
         }
         target_new() {
-            const target = this.scheme().target().instance_new();
-            this.target_join(target);
+            const target = this.domain().entity_new();
+            target.property('scheme').target_join(this.scheme().target());
+            this.target_join([target]);
             return target;
         }
-        target_join(target) {
-            if (this.list().includes(target))
-                return;
-            this.list([...this.list(), target]);
-            const back = target.property(this.scheme().back());
-            back.list([...back.list(), this.entity()]);
+        target_join(entities) {
+            const entity = this.entity();
+            let links = this.links();
+            for (const target of entities) {
+                if (links.includes(target))
+                    continue;
+                this.links(links = [...links, target]);
+                const back = target.property(this.scheme().back());
+                back.links([...back.links(), entity]);
+            }
         }
         target_tear(index) {
             if (index < 0)
                 return;
             const back = this.back(index);
-            const list = this.list().slice();
+            const list = this.links().slice();
             list.splice(index, 1);
-            this.list(list);
-            back.target_tear(back.list().indexOf(this.entity()));
+            this.links(list);
+            back.target_tear(back.links().indexOf(this.entity()));
         }
     }
     $.$hyoo_case_property = $hyoo_case_property;
@@ -7144,11 +7143,11 @@ var $;
             const obj = new this.$.$hyoo_case_property();
             return obj;
         }
-        link_title() {
-            return "";
+        attr() {
+            return Object.assign(Object.assign({}, super.attr()), { title: this.hint() });
         }
-        link_arg() {
-            return {};
+        hint() {
+            return "";
         }
     }
     __decorate([
@@ -7178,7 +7177,13 @@ var $;
     (function ($$) {
         class $hyoo_case_property_snippet extends $.$hyoo_case_property_snippet {
             title() {
-                return this.text();
+                switch (this.property().scheme().type()) {
+                    case 'link': return this.property().links().length.toString();
+                    default: return this.text();
+                }
+            }
+            hint() {
+                return this.property().scheme().name(this.$.$mol_locale.lang());
             }
             text(next) {
                 return this.property().locale($.$mol_locale.lang(), next);
@@ -8139,11 +8144,13 @@ var $;
             obj.sub = () => this.link_content(id);
             return obj;
         }
+        scheme() {
+            const obj = new this.$.$hyoo_case_entity();
+            return obj;
+        }
         Title() {
-            const obj = new this.$.$mol_view();
-            obj.sub = () => [
-                this.title()
-            ];
+            const obj = new this.$.$hyoo_case_entity_snippet();
+            obj.entity = () => this.scheme();
             return obj;
         }
         pick(val) {
@@ -8265,6 +8272,9 @@ var $;
     ], $hyoo_case_property_row.prototype, "Link_view", null);
     __decorate([
         $.$mol_mem
+    ], $hyoo_case_property_row.prototype, "scheme", null);
+    __decorate([
+        $.$mol_mem
     ], $hyoo_case_property_row.prototype, "Title", null);
     __decorate([
         $.$mol_mem
@@ -8318,17 +8328,35 @@ var $;
 "use strict";
 var $;
 (function ($) {
+    function $mol_compare_array(a, b) {
+        if (a === b)
+            return true;
+        if (Object.getPrototypeOf(a) !== Object.getPrototypeOf(b))
+            return false;
+        if (a.length !== b.length)
+            return false;
+        for (let i = 0; i < a.length; i++)
+            if (a[i] !== b[i])
+                return false;
+        return true;
+    }
+    $.$mol_compare_array = $mol_compare_array;
+})($ || ($ = {}));
+//array.js.map
+;
+"use strict";
+var $;
+(function ($) {
     function $hyoo_case_route_arg(source, target, editable) {
         if (!target)
             return { [source.id()]: null };
         const domain = source.domain();
         const arg = Object.assign({}, this.$.$mol_state_arg.dict());
         let keys = Object.keys(arg);
-        const scheme_source = source.scheme();
-        const index_source = keys.findIndex(id => domain.entity(id).scheme() === scheme_source);
+        const index_source = keys.indexOf(source.id());
         keys.splice(index_source + 1, 1000);
         const scheme_target = target.scheme();
-        const index_target = keys.findIndex(id => domain.entity(id).scheme() === scheme_target);
+        const index_target = keys.findIndex(id => this.$mol_compare_array(domain.entity(id).scheme(), scheme_target));
         keys.splice(0, index_target + 1);
         keys.push(target.id());
         if (editable !== this.undefined) {
@@ -8376,7 +8404,9 @@ var $;
                 },
             },
             Title: {
-                padding: $.$mol_gap.text
+                flex: {
+                    grow: 0,
+                },
             },
         });
     })($$ = $.$$ || ($.$$ = {}));
@@ -8389,6 +8419,9 @@ var $;
     var $$;
     (function ($$) {
         class $hyoo_case_property_row extends $.$hyoo_case_property_row {
+            scheme() {
+                return this.property().scheme();
+            }
             title() {
                 return this.property().scheme().name($.$mol_locale.lang());
             }
@@ -8413,7 +8446,7 @@ var $;
                     case "integer": return [this.editable() ? this.Numb() : this.Text_view()];
                     case "float": return [this.editable() ? this.Numb() : this.Text_view()];
                     case "boolean": return [this.Bool()];
-                    case "link": return this.property().list().map((_, i) => this.Link_view(i));
+                    case "link": return this.property().links().map((_, i) => this.Link_view(i));
                     default: return [this.editable() ? this.String() : this.Text_view()];
                 }
             }
@@ -8434,10 +8467,10 @@ var $;
                 return this.property().data(next) === true;
             }
             link_arg(index) {
-                return this.$.$hyoo_case_route_arg(this.property().entity(), this.property().target(index));
+                return this.$.$hyoo_case_route_arg(this.property().entity(), this.property().links()[index]);
             }
             link_entity(index) {
-                return this.property().target(index);
+                return this.property().links()[index];
             }
             drop(index, event) {
                 event === null || event === void 0 ? void 0 : event.preventDefault();
@@ -8449,17 +8482,23 @@ var $;
                 this.$.$hyoo_case_route_go(prop.entity(), target, true);
             }
             pick_options() {
-                const exists = new Set(this.property().list());
-                return this.property().scheme().target().instance_all()
-                    .filter(inst => !exists.has(inst))
-                    .map(inst => inst.id());
+                const exists = new Set(this.property().links());
+                const options = [];
+                for (const scheme of this.property().scheme().target()) {
+                    for (const inst of scheme.instance_all()) {
+                        if (exists.has(inst))
+                            continue;
+                        options.push(inst.id());
+                    }
+                }
+                return options;
             }
             entity(id) {
                 return this.property().domain().entity(id);
             }
             pick(id) {
                 if (id) {
-                    this.property().target_join(this.entity(id));
+                    this.property().target_join([this.entity(id)]);
                 }
                 return '';
             }
@@ -8707,13 +8746,12 @@ var $;
     (function ($$) {
         class $hyoo_case_entity_page extends $.$hyoo_case_entity_page {
             scheme() {
-                return this.entity().scheme();
+                return this.entity().scheme()[0];
             }
             property_list() {
                 let props = this.entity().property_all();
                 if (!this.editable()) {
-                    props = props.filter(prop => !prop.scheme().main());
-                    props = props.filter(prop => prop.filled());
+                    props = props.filter(prop => prop.scheme().least());
                 }
                 return props.map(property => this.Property(property.id()));
             }
@@ -8721,7 +8759,7 @@ var $;
                 return this.entity().property(id);
             }
             config_arg() {
-                return this.$.$hyoo_case_route_arg(this.entity(), this.entity().scheme());
+                return this.$.$hyoo_case_route_arg(this.entity(), this.entity().scheme()[0]);
             }
             close_arg() {
                 return this.$.$hyoo_case_route_arg(this.entity(), null);
@@ -8979,9 +9017,7 @@ var $;
                         ru: "Экземпляры"
                     },
                     type: "link",
-                    target: [
-                        "entity"
-                    ],
+                    target: [],
                     back: [
                         "scheme"
                     ],

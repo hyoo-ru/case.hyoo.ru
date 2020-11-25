@@ -397,9 +397,9 @@ $mol_number $mol_view
 $hyoo_case_property_snippet $mol_view
 	sub / <= title
 	property $hyoo_case_property
-	- Link_view $mol_link
-		title <= link_title \
-		arg <= link_arg *
+	attr *
+		^
+		title <= hint \
 
 $hyoo_case_entity_snippet $mol_view
 	entity $hyoo_case_entity
@@ -505,9 +505,8 @@ $hyoo_case_property_row $mol_labeler
 	editable false
 	property $hyoo_case_property
 	label /
-		<= Title $mol_view
-			sub /
-				<= title
+		<= Title $hyoo_case_entity_snippet
+			entity <= scheme $hyoo_case_entity
 		<= Pick $mol_select
 			value?val <=> pick?val \
 			options <= pick_options /string
@@ -644,7 +643,7 @@ $hyoo_case $mol_book2
 			scheme / \property
 			name * ru \Экземпляры
 			type \link
-			target / \entity
+			target /
 			back / \scheme
 			entities / \entity
 		properties *

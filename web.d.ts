@@ -1153,21 +1153,21 @@ declare namespace $ {
     class $hyoo_case_entity extends $mol_store<Record<string, ReturnType<$hyoo_case_property['data']>>> {
         id(): string;
         domain(): $hyoo_case_domain;
-        scheme(): $hyoo_case_entity;
+        scheme(): $hyoo_case_entity[];
         property(id: string): $hyoo_case_property;
         property_list(): string[];
         name(lang: string): string;
-        target(): $hyoo_case_entity;
+        target(): $hyoo_case_entity[];
         color(): string;
         type(): "" | "string" | "boolean" | "text" | "type" | "integer" | "float" | "duration" | "color" | "link";
         locale(): boolean;
         suggest(): boolean;
         main(): boolean;
+        least(): boolean;
         unit(): string;
         back(): string;
         property_all(): $hyoo_case_property[];
         instance_all(): $hyoo_case_entity[];
-        instance_new(): $hyoo_case_entity;
         property_main(): $hyoo_case_property[];
         property_least(): $hyoo_case_property[];
     }
@@ -1181,12 +1181,10 @@ declare namespace $ {
         scheme(): $hyoo_case_entity;
         filled(): boolean;
         locale(lang: string, next?: string): string;
-        item(index: number, next?: string): string;
-        list(next?: $hyoo_case_entity[]): $hyoo_case_entity[];
-        target(index: number): $hyoo_case_entity;
+        links(next?: $hyoo_case_entity[]): $hyoo_case_entity[];
         back(index: number): $hyoo_case_property;
         target_new(): $hyoo_case_entity;
-        target_join(target: $hyoo_case_entity): void;
+        target_join(entities: $hyoo_case_entity[]): void;
         target_tear(index: number): void;
     }
 }
@@ -2376,8 +2374,10 @@ declare namespace $ {
     class $hyoo_case_property_snippet extends $mol_view {
         sub(): readonly any[];
         property(): $hyoo_case_property;
-        link_title(): string;
-        link_arg(): {};
+        attr(): {
+            title: string;
+        };
+        hint(): string;
     }
 }
 
@@ -2387,6 +2387,7 @@ declare namespace $.$$ {
 declare namespace $.$$ {
     class $hyoo_case_property_snippet extends $.$hyoo_case_property_snippet {
         title(): string;
+        hint(): string;
         text(next?: string): string;
     }
 }
@@ -2604,7 +2605,8 @@ declare namespace $ {
         Numb(): $$.$mol_number;
         Text_view(): $mol_view;
         Link_view(id: any): $$.$mol_link;
-        Title(): $mol_view;
+        scheme(): $hyoo_case_entity;
+        Title(): $$.$hyoo_case_entity_snippet;
         pick(val?: any): any;
         pick_options(): readonly string[];
         entity(id: any): $hyoo_case_entity;
@@ -2627,6 +2629,10 @@ declare namespace $ {
 }
 
 declare namespace $ {
+    function $mol_compare_array<Value extends ArrayLike<unknown>>(a: Value, b: Value): boolean;
+}
+
+declare namespace $ {
     function $hyoo_case_route_arg(this: $mol_ambient_context, source: $hyoo_case_entity, target: $hyoo_case_entity | null, editable?: boolean): Record<string, string | null>;
     function $hyoo_case_route_link(this: $mol_ambient_context, source: $hyoo_case_entity, target: $hyoo_case_entity, editable?: boolean): string;
     function $hyoo_case_route_go(this: $mol_ambient_context, source: $hyoo_case_entity, target: $hyoo_case_entity, editable?: boolean): void;
@@ -2637,9 +2643,10 @@ declare namespace $.$$ {
 
 declare namespace $.$$ {
     class $hyoo_case_property_row extends $.$hyoo_case_property_row {
+        scheme(): $hyoo_case_entity;
         title(): string;
         type(): "" | "string" | "boolean" | "text" | "type" | "integer" | "float" | "duration" | "color" | "link";
-        label(): ($mol_view | $mol_select)[];
+        label(): ($mol_button_minor | $hyoo_case_entity_snippet | $mol_select)[];
         content(): ($mol_view | $mol_string)[] | ($mol_view | $mol_textarea)[] | ($mol_view | $mol_number)[] | $mol_check_box[];
         link_content(id: number): ($mol_button_minor | $hyoo_case_entity_snippet)[];
         text(next?: string): string;
