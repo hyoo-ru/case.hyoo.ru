@@ -59,6 +59,10 @@ namespace $ {
 			return Boolean( this.value( 'main' ) )
 		}
 
+		least() {
+			return this.type() === 'link' || !this.main() 
+		}
+
 		unit() {
 			return String( this.value( 'unit' ) )
 		}
@@ -93,7 +97,7 @@ namespace $ {
 		}
 
 		property_least() {
-			return this.property_all().filter( prop => !prop.scheme().main() )
+			return this.property_all().filter( prop => prop.scheme().least() )
 		}
 
 	}

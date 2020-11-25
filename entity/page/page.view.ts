@@ -9,8 +9,7 @@ namespace $.$$ {
 		property_list() {
 			let props = this.entity().property_all()
 			if( !this.editable() ) {
-				props = props.filter( prop => !prop.scheme().main() )
-				props = props.filter( prop => prop.filled() )
+				props = props.filter( prop => prop.scheme().least() )
 			}
 			return props.map( property => this.Property( property.id() ) )
 		}

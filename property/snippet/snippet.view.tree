@@ -1,6 +1,6 @@
 $hyoo_case_property_snippet $mol_view
 	sub / <= title
 	property $hyoo_case_property
-	- Link_view $mol_link
-		title <= link_title \
-		arg <= link_arg *
+	attr *
+		^
+		title <= hint \

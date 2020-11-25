@@ -2,7 +2,14 @@ namespace $.$$ {
 	export class $hyoo_case_property_snippet extends $.$hyoo_case_property_snippet {
 
 		title() {
-			return this.text()
+			switch( this.property().scheme().type() ) {
+				case 'link': return this.property().links().length.toString()
+				default: return this.text()
+			}
+		}
+
+		hint() {
+			return this.property().scheme().name( this.$.$mol_locale.lang() )
 		}
 
 		// Content() {
