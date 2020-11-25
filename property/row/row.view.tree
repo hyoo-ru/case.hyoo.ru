@@ -2,9 +2,8 @@ $hyoo_case_property_row $mol_labeler
 	editable false
 	property $hyoo_case_property
 	label /
-		<= Title $mol_view
-			sub /
-				<= title
+		<= Title $hyoo_case_entity_snippet
+			entity <= scheme $hyoo_case_entity
 		<= Pick $mol_select
 			value?val <=> pick?val \
 			options <= pick_options /string

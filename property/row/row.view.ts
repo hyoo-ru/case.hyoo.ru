@@ -1,6 +1,10 @@
 namespace $.$$ {
 	export class $hyoo_case_property_row extends $.$hyoo_case_property_row {
 
+		scheme() {
+			return this.property().scheme()
+		}
+
 		title() {
 			return this.property().scheme().name( $mol_locale.lang() )
 		}
@@ -31,7 +35,7 @@ namespace $.$$ {
 				case "integer": return [ this.editable() ? this.Numb() : this.Text_view() ]
 				case "float": return [ this.editable() ? this.Numb() : this.Text_view() ]
 				case "boolean": return [ this.Bool() ]
-				case "link": return this.property().list().map( ( _, i )=> this.Link_view( i ) )
+				case "link": return this.property().links().map( ( _, i )=> this.Link_view( i ) )
 				default: return [ this.editable() ? this.String() : this.Text_view() ]
 			}
 		}
@@ -60,13 +64,13 @@ namespace $.$$ {
 
 			return this.$.$hyoo_case_route_arg(
 				this.property().entity(),
-				this.property().target( index )
+				this.property().links()[ index ]
 			)
 
 		}
 
 		link_entity( index: number ) {
-			return this.property().target( index )
+			return this.property().links()[ index ]
 		}
 
 		drop( index: number, event?: Event ) {
@@ -81,10 +85,19 @@ namespace $.$$ {
 		}
 
 		pick_options() {
-			const exists = new Set( this.property().list() )
-			return this.property().scheme().target().instance_all()
-			.filter( inst => !exists.has( inst ) )
-			.map( inst => inst.id() )
+
+			const exists = new Set( this.property().links() )
+			const options = [] as string[]
+			
+			for( const scheme of this.property().scheme().target() ) {
+
+				for( const inst of scheme.instance_all() ) {
+					if( exists.has( inst ) ) continue
+					options.push( inst.id() )
+				}
+			}
+
+			return options
 		}
 
 		entity( id: string ) {
@@ -93,7 +106,7 @@ namespace $.$$ {
 
 		pick( id: string ) {
 			if( id ) {
-				this.property().target_join( this.entity( id ) )
+				this.property().target_join([ this.entity( id ) ])
 			}
 			return ''
 		}

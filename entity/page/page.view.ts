@@ -2,7 +2,7 @@ namespace $.$$ {
 	export class $hyoo_case_entity_page extends $.$hyoo_case_entity_page {
 
 		scheme() {
-			return this.entity().scheme()
+			return this.entity().scheme()[0]
 		}
 
 		@ $mol_mem
@@ -22,7 +22,7 @@ namespace $.$$ {
 		config_arg() {
 			return this.$.$hyoo_case_route_arg(
 				this.entity(),
-				this.entity().scheme()
+				this.entity().scheme()[0]
 			)
 		}
 

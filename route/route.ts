@@ -14,12 +14,11 @@ namespace $ {
 		const arg = { ... this.$.$mol_state_arg.dict() }
 		let keys = Object.keys( arg )
 		
-		const scheme_source = source.scheme()
-		const index_source = keys.findIndex( id => domain.entity( id ).scheme() === scheme_source )
+		const index_source = keys.indexOf( source.id() )
 		keys.splice( index_source + 1, 1000 )
 		
 		const scheme_target = target.scheme()
-		const index_target = keys.findIndex( id => domain.entity( id ).scheme() === scheme_target )
+		const index_target = keys.findIndex( id => this.$mol_compare_array( domain.entity( id ).scheme() , scheme_target ) )
 
 		keys.splice( 0, index_target + 1 )
 		keys.push( target.id() )

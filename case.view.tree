@@ -48,7 +48,7 @@ $hyoo_case $mol_book2
 			scheme / \property
 			name * ru \Экземпляры
 			type \link
-			target / \entity
+			target /
 			back / \scheme
 			entities / \entity
 		properties *

@@ -9,7 +9,7 @@ namespace $ {
 		id() { return '' }
 		domain() { return undefined as any as $hyoo_case_domain }
 
-		scheme() { return this.property( 'scheme' ).target( 0 ) }
+		scheme() { return this.property( 'scheme' ).links() }
 
 		@ $mol_mem_key
 		property( id: string ) {
@@ -29,12 +29,14 @@ namespace $ {
 
 		name( lang: string ): string {
 			const name = this.value( 'name' )
-			if( name === undefined ) return this.target().name( lang )
+			if( name === undefined ) {
+				return this.target().find( t => t.name( lang ) )?.name( lang ) ?? this.id()
+			}
 			return String( name[ lang ] )
 		}
 
 		target() {
-			return this.domain().entity( String( this.value( 'target' ) ) )
+			return this.property( 'target' ).links()
 		}
 
 		color() {
@@ -68,11 +70,11 @@ namespace $ {
 		@ $mol_mem
 		property_all() {
 
-			const schemes = this.property( 'scheme' ).list()
+			const schemes = this.property( 'scheme' ).links()
 			const props = [] as $hyoo_case_property[]
 			
 			for( const scheme of schemes ) {
-				for( const prop of scheme.property( 'properties' ).list() ) {
+				for( const prop of scheme.property( 'properties' ).links() ) {
 					props.push( this.property( prop.id() ) )
 				}
 			}
@@ -86,12 +88,6 @@ namespace $ {
 			return ( this.value( 'instances' ) as string[] ?? [] ).map( id => domain.entity( id ) )
 		}
 		
-		instance_new() {
-			const inst = this.domain().entity_new()
-			this.property( 'instances' ).target_join( inst )
-			return inst
-		}
-
 		property_main() {
 			return this.property_all().filter( prop => prop.scheme().main() )
 		}

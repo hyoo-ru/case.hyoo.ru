@@ -19,7 +19,9 @@ namespace $.$$ {
 		},
 
 		Title: {
-			padding: $mol_gap.text
+			flex: {
+				grow: 0,
+			},
 		},
 
 	} )
