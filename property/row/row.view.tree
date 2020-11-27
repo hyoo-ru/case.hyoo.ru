@@ -3,7 +3,7 @@ $hyoo_case_property_row $mol_labeler
 	property $hyoo_case_property
 	label /
 		<= Title $hyoo_case_entity_snippet
-			entity <= scheme $hyoo_case_entity
+			entity <= kind $hyoo_case_entity
 		<= Pick $mol_select
 			value?val <=> pick?val \
 			options <= pick_options /string

@@ -3,7 +3,7 @@ namespace $.$$ {
 
 		title() {
 
-			const main = this.entity().property_main()
+			const main = this.entity().entity_properties_main()
 			if( main.length === 0 ) return this.entity().id()
 
 			return main.map( prop => prop.locale( $mol_locale.lang() ) ).join( ' ' )
@@ -13,7 +13,7 @@ namespace $.$$ {
 
 		property_list() {
 			
-			const main = this.entity().property_main()
+			const main = this.entity().entity_properties_main()
 			if( main.length === 0 ) return [ this.entity().id() ]
 
 			return main.map( prop => this.Property( prop.id() ) )

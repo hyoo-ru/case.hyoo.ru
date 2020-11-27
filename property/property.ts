@@ -12,7 +12,7 @@ namespace $ {
 		entity() { return undefined as any as $hyoo_case_entity }
 
 		domain() { return this.entity().domain() }
-		scheme() { return this.domain().entity( this.id() ) }
+		kind() { return this.domain().entity( this.id() ) }
 
 		filled() {
 			return this.data() != null
@@ -21,7 +21,7 @@ namespace $ {
 		locale( lang: string, next? : string ) {
 
 			if( next !== undefined ) {
-				if( this.scheme().locale() ) {
+				if( this.kind().property_locale() ) {
 					this.data({
 						... this.data() as {},
 						[ lang ]: next,
@@ -47,12 +47,12 @@ namespace $ {
 		}
 
 		back( index: number ) {
-			return this.links()[ index ]?.property( this.scheme().back() ) ?? null
+			return this.links()[ index ]?.property( this.kind().property_back() ) ?? null
 		}
 
 		target_new() {
 			const target = this.domain().entity_new()
-			target.property( 'scheme' ).target_join( this.scheme().target() )
+			target.property( 'entity-kind' ).target_join( this.kind().property_target() )
 			this.target_join([ target ])
 			return target
 		}
@@ -67,7 +67,7 @@ namespace $ {
 				
 				this.links( links = [ ... links, target ] )
 				
-				const back = target.property( this.scheme().back() )
+				const back = target.property( this.kind().property_back() )
 				back.links([ ... back.links(), entity ])
 
 			}

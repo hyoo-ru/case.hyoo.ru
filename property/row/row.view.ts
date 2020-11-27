@@ -1,25 +1,25 @@
 namespace $.$$ {
 	export class $hyoo_case_property_row extends $.$hyoo_case_property_row {
 
-		scheme() {
-			return this.property().scheme()
+		kind() {
+			return this.property().kind()
 		}
 
 		title() {
-			return this.property().scheme().name( $mol_locale.lang() )
+			return this.property().kind().entity_name( $mol_locale.lang() )
 		}
 
 		@ $mol_mem
 		type() {
-			return this.property().scheme().type()
+			return this.property().kind().entity_kind_id()
 		}
 
 		@ $mol_mem
 		label() {
 			return [
 				this.Title(),
-				... this.type() === 'link' && this.editable() && this.pick_options().length ? [ this.Pick() ] : [],
-				... this.type() === 'link' ? [ this.Add() ] : [],
+				... this.type() === 'property_link' && this.editable() && this.pick_options().length ? [ this.Pick() ] : [],
+				... this.type() === 'property_link' ? [ this.Add() ] : [],
 			]
 		}
 		
@@ -30,12 +30,11 @@ namespace $.$$ {
 				}
 			}
 			switch( this.type() ) {
-				case "string": return [ this.editable() ? this.String() : this.Text_view() ]
-				case "text": return [ this.editable() ? this.Text() : this.Text_view() ]
-				case "integer": return [ this.editable() ? this.Numb() : this.Text_view() ]
-				case "float": return [ this.editable() ? this.Numb() : this.Text_view() ]
-				case "boolean": return [ this.Bool() ]
-				case "link": return this.property().links().map( ( _, i )=> this.Link_view( i ) )
+				case "property_string": return [ this.editable() ? this.String() : this.Text_view() ]
+				case "property_text": return [ this.editable() ? this.Text() : this.Text_view() ]
+				case "property_integer": return [ this.editable() ? this.Numb() : this.Text_view() ]
+				case "property_boolean": return [ this.Bool() ]
+				case "property_link": return this.property().links().map( ( _, i )=> this.Link_view( i ) )
 				default: return [ this.editable() ? this.String() : this.Text_view() ]
 			}
 		}
@@ -89,9 +88,9 @@ namespace $.$$ {
 			const exists = new Set( this.property().links() )
 			const options = [] as string[]
 			
-			for( const scheme of this.property().scheme().target() ) {
+			for( const scheme of this.property().kind().property_target() ) {
 
-				for( const inst of scheme.instance_all() ) {
+				for( const inst of scheme.entity_members() ) {
 					if( exists.has( inst ) ) continue
 					options.push( inst.id() )
 				}

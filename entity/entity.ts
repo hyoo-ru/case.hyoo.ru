@@ -9,8 +9,6 @@ namespace $ {
 		id() { return '' }
 		domain() { return undefined as any as $hyoo_case_domain }
 
-		scheme() { return this.property( 'scheme' ).links() }
-
 		@ $mol_mem_key
 		property( id: string ) {
 
@@ -23,62 +21,85 @@ namespace $ {
 		}
 
 		@ $mol_mem
-		property_list() {
+		properties_id() {
 			return Object.keys( this.data() )
 		}
 
-		name( lang: string ): string {
-			const name = this.value( 'name' )
+		entity_name( lang: string ): string {
+			const name = this.value( 'entity-name' )
 			if( name === undefined ) {
-				return this.target().find( t => t.name( lang ) )?.name( lang ) ?? this.id()
+				return this.property_target().find( t => t.entity_name( lang ) )?.entity_name( lang ) ?? this.id()
 			}
 			return String( name[ lang ] )
 		}
 
-		target() {
-			return this.property( 'target' ).links()
+		property_target() {
+			return this.property( 'property-target' ).links()
 		}
 
-		color() {
-			return String( this.value( 'color' ) )
+		entity_kind() {
+			return this.property( 'entity-kind' ).links()
 		}
 
-		type() {
-			return String( this.value( 'type' ) ) as 'type' | 'string' | 'text' | 'integer' | 'float' | 'boolean' | 'duration' | 'color' | 'link' | ''
+		entity_kind_id() {
+			return this.entity_kind()[0].id() as
+			| 'property_string'
+			| 'property_text'
+			| 'property_integer'
+			| 'property_boolean'
+			| 'property_link'
 		}
 
-		locale() {
-			return Boolean( this.value( 'locale' ) )
+		property_locale() {
+			return Boolean( this.value( 'property-locale' ) )
 		}
 
-		suggest() {
-			return Boolean( this.value( 'suggest' ) )
+		property_suggest() {
+			return Boolean( this.value( 'property-suggest' ) )
 		}
 
-		main() {
-			return Boolean( this.value( 'main' ) )
+		property_main() {
+			return Boolean( this.value( 'property-main' ) )
 		}
 
-		least() {
-			return this.type() === 'link' || !this.main() 
+		property_least() {
+			return this.entity_kind_id() === 'property_link' || !this.property_main() 
 		}
 
-		unit() {
-			return String( this.value( 'unit' ) )
+		property_unit() {
+			return String( this.value( 'property-unit' ) )
 		}
 
-		back() {
-			return String( this.value( 'back' ) )
+		property_back() {
+			return String( this.value( 'property-back' ) )
+		}
+
+		entity_parents() {
+			return this.property( 'entity-parents' ).links()
 		}
 
 		@ $mol_mem
-		property_all() {
+		entity_ancestors() {
+			const all = [] as $hyoo_case_entity[]
+			for( const parent of this.entity_parents() ) {
+				all.push( ... parent.entity_ancestors(), parent )
+			}
+			return new Set( all )
+		}
 
-			const schemes = this.property( 'scheme' ).links()
+		@ $mol_mem
+		entity_properties() {
+
+			const kinds = [] as $hyoo_case_entity[]
+			for( const kind of this.entity_kind() ) {
+				kinds.push( ... kind.entity_ancestors() )
+				kinds.push( kind )
+			}
+
 			const props = [] as $hyoo_case_property[]
 			
-			for( const scheme of schemes ) {
-				for( const prop of scheme.property( 'properties' ).links() ) {
+			for( const kind of kinds ) {
+				for( const prop of kind.property( 'entity-properties' ).links() ) {
 					props.push( this.property( prop.id() ) )
 				}
 			}
@@ -87,17 +108,17 @@ namespace $ {
 		}
 
 		@ $mol_mem
-		instance_all() {
+		entity_members() {
 			const domain = this.domain()
-			return ( this.value( 'instances' ) as string[] ?? [] ).map( id => domain.entity( id ) )
+			return ( this.value( 'enity-members' ) as string[] ?? [] ).map( id => domain.entity( id ) )
 		}
 		
-		property_main() {
-			return this.property_all().filter( prop => prop.scheme().main() )
+		entity_properties_main() {
+			return this.entity_properties().filter( prop => prop.kind().property_main() )
 		}
 
-		property_least() {
-			return this.property_all().filter( prop => prop.scheme().least() )
+		entity_properties_least() {
+			return this.entity_properties().filter( prop => prop.kind().property_least() )
 		}
 
 	}

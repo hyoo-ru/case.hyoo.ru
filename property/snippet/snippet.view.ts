@@ -2,14 +2,14 @@ namespace $.$$ {
 	export class $hyoo_case_property_snippet extends $.$hyoo_case_property_snippet {
 
 		title() {
-			switch( this.property().scheme().type() ) {
-				case 'link': return this.property().links().length.toString()
+			switch( this.property().kind().entity_kind_id() ) {
+				case 'property_link': return this.property().links().length.toString()
 				default: return this.text()
 			}
 		}
 
 		hint() {
-			return this.property().scheme().name( this.$.$mol_locale.lang() )
+			return this.property().kind().entity_name( this.$.$mol_locale.lang() )
 		}
 
 		// Content() {
