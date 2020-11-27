@@ -3707,71 +3707,84 @@ var $;
     class $hyoo_case_entity extends $.$mol_store {
         id() { return ''; }
         domain() { return undefined; }
-        scheme() { return this.property('scheme').links(); }
         property(id) {
             const store = new $.$hyoo_case_property;
             store.id = $.$mol_const(id);
             store.entity = $.$mol_const(this);
             return this.sub(id, store);
         }
-        property_list() {
+        properties_id() {
             return Object.keys(this.data());
         }
-        name(lang) {
+        entity_name(lang) {
             var _a, _b;
-            const name = this.value('name');
+            const name = this.value('entity-name');
             if (name === undefined) {
-                return (_b = (_a = this.target().find(t => t.name(lang))) === null || _a === void 0 ? void 0 : _a.name(lang)) !== null && _b !== void 0 ? _b : this.id();
+                return (_b = (_a = this.property_target().find(t => t.entity_name(lang))) === null || _a === void 0 ? void 0 : _a.entity_name(lang)) !== null && _b !== void 0 ? _b : this.id();
             }
             return String(name[lang]);
         }
-        target() {
-            return this.property('target').links();
+        property_target() {
+            return this.property('property-target').links();
         }
-        color() {
-            return String(this.value('color'));
+        entity_kind() {
+            return this.property('entity-kind').links();
         }
-        type() {
-            return String(this.value('type'));
+        entity_kind_id() {
+            return this.entity_kind()[0].id();
         }
-        locale() {
-            return Boolean(this.value('locale'));
+        property_locale() {
+            return Boolean(this.value('property-locale'));
         }
-        suggest() {
-            return Boolean(this.value('suggest'));
+        property_suggest() {
+            return Boolean(this.value('property-suggest'));
         }
-        main() {
-            return Boolean(this.value('main'));
+        property_main() {
+            return Boolean(this.value('property-main'));
         }
-        least() {
-            return this.type() === 'link' || !this.main();
+        property_least() {
+            return this.entity_kind_id() === 'property_link' || !this.property_main();
         }
-        unit() {
-            return String(this.value('unit'));
+        property_unit() {
+            return String(this.value('property-unit'));
         }
-        back() {
-            return String(this.value('back'));
+        property_back() {
+            return String(this.value('property-back'));
         }
-        property_all() {
-            const schemes = this.property('scheme').links();
+        entity_parents() {
+            return this.property('entity-parents').links();
+        }
+        entity_ancestors() {
+            const all = [];
+            for (const parent of this.entity_parents()) {
+                all.push(...parent.entity_ancestors(), parent);
+            }
+            return new Set(all);
+        }
+        entity_properties() {
+            const kinds = [];
+            for (const kind of this.entity_kind()) {
+                kinds.push(...kind.entity_ancestors());
+                kinds.push(kind);
+            }
             const props = [];
-            for (const scheme of schemes) {
-                for (const prop of scheme.property('properties').links()) {
+            for (const kind of kinds) {
+                for (const prop of kind.property('entity-properties').links()) {
                     props.push(this.property(prop.id()));
                 }
             }
             return props;
         }
-        instance_all() {
+        entity_members() {
             var _a;
             const domain = this.domain();
-            return ((_a = this.value('instances')) !== null && _a !== void 0 ? _a : []).map(id => domain.entity(id));
+            return ((_a = this.value('enity-members')) !== null && _a !== void 0 ? _a : []).map(id => domain.entity(id));
         }
-        property_main() {
-            return this.property_all().filter(prop => prop.scheme().main());
+        entity_properties_main() {
+            return this.entity_properties().filter(prop => prop.kind().property_main());
         }
-        property_least() {
-            return this.property_all().filter(prop => prop.scheme().least());
+        entity_properties_least() {
+            return this.entity_properties().filter(prop => prop.kind().property_least());
         }
     }
     __decorate([
@@ -3779,13 +3792,16 @@ var $;
     ], $hyoo_case_entity.prototype, "property", null);
     __decorate([
         $.$mol_mem
-    ], $hyoo_case_entity.prototype, "property_list", null);
+    ], $hyoo_case_entity.prototype, "properties_id", null);
     __decorate([
         $.$mol_mem
-    ], $hyoo_case_entity.prototype, "property_all", null);
+    ], $hyoo_case_entity.prototype, "entity_ancestors", null);
     __decorate([
         $.$mol_mem
-    ], $hyoo_case_entity.prototype, "instance_all", null);
+    ], $hyoo_case_entity.prototype, "entity_properties", null);
+    __decorate([
+        $.$mol_mem
+    ], $hyoo_case_entity.prototype, "entity_members", null);
     $.$hyoo_case_entity = $hyoo_case_entity;
 })($ || ($ = {}));
 //entity.js.map
@@ -3797,13 +3813,13 @@ var $;
         id() { return ''; }
         entity() { return undefined; }
         domain() { return this.entity().domain(); }
-        scheme() { return this.domain().entity(this.id()); }
+        kind() { return this.domain().entity(this.id()); }
         filled() {
             return this.data() != null;
         }
         locale(lang, next) {
             if (next !== undefined) {
-                if (this.scheme().locale()) {
+                if (this.kind().property_locale()) {
                     this.data(Object.assign(Object.assign({}, this.data()), { [lang]: next }));
                 }
                 else {
@@ -3824,11 +3840,11 @@ var $;
         }
         back(index) {
             var _a, _b;
-            return (_b = (_a = this.links()[index]) === null || _a === void 0 ? void 0 : _a.property(this.scheme().back())) !== null && _b !== void 0 ? _b : null;
+            return (_b = (_a = this.links()[index]) === null || _a === void 0 ? void 0 : _a.property(this.kind().property_back())) !== null && _b !== void 0 ? _b : null;
         }
         target_new() {
             const target = this.domain().entity_new();
-            target.property('scheme').target_join(this.scheme().target());
+            target.property('entity-kind').target_join(this.kind().property_target());
             this.target_join([target]);
             return target;
         }
@@ -3839,7 +3855,7 @@ var $;
                 if (links.includes(target))
                     continue;
                 this.links(links = [...links, target]);
-                const back = target.property(this.scheme().back());
+                const back = target.property(this.kind().property_back());
                 back.links([...back.links(), entity]);
             }
         }
@@ -7177,13 +7193,13 @@ var $;
     (function ($$) {
         class $hyoo_case_property_snippet extends $.$hyoo_case_property_snippet {
             title() {
-                switch (this.property().scheme().type()) {
-                    case 'link': return this.property().links().length.toString();
+                switch (this.property().kind().entity_kind_id()) {
+                    case 'property_link': return this.property().links().length.toString();
                     default: return this.text();
                 }
             }
             hint() {
-                return this.property().scheme().name(this.$.$mol_locale.lang());
+                return this.property().kind().entity_name(this.$.$mol_locale.lang());
             }
             text(next) {
                 return this.property().locale($.$mol_locale.lang(), next);
@@ -7256,13 +7272,13 @@ var $;
     (function ($$) {
         class $hyoo_case_entity_snippet extends $.$hyoo_case_entity_snippet {
             title() {
-                const main = this.entity().property_main();
+                const main = this.entity().entity_properties_main();
                 if (main.length === 0)
                     return this.entity().id();
                 return main.map(prop => prop.locale($.$mol_locale.lang())).join(' ');
             }
             property_list() {
-                const main = this.entity().property_main();
+                const main = this.entity().entity_properties_main();
                 if (main.length === 0)
                     return [this.entity().id()];
                 return main.map(prop => this.Property(prop.id()));
@@ -8144,13 +8160,13 @@ var $;
             obj.sub = () => this.link_content(id);
             return obj;
         }
-        scheme() {
+        kind() {
             const obj = new this.$.$hyoo_case_entity();
             return obj;
         }
         Title() {
             const obj = new this.$.$hyoo_case_entity_snippet();
-            obj.entity = () => this.scheme();
+            obj.entity = () => this.kind();
             return obj;
         }
         pick(val) {
@@ -8272,7 +8288,7 @@ var $;
     ], $hyoo_case_property_row.prototype, "Link_view", null);
     __decorate([
         $.$mol_mem
-    ], $hyoo_case_property_row.prototype, "scheme", null);
+    ], $hyoo_case_property_row.prototype, "kind", null);
     __decorate([
         $.$mol_mem
     ], $hyoo_case_property_row.prototype, "Title", null);
@@ -8355,8 +8371,8 @@ var $;
         let keys = Object.keys(arg);
         const index_source = keys.indexOf(source.id());
         keys.splice(index_source + 1, 1000);
-        const scheme_target = target.scheme();
-        const index_target = keys.findIndex(id => this.$mol_compare_array(domain.entity(id).scheme(), scheme_target));
+        const scheme_target = target.entity_kind();
+        const index_target = keys.findIndex(id => this.$mol_compare_array(domain.entity(id).entity_kind(), scheme_target));
         keys.splice(0, index_target + 1);
         keys.push(target.id());
         if (editable !== this.undefined) {
@@ -8419,20 +8435,20 @@ var $;
     var $$;
     (function ($$) {
         class $hyoo_case_property_row extends $.$hyoo_case_property_row {
-            scheme() {
-                return this.property().scheme();
+            kind() {
+                return this.property().kind();
             }
             title() {
-                return this.property().scheme().name($.$mol_locale.lang());
+                return this.property().kind().entity_name($.$mol_locale.lang());
             }
             type() {
-                return this.property().scheme().type();
+                return this.property().kind().entity_kind_id();
             }
             label() {
                 return [
                     this.Title(),
-                    ...this.type() === 'link' && this.editable() && this.pick_options().length ? [this.Pick()] : [],
-                    ...this.type() === 'link' ? [this.Add()] : [],
+                    ...this.type() === 'property_link' && this.editable() && this.pick_options().length ? [this.Pick()] : [],
+                    ...this.type() === 'property_link' ? [this.Add()] : [],
                 ];
             }
             content() {
@@ -8441,12 +8457,11 @@ var $;
                     }
                 }
                 switch (this.type()) {
-                    case "string": return [this.editable() ? this.String() : this.Text_view()];
-                    case "text": return [this.editable() ? this.Text() : this.Text_view()];
-                    case "integer": return [this.editable() ? this.Numb() : this.Text_view()];
-                    case "float": return [this.editable() ? this.Numb() : this.Text_view()];
-                    case "boolean": return [this.Bool()];
-                    case "link": return this.property().links().map((_, i) => this.Link_view(i));
+                    case "property_string": return [this.editable() ? this.String() : this.Text_view()];
+                    case "property_text": return [this.editable() ? this.Text() : this.Text_view()];
+                    case "property_integer": return [this.editable() ? this.Numb() : this.Text_view()];
+                    case "property_boolean": return [this.Bool()];
+                    case "property_link": return this.property().links().map((_, i) => this.Link_view(i));
                     default: return [this.editable() ? this.String() : this.Text_view()];
                 }
             }
@@ -8484,8 +8499,8 @@ var $;
             pick_options() {
                 const exists = new Set(this.property().links());
                 const options = [];
-                for (const scheme of this.property().scheme().target()) {
-                    for (const inst of scheme.instance_all()) {
+                for (const scheme of this.property().kind().property_target()) {
+                    for (const inst of scheme.entity_members()) {
                         if (exists.has(inst))
                             continue;
                         options.push(inst.id());
@@ -8746,12 +8761,12 @@ var $;
     (function ($$) {
         class $hyoo_case_entity_page extends $.$hyoo_case_entity_page {
             scheme() {
-                return this.entity().scheme()[0];
+                return this.entity().entity_kind()[0];
             }
             property_list() {
-                let props = this.entity().property_all();
+                let props = this.entity().entity_properties();
                 if (!this.editable()) {
-                    props = props.filter(prop => prop.scheme().least());
+                    props = props.filter(prop => prop.kind().property_least());
                 }
                 return props.map(property => this.Property(property.id()));
             }
@@ -8759,7 +8774,7 @@ var $;
                 return this.entity().property(id);
             }
             config_arg() {
-                return this.$.$hyoo_case_route_arg(this.entity(), this.entity().scheme()[0]);
+                return this.$.$hyoo_case_route_arg(this.entity(), this.entity().entity_kind()[0]);
             }
             close_arg() {
                 return this.$.$hyoo_case_route_arg(this.entity(), null);
@@ -8945,649 +8960,746 @@ var $;
         }
         domain() {
             const obj = new this.$.$hyoo_case_domain({
-                scheme: {
-                    scheme: [
-                        "property"
-                    ],
-                    name: {
-                        ru: "Схема"
-                    },
-                    type: "link",
-                    target: [
-                        "scheme"
-                    ],
-                    entities: [
-                        "scheme"
-                    ],
-                    back: [
-                        "instances"
-                    ],
-                    properties: [
-                        "scheme",
-                        "name",
-                        "properties"
-                    ]
-                },
-                name: {
-                    scheme: [
-                        "scheme"
-                    ],
-                    name: {
-                        ru: "Название"
-                    },
-                    type: "string",
-                    locale: true,
-                    entities: [
-                        "scheme"
-                    ],
-                    main: true
-                },
                 entity: {
-                    scheme: [
+                    "entity-kind": [
                         "entity"
                     ],
-                    name: {
+                    "entity-name": {
                         ru: "Сущность"
                     },
-                    properties: [
-                        "scheme",
-                        "name",
-                        "color",
-                        "properties",
-                        "instances"
-                    ]
-                },
-                color: {
-                    scheme: [
-                        "scheme"
-                    ],
-                    name: {
-                        ru: "Цвет"
-                    },
-                    type: "color",
-                    entities: [
-                        "scheme"
-                    ]
-                },
-                instances: {
-                    scheme: [
-                        "property"
-                    ],
-                    name: {
-                        ru: "Экземпляры"
-                    },
-                    type: "link",
-                    target: [],
-                    back: [
-                        "scheme"
-                    ],
-                    entities: [
-                        "entity"
-                    ]
-                },
-                properties: {
-                    scheme: [
-                        "scheme"
-                    ],
-                    name: {
-                        ru: "Свойства"
-                    },
-                    type: "link",
-                    target: [
-                        "property"
-                    ],
-                    back: [
-                        "entity"
-                    ],
-                    entities: [
-                        "scheme"
+                    "entity-properties": [
+                        "entity-kind",
+                        "entity-members",
+                        "entity-parents",
+                        "entity-kids",
+                        "entity-name",
+                        "entity-description",
+                        "entity-properties"
                     ]
                 },
                 property: {
-                    scheme: [
-                        "scheme"
+                    "entity-kind": [
+                        "entity"
                     ],
-                    name: {
+                    "entity-name": {
                         ru: "Свойство"
                     },
-                    properties: [
-                        "scheme",
-                        "name",
-                        "min",
-                        "max",
-                        "main",
-                        "type",
-                        "target",
-                        "back",
-                        "entities"
+                    "entity-properties": [
+                        "entity-kind",
+                        "entity-name",
+                        "property-owners",
+                        "property-main",
+                        "property-suggest"
+                    ],
+                    "entity-kids": [
+                        "property_link",
+                        "property_string",
+                        "property_text",
+                        "property_number"
                     ]
                 },
-                min: {
-                    scheme: [
+                property_link: {
+                    "entity-kind": [
+                        "entity"
+                    ],
+                    "entity-parents": [
                         "property"
                     ],
-                    name: {
-                        ru: "Минимальное число"
+                    "entity-name": {
+                        ru: "Ссылка на сущность"
                     },
-                    type: "integer",
-                    entities: [
-                        "property"
+                    "entity-properties": [
+                        "property-inherit",
+                        "property-target",
+                        "property-back",
+                        "property-min",
+                        "property-max"
+                    ],
+                    "entity-members": [
+                        "entity-kind"
                     ]
                 },
-                max: {
-                    scheme: [
+                property_string: {
+                    "entity-kind": [
+                        "entity"
+                    ],
+                    "entity-parents": [
                         "property"
                     ],
-                    name: {
-                        ru: "Максимальное число"
+                    "entity-name": {
+                        ru: "Строка текста"
                     },
-                    type: "integer",
-                    entities: [
+                    "entity-properties": [
+                        "property-min",
+                        "property-max"
+                    ]
+                },
+                property_text: {
+                    "entity-kind": [
+                        "entity"
+                    ],
+                    "entity-parents": [
                         "property"
-                    ]
-                },
-                main: {
-                    scheme: [
-                        "scheme"
                     ],
-                    name: {
-                        ru: "Основное"
+                    "entity-name": {
+                        ru: "Многострочный текст"
                     },
-                    type: "boolean",
-                    entities: [
-                        "scheme"
+                    "entity-properties": [
+                        "property-min",
+                        "property-max"
                     ]
                 },
-                type: {
-                    scheme: [
-                        "scheme"
+                property_integer: {
+                    "entity-kind": [
+                        "entity"
                     ],
-                    name: {
+                    "entity-parents": [
+                        "property"
+                    ],
+                    "entity-name": {
+                        ru: "Целое число"
+                    },
+                    "entity-properties": [
+                        "property-min",
+                        "property-max"
+                    ]
+                },
+                property_boolean: {
+                    "entity-kind": [
+                        "entity"
+                    ],
+                    "entity-parents": [
+                        "property"
+                    ],
+                    "entity-name": {
+                        ru: "Флаг"
+                    },
+                    "entity-properties": []
+                },
+                "entity-kind": {
+                    "entity-kind": [
+                        "property_link"
+                    ],
+                    "entity-name": {
                         ru: "Тип"
                     },
-                    type: "type",
-                    entities: [
-                        "scheme"
-                    ]
-                },
-                target: {
-                    scheme: [
-                        "scheme"
-                    ],
-                    name: {
-                        ru: "Указывает на тип"
-                    },
-                    type: "link",
-                    target: [
+                    "property-target": [
                         "entity"
                     ],
-                    entities: [
-                        "scheme"
-                    ]
-                },
-                back: {
-                    scheme: [
-                        "scheme"
-                    ],
-                    name: {
-                        ru: "Обратное свойство в целевом типе"
-                    },
-                    type: "link",
-                    target: [
-                        "property"
-                    ],
-                    entities: [
-                        "scheme"
-                    ]
-                },
-                entities: {
-                    scheme: [
-                        "scheme"
-                    ],
-                    name: {
-                        ru: "Сущность"
-                    },
-                    type: "link",
-                    target: [
+                    "property-owners": [
                         "entity"
                     ],
-                    back: [
-                        "properties"
-                    ],
-                    entities: [
-                        "scheme"
+                    "property-back": [
+                        "entity-members"
                     ]
                 },
-                ppp: {
-                    scheme: [
+                "entity-parents": {
+                    "entity-kind": [
+                        "property_link"
+                    ],
+                    "entity-name": {
+                        ru: "Родительский тип"
+                    },
+                    "property-inherit": true,
+                    "property-target": [
                         "entity"
                     ],
-                    name: {
-                        ru: "Площадка"
-                    },
-                    color: "green",
-                    properties: [
-                        "pt",
-                        "pa",
-                        "pm"
+                    "property-owners": [
+                        "entity"
                     ],
-                    instances: [
-                        "pppp"
+                    "property-back": [
+                        "entity-kids"
                     ]
                 },
-                pt: {
-                    scheme: [
-                        "property"
+                "entity-kids": {
+                    "entity-kind": [
+                        "property_link"
                     ],
-                    name: {
+                    "entity-name": {
+                        ru: "Дочерние типы"
+                    },
+                    "property-inherit": true,
+                    "property-target": [
+                        "entity"
+                    ],
+                    "property-owners": [
+                        "entity"
+                    ],
+                    "property-back": [
+                        "entity-parent"
+                    ]
+                },
+                "entity-name": {
+                    "entity-kind": [
+                        "property_string"
+                    ],
+                    "entity-name": {
                         ru: "Название"
                     },
-                    type: "string",
-                    locale: true,
-                    entities: [
-                        "ppp"
-                    ],
-                    main: true
-                },
-                pa: {
-                    scheme: [
-                        "property"
-                    ],
-                    name: {
-                        ru: "Адрес"
-                    },
-                    type: "string",
-                    locale: true,
-                    entities: [
-                        "ppp"
-                    ]
-                },
-                pm: {
-                    scheme: [
-                        "property"
-                    ],
-                    name: {
-                        ru: "Митапы"
-                    },
-                    type: "link",
-                    target: [
-                        "mmm"
-                    ],
-                    back: [
-                        "mp"
-                    ],
-                    entities: [
-                        "ppp"
-                    ]
-                },
-                mmm: {
-                    scheme: [
+                    "property-locale": true,
+                    "property-owners": [
                         "entity"
                     ],
-                    name: {
-                        ru: "Митап"
-                    },
-                    color: "red",
-                    properties: [
-                        "mn",
-                        "mt",
-                        "mp",
-                        "md",
-                        "mu"
-                    ],
-                    instances: [
-                        "mmmm"
-                    ]
+                    "property-main": true
                 },
-                mn: {
-                    scheme: [
-                        "property"
+                "entity-description": {
+                    "entity-kind": [
+                        "property_text"
                     ],
-                    name: {
-                        ru: "Номер"
-                    },
-                    type: "string",
-                    entities: [
-                        "mmm"
-                    ],
-                    main: true
-                },
-                mt: {
-                    scheme: [
-                        "property"
-                    ],
-                    name: {
-                        ru: "Трансляция"
-                    },
-                    type: "string",
-                    entities: [
-                        "mmm"
-                    ]
-                },
-                mp: {
-                    scheme: [
-                        "property"
-                    ],
-                    type: "link",
-                    target: [
-                        "ppp"
-                    ],
-                    back: [
-                        "pm"
-                    ],
-                    entities: [
-                        "mmm"
-                    ]
-                },
-                md: {
-                    scheme: [
-                        "property"
-                    ],
-                    name: {
-                        ru: "Выступления"
-                    },
-                    type: "link",
-                    target: [
-                        "ddd"
-                    ],
-                    back: [
-                        "dm"
-                    ],
-                    entities: [
-                        "mmm"
-                    ]
-                },
-                mu: {
-                    scheme: [
-                        "property"
-                    ],
-                    name: {
-                        ru: "Ведущие"
-                    },
-                    type: "link",
-                    target: [
-                        "uuu"
-                    ],
-                    back: [
-                        "um"
-                    ],
-                    entities: [
-                        "mmm"
-                    ]
-                },
-                uuu: {
-                    scheme: [
-                        "entity"
-                    ],
-                    name: {
-                        ru: "Персона"
-                    },
-                    color: "blue",
-                    properties: [
-                        "un",
-                        "ue",
-                        "um",
-                        "ud"
-                    ],
-                    instances: [
-                        "uuuu"
-                    ]
-                },
-                un: {
-                    scheme: [
-                        "property"
-                    ],
-                    name: {
-                        ru: "Имя"
-                    },
-                    type: "string",
-                    locale: true,
-                    entities: [
-                        "uuu"
-                    ],
-                    main: true
-                },
-                ue: {
-                    scheme: [
-                        "property"
-                    ],
-                    name: {
-                        ru: "Почта"
-                    },
-                    type: "string",
-                    entities: [
-                        "uuu"
-                    ]
-                },
-                um: {
-                    scheme: [
-                        "property"
-                    ],
-                    name: {
-                        ru: "Ведущий митапов"
-                    },
-                    type: "link",
-                    target: [
-                        "mmm"
-                    ],
-                    back: [
-                        "mu"
-                    ],
-                    entities: [
-                        "uuu"
-                    ]
-                },
-                ud: {
-                    scheme: [
-                        "property"
-                    ],
-                    name: {
-                        ru: "Выступления"
-                    },
-                    type: "link",
-                    target: [
-                        "ddd"
-                    ],
-                    back: [
-                        "du"
-                    ],
-                    entities: [
-                        "uuu"
-                    ]
-                },
-                ddd: {
-                    scheme: [
-                        "entity"
-                    ],
-                    name: {
-                        ru: "Выступление"
-                    },
-                    color: "magenta",
-                    properties: [
-                        "dt",
-                        "do",
-                        "dr",
-                        "dm",
-                        "du"
-                    ],
-                    instances: [
-                        "xxxx",
-                        "yyyy",
-                        "zzzz"
-                    ]
-                },
-                dt: {
-                    scheme: [
-                        "property"
-                    ],
-                    name: {
-                        ru: "Название"
-                    },
-                    type: "string",
-                    locale: true,
-                    entities: [
-                        "ddd"
-                    ],
-                    main: true
-                },
-                do: {
-                    scheme: [
-                        "property"
-                    ],
-                    name: {
+                    "entity-name": {
                         ru: "Описание"
                     },
-                    type: "text",
-                    locale: true,
-                    entities: [
-                        "ddd"
+                    "property-locale": true,
+                    "property-owners": [
+                        "entity"
                     ]
                 },
-                dr: {
-                    scheme: [
+                "entity-members": {
+                    "entity-kind": [
+                        "property_link"
+                    ],
+                    "entity-name": {
+                        ru: "Экземпляры"
+                    },
+                    "property-target": [],
+                    "property-back": [
+                        "entity-kind"
+                    ],
+                    "property-owners": [
+                        "entity"
+                    ]
+                },
+                "entity-properties": {
+                    "entity-kind": [
+                        "property_link"
+                    ],
+                    "entity-name": {
+                        ru: "Свойства"
+                    },
+                    "property-target": [
                         "property"
                     ],
-                    name: {
+                    "property-back": [
+                        "property_owners"
+                    ],
+                    "property-owners": [
+                        "entity"
+                    ]
+                },
+                "property-min": {
+                    "entity-kind": [
+                        "property_integer"
+                    ],
+                    "entity-name": {
+                        ru: "Минимальное число"
+                    },
+                    "property-owners": [
+                        "property"
+                    ]
+                },
+                "property-max": {
+                    "entity-kind": [
+                        "property_integer"
+                    ],
+                    "entity-name": {
+                        ru: "Максимальное число"
+                    },
+                    "property-owners": [
+                        "property"
+                    ]
+                },
+                "property-main": {
+                    "entity-kind": [
+                        "property_boolean"
+                    ],
+                    "entity-name": {
+                        ru: "Основное"
+                    },
+                    "property-owners": [
+                        "property"
+                    ]
+                },
+                "property-suggest": {
+                    "entity-kind": [
+                        "property_boolean"
+                    ],
+                    "entity-name": {
+                        ru: "Подсказывать из существующих"
+                    },
+                    "property-owners": [
+                        "property"
+                    ]
+                },
+                "property-inherit": {
+                    "entity-kind": [
+                        "property_boolean"
+                    ],
+                    "entity-name": {
+                        ru: "Добавляет свойства"
+                    },
+                    "property-owners": [
+                        "property"
+                    ]
+                },
+                "property-target": {
+                    "entity-kind": [
+                        "property_link"
+                    ],
+                    "entity-name": {
+                        ru: "Указывает на тип"
+                    },
+                    "property-target": [
+                        "entity"
+                    ],
+                    "property-owners": [
+                        "property"
+                    ]
+                },
+                "property-back": {
+                    "entity-kind": [
+                        "property_link"
+                    ],
+                    "entity-name": {
+                        ru: "Обратное свойство в целевом типе"
+                    },
+                    "property-target": [
+                        "property"
+                    ],
+                    "property-owners": [
+                        "property"
+                    ]
+                },
+                "property-owners": {
+                    "entity-kind": [
+                        "property_link"
+                    ],
+                    "entity-name": {
+                        ru: "Сущность"
+                    },
+                    "property-target": [
+                        "entity"
+                    ],
+                    "property-back": [
+                        "entity-properties"
+                    ],
+                    "property-owners": [
+                        "entity"
+                    ]
+                },
+                place: {
+                    "entity-kind": [
+                        "entity"
+                    ],
+                    "entity-name": {
+                        ru: "Площадка"
+                    },
+                    "entity-properties": [
+                        "place-title",
+                        "place-address",
+                        "place-meetup"
+                    ],
+                    "entity-members": [
+                        "place-online"
+                    ]
+                },
+                "place-title": {
+                    "entity-kind": [
+                        "property_string"
+                    ],
+                    "entity-name": {
+                        ru: "Название"
+                    },
+                    "property-locale": true,
+                    "property-owners": [
+                        "place"
+                    ],
+                    "property-main": true
+                },
+                "place-address": {
+                    "entity-kind": [
+                        "property_text"
+                    ],
+                    "entity-name": {
+                        ru: "Адрес"
+                    },
+                    "property-locale": true,
+                    "property-owners": [
+                        "place"
+                    ]
+                },
+                "place-meetup": {
+                    "entity-kind": [
+                        "property_link"
+                    ],
+                    "entity-name": {
+                        ru: "Митапы"
+                    },
+                    "property-target": [
+                        "meetup"
+                    ],
+                    "property-back": [
+                        "meetup-place"
+                    ],
+                    "property-owners": [
+                        "place"
+                    ]
+                },
+                meetup: {
+                    "entity-kind": [
+                        "entity"
+                    ],
+                    "entity-name": {
+                        ru: "Митап"
+                    },
+                    "entity-properties": [
+                        "meetup-name",
+                        "meetup-translation",
+                        "meetup-place",
+                        "meetup-speeches",
+                        "meetup-host"
+                    ],
+                    "entity-members": [
+                        "meetup-66"
+                    ]
+                },
+                "meetup-name": {
+                    "entity-kind": [
+                        "property_string"
+                    ],
+                    "entity-name": {
+                        ru: "Номер"
+                    },
+                    "property-owners": [
+                        "meetup"
+                    ],
+                    "property-main": true
+                },
+                "meetup-translation": {
+                    "entity-kind": [
+                        "property_string"
+                    ],
+                    "entity-name": {
+                        ru: "Трансляция"
+                    },
+                    "property-owners": [
+                        "meetup"
+                    ]
+                },
+                "meetup-place": {
+                    "entity-kind": [
+                        "property_link"
+                    ],
+                    "entity-name": {
+                        ru: "Площадка"
+                    },
+                    "property-target": [
+                        "place"
+                    ],
+                    "property-back": [
+                        "place-meetup"
+                    ],
+                    "property-owners": [
+                        "meetup"
+                    ]
+                },
+                "meetup-speeches": {
+                    "entity-kind": [
+                        "property_link"
+                    ],
+                    "entity-name": {
+                        ru: "Выступления"
+                    },
+                    "property-target": [
+                        "speech"
+                    ],
+                    "property-back": [
+                        "speech-meetup"
+                    ],
+                    "property-owners": [
+                        "meetup"
+                    ]
+                },
+                "meetup-host": {
+                    "entity-kind": [
+                        "property_link"
+                    ],
+                    "entity-name": {
+                        ru: "Ведущие"
+                    },
+                    "property-target": [
+                        "user"
+                    ],
+                    "property-back": [
+                        "user-host-of-meetup"
+                    ],
+                    "property-owners": [
+                        "meetup"
+                    ]
+                },
+                user: {
+                    "entity-kind": [
+                        "entity"
+                    ],
+                    "entity-name": {
+                        ru: "Персона"
+                    },
+                    "entity-properties": [
+                        "user-name",
+                        "user-email",
+                        "user-host-of-meetup",
+                        "user-speeches"
+                    ],
+                    "entity-members": [
+                        "user-vas"
+                    ]
+                },
+                "user-name": {
+                    "entity-kind": [
+                        "property_string"
+                    ],
+                    "entity-name": {
+                        ru: "Имя"
+                    },
+                    "property-locale": true,
+                    "property-owners": [
+                        "user"
+                    ],
+                    "property-main": true
+                },
+                "user-email": {
+                    "entity-kind": [
+                        "property_string"
+                    ],
+                    "entity-name": {
+                        ru: "Почта"
+                    },
+                    "property-owners": [
+                        "user"
+                    ]
+                },
+                "user-host-of-meetup": {
+                    "entity-kind": [
+                        "property_link"
+                    ],
+                    "entity-name": {
+                        ru: "Ведущий митапов"
+                    },
+                    "property-target": [
+                        "meetup"
+                    ],
+                    "property-back": [
+                        "meetup-host"
+                    ],
+                    "property-owners": [
+                        "user"
+                    ]
+                },
+                "user-speeches": {
+                    "entity-kind": [
+                        "property_link"
+                    ],
+                    "entity-name": {
+                        ru: "Выступления"
+                    },
+                    "property-target": [
+                        "speech"
+                    ],
+                    "property-back": [
+                        "speech-speakers"
+                    ],
+                    "property-owners": [
+                        "user"
+                    ]
+                },
+                speech: {
+                    "entity-kind": [
+                        "entity"
+                    ],
+                    "entity-name": {
+                        ru: "Выступление"
+                    },
+                    "entity-properties": [
+                        "speech-title",
+                        "speech-description",
+                        "speech-duration",
+                        "speech-meetup",
+                        "speech-speakers"
+                    ],
+                    "entity-members": [
+                        "speech-copy-paste",
+                        "speech-kung-fu",
+                        "speech-deps"
+                    ]
+                },
+                "speech-title": {
+                    "entity-kind": [
+                        "property_string"
+                    ],
+                    "entity-name": {
+                        ru: "Название"
+                    },
+                    "property-locale": true,
+                    "property-owners": [
+                        "speech"
+                    ],
+                    "property-main": true
+                },
+                "speech-description": {
+                    "entity-kind": [
+                        "property_text"
+                    ],
+                    "entity-name": {
+                        ru: "Описание"
+                    },
+                    "property-locale": true,
+                    "property-owners": [
+                        "speech"
+                    ]
+                },
+                "speech-duration": {
+                    "entity-kind": [
+                        "property_integer"
+                    ],
+                    "entity-name": {
                         ru: "Длительность"
                     },
-                    type: "integer",
-                    unit: "minute",
-                    suggest: true,
-                    entities: [
-                        "ddd"
+                    "property-suggest": true,
+                    "property-owners": [
+                        "speech"
                     ],
-                    main: true
+                    "property-main": true
                 },
-                dm: {
-                    scheme: [
-                        "property"
+                "speech-meetup": {
+                    "entity-kind": [
+                        "property_link"
                     ],
-                    type: "link",
-                    target: [
-                        "mmm"
+                    "entity-name": {
+                        ru: "Митап"
+                    },
+                    "property-target": [
+                        "meetup"
                     ],
-                    back: [
-                        "md"
+                    "property-back": [
+                        "meetup-speeches"
                     ],
-                    entities: [
-                        "ddd"
+                    "property-owners": [
+                        "speech"
                     ]
                 },
-                du: {
-                    scheme: [
-                        "property"
+                "speech-speakers": {
+                    "entity-kind": [
+                        "property_link"
                     ],
-                    name: {
+                    "entity-name": {
                         ru: "Докладчики"
                     },
-                    type: "link",
-                    target: [
-                        "uuu"
+                    "property-target": [
+                        "user"
                     ],
-                    back: [
-                        "ud"
+                    "property-back": [
+                        "user-speeches"
                     ],
-                    entities: [
-                        "ddd"
+                    "property-owners": [
+                        "speech"
                     ]
                 },
-                pppp: {
-                    scheme: [
-                        "ppp"
+                "place-online": {
+                    "entity-kind": [
+                        "place"
                     ],
-                    pt: {
+                    "place-title": {
                         ru: "Онлайн"
                     },
-                    pa: {
+                    "place-address": {
                         ru: "До конца эпидемии встречаемся онлайн"
                     },
-                    pm: [
-                        "mmmm"
+                    "place-meetup": [
+                        "meetup-66"
                     ]
                 },
-                mmmm: {
-                    scheme: [
-                        "mmm"
+                "meetup-66": {
+                    "entity-kind": [
+                        "meetup"
                     ],
-                    mn: "#66",
-                    mt: "https://youtube.com/piterjs",
-                    mp: [
-                        "pppp"
+                    "meetup-name": "#66",
+                    "meetup-translation": "https://youtube.com/piterjs",
+                    "meetup-place": [
+                        "place-online"
                     ],
-                    mu: [
-                        "uuuu"
+                    "meetup-host": [
+                        "user-vas"
                     ],
-                    md: [
-                        "xxxx",
-                        "yyyy",
-                        "zzzz"
+                    "meetup-speeches": [
+                        "speech-copy-paste",
+                        "speech-kung-fu",
+                        "speech-deps"
                     ]
                 },
-                uuuu: {
-                    scheme: [
-                        "uuu"
+                "user-vas": {
+                    "entity-kind": [
+                        "user"
                     ],
-                    un: {
+                    "user-name": {
                         ru: "Василий Пупкин"
                     },
-                    ue: "pupa@example.org",
-                    um: [
-                        "mmmm"
+                    "user-email": "pupa@example.org",
+                    "user-host-of-meetup": [
+                        "meetup-66"
                     ],
-                    ud: [
-                        "xxxx",
-                        "yyyy"
+                    "user-speeches": [
+                        "speech-copy-paste",
+                        "speech-kung-fu"
                     ]
                 },
-                xxxx: {
-                    scheme: [
-                        "ddd"
+                "speech-copy-paste": {
+                    "entity-kind": [
+                        "speech"
                     ],
-                    dt: {
+                    "speech-title": {
                         ru: "Как победить копипасту?"
                     },
-                    do: {
+                    "speech-description": {
                         ru: "Расскажу о своём ноу-хау."
                     },
-                    dr: 40,
-                    du: [
-                        "uuuu"
+                    "speech-duration": 40,
+                    "speech-speakers": [
+                        "user-vas"
                     ],
-                    dm: [
-                        "mmmm"
+                    "speech-meetup": [
+                        "meetup-66"
                     ]
                 },
-                yyyy: {
-                    scheme: [
-                        "ddd"
+                "speech-kung-fu": {
+                    "entity-kind": [
+                        "speech"
                     ],
-                    dt: {
+                    "speech-title": {
                         ru: "Слепое программирование"
                     },
-                    do: {
+                    "speech-description": {
                         ru: "Настоящее кунг-фу программирования."
                     },
-                    dr: 30,
-                    du: [
-                        "uuuu"
+                    "speech-duration": 30,
+                    "speech-speakers": [
+                        "user-vas"
                     ],
-                    dm: [
-                        "mmmm"
+                    "speech-meetup": [
+                        "meetup-66"
                     ]
                 },
-                zzzz: {
-                    scheme: [
-                        "ddd"
+                "speech-deps": {
+                    "entity-kind": [
+                        "speech"
                     ],
-                    dt: {
+                    "speech-title": {
                         ru: "Зависимость от программирования"
                     },
-                    do: {
+                    "speech-description": {
                         ru: "Обмениваемся опытом слезания с кодинга."
                     },
-                    dr: 60,
-                    dm: [
-                        "mmmm"
+                    "speech-duration": 60,
+                    "speech-meetup": [
+                        "meetup-66"
                     ]
                 }
             });

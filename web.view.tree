@@ -506,7 +506,7 @@ $hyoo_case_property_row $mol_labeler
 	property $hyoo_case_property
 	label /
 		<= Title $hyoo_case_entity_snippet
-			entity <= scheme $hyoo_case_entity
+			entity <= kind $hyoo_case_entity
 		<= Pick $mol_select
 			value?val <=> pick?val \
 			options <= pick_options /string
@@ -607,305 +607,329 @@ $hyoo_case $mol_book2
 		editable?val <=> editable!id?val false
 	-
 	domain $hyoo_case_domain / *
-		scheme *
-			scheme / \property
-			name * ru \Схема
-			type \link
-			target / \scheme
-			entities / \scheme
-			back / \instances
-			properties /
-				\scheme
-				\name
-				\properties
-		name *
-			scheme / \scheme
-			name * ru \Название
-			type \string
-			locale true
-			entities / \scheme
-			main true
 		entity *
-			scheme / \entity
-			name * ru \Сущность
-			properties /
-				\scheme
-				\name
-				\color
-				\properties
-				\instances
-		color *
-			scheme / \scheme
-			name * ru \Цвет
-			type \color
-			entities / \scheme
-		instances *
-			scheme / \property
-			name * ru \Экземпляры
-			type \link
-			target /
-			back / \scheme
-			entities / \entity
-		properties *
-			scheme / \scheme
-			name * ru \Свойства
-			type \link
-			target / \property
-			back / \entity
-			entities / \scheme
+			entity-kind / \entity
+			entity-name * ru \Сущность
+			entity-properties /
+				\entity-kind
+				\entity-members
+				\entity-parents
+				\entity-kids
+				\entity-name
+				\entity-description
+				\entity-properties
 		property *
-			scheme / \scheme
-			name * ru \Свойство
-			properties /
-				\scheme
-				\name
-				\min
-				\max
-				\main
-				\type
-				\target
-				\back
-				\entities
-		min *
-			scheme / \property
-			name * ru \Минимальное число
-			type \integer
-			entities / \property
-		max *
-			scheme / \property
-			name * ru \Максимальное число
-			type \integer
-			entities / \property
-		main *
-			scheme / \scheme
-			name * ru \Основное
-			type \boolean
-			entities / \scheme
-		type *
-			scheme / \scheme
-			name * ru \Тип
-			type \type
-			entities / \scheme
-		target *
-			scheme / \scheme
-			name * ru \Указывает на тип
-			type \link
-			target / \entity
-			entities / \scheme
-		back *
-			scheme / \scheme
-			name * ru \Обратное свойство в целевом типе
-			type \link
-			target / \property
-			entities / \scheme
-		entities *
-			scheme / \scheme
-			name * ru \Сущность
-			type \link
-			target / \entity
-			back / \properties
-			entities / \scheme
-		ppp *
-			scheme / \entity
-			name * ru \Площадка
-			color \green
-			properties /
-				\pt
-				\pa
-				\pm
-			instances /
-				\pppp
-		pt *
-			scheme / \property
-			name * ru \Название
-			type \string
-			locale true
-			entities / \ppp
-			main true
-		pa *
-			scheme / \property
-			name * ru \Адрес
-			type \string
-			locale true
-			entities / \ppp
-		pm *
-			scheme / \property
-			name * ru \Митапы
-			type \link
-			target / \mmm
-			back / \mp
-			entities / \ppp
-		mmm *
-			scheme / \entity
-			name * ru \Митап
-			color \red
-			properties /
-				\mn
-				\mt
-				\mp
-				\md
-				\mu
-			instances /
-				\mmmm
-		mn *
-			scheme / \property
-			name * ru \Номер
-			type \string
-			entities / \mmm
-			main true
-		mt *
-			scheme / \property
-			name * ru \Трансляция
-			type \string
-			entities / \mmm
-		mp *
-			scheme / \property
-			type \link
-			target / \ppp
-			back / \pm
-			entities / \mmm
-		md *
-			scheme / \property
-			name * ru \Выступления
-			type \link
-			target / \ddd
-			back / \dm
-			entities / \mmm
-		mu *
-			scheme / \property
-			name * ru \Ведущие
-			type \link
-			target / \uuu
-			back / \um
-			entities / \mmm
-		uuu *
-			scheme / \entity
-			name * ru \Персона
-			color \blue
-			properties /
-				\un
-				\ue
-				\um
-				\ud
-			instances /
-				\uuuu
-		un *
-			scheme / \property
-			name * ru \Имя
-			type \string
-			locale true
-			entities / \uuu
-			main true
-		ue *
-			scheme / \property
-			name * ru \Почта
-			type \string
-			entities / \uuu
-		um *
-			scheme / \property
-			name * ru \Ведущий митапов
-			type \link
-			target / \mmm
-			back / \mu
-			entities / \uuu
-		ud *
-			scheme / \property
-			name * ru \Выступления
-			type \link
-			target / \ddd
-			back / \du
-			entities / \uuu
-		ddd *
-			scheme / \entity
-			name * ru \Выступление
-			color \magenta
-			properties /
-				\dt
-				\do
-				\dr
-				\dm
-				\du
-			instances /
-				\xxxx
-				\yyyy
-				\zzzz
-		dt *
-			scheme / \property
-			name * ru \Название
-			type \string
-			locale true
-			entities / \ddd
-			main true
-		do *
-			scheme / \property
-			name * ru \Описание
-			type \text
-			locale true
-			entities / \ddd
-		dr *
-			scheme / \property
-			name * ru \Длительность
-			type \integer
-			unit \minute
-			suggest true
-			entities / \ddd
-			main true
-		dm *
-			scheme / \property
-			type \link
-			target / \mmm
-			back / \md
-			entities / \ddd
-		du *
-			scheme / \property
-			name * ru \Докладчики
-			type \link
-			target / \uuu
-			back / \ud
-			entities / \ddd
-		pppp *
-			scheme / \ppp
-			pt * ru \Онлайн
-			pa * ru \До конца эпидемии встречаемся онлайн
-			pm / \mmmm
-		mmmm *
-			scheme / \mmm
-			mn \#66
-			mt \https://youtube.com/piterjs
-			mp / \pppp
-			mu / \uuuu
-			md /
-				\xxxx
-				\yyyy
-				\zzzz
-		uuuu *
-			scheme / \uuu
-			un * ru \Василий Пупкин
-			ue \pupa@example.org
-			um / \mmmm
-			ud /
-				\xxxx
-				\yyyy
-		xxxx *
-			scheme / \ddd
-			dt * ru \Как победить копипасту?
-			do * ru \Расскажу о своём ноу-хау.
-			dr 40
-			du / \uuuu
-			dm / \mmmm
-		yyyy *
-			scheme / \ddd
-			dt * ru \Слепое программирование
-			do * ru \Настоящее кунг-фу программирования.
-			dr 30
-			du / \uuuu
-			dm / \mmmm
-		zzzz *
-			scheme / \ddd
-			dt * ru \Зависимость от программирования
-			do * ru \Обмениваемся опытом слезания с кодинга.
-			dr 60
-			dm / \mmmm
+			entity-kind / \entity
+			entity-name * ru \Свойство
+			entity-properties /
+				\entity-kind
+				\entity-name
+				\property-owners
+				\property-main
+				\property-suggest
+			entity-kids /
+				\property_link
+				\property_string
+				\property_text
+				\property_number
+		property_link *
+			entity-kind / \entity
+			entity-parents / \property
+			entity-name * ru \Ссылка на сущность
+			entity-properties /
+				\property-inherit
+				\property-target
+				\property-back
+				\property-min
+				\property-max
+			entity-members /
+				\entity-kind
+		property_string *
+			entity-kind / \entity
+			entity-parents / \property
+			entity-name * ru \Строка текста
+			entity-properties /
+				\property-min
+				\property-max
+		property_text *
+			entity-kind / \entity
+			entity-parents / \property
+			entity-name * ru \Многострочный текст
+			entity-properties /
+				\property-min
+				\property-max
+		property_integer *
+			entity-kind / \entity
+			entity-parents / \property
+			entity-name * ru \Целое число
+			entity-properties /
+				\property-min
+				\property-max
+		property_boolean *
+			entity-kind / \entity
+			entity-parents / \property
+			entity-name * ru \Флаг
+			entity-properties /
+		entity-kind *
+			entity-kind / \property_link
+			entity-name * ru \Тип
+			property-target / \entity
+			property-owners / \entity
+			property-back / \entity-members
+		entity-parents *
+			entity-kind / \property_link
+			entity-name * ru \Родительский тип
+			property-inherit true
+			property-target / \entity
+			property-owners / \entity
+			property-back / \entity-kids
+		entity-kids *
+			entity-kind / \property_link
+			entity-name * ru \Дочерние типы
+			property-inherit true
+			property-target / \entity
+			property-owners / \entity
+			property-back / \entity-parent
+		entity-name *
+			entity-kind / \property_string
+			entity-name * ru \Название
+			property-locale true
+			property-owners / \entity
+			property-main true
+		entity-description *
+			entity-kind / \property_text
+			entity-name * ru \Описание
+			property-locale true
+			property-owners / \entity
+		entity-members *
+			entity-kind / \property_link
+			entity-name * ru \Экземпляры
+			property-target /
+			property-back / \entity-kind
+			property-owners / \entity
+		entity-properties *
+			entity-kind / \property_link
+			entity-name * ru \Свойства
+			property-target / \property
+			property-back / \property_owners
+			property-owners / \entity
+		property-min *
+			entity-kind / \property_integer
+			entity-name * ru \Минимальное число
+			property-owners / \property
+		property-max *
+			entity-kind / \property_integer
+			entity-name * ru \Максимальное число
+			property-owners / \property
+		property-main *
+			entity-kind / \property_boolean
+			entity-name * ru \Основное
+			property-owners / \property
+		property-suggest *
+			entity-kind / \property_boolean
+			entity-name * ru \Подсказывать из существующих
+			property-owners / \property
+		property-inherit *
+			entity-kind / \property_boolean
+			entity-name * ru \Добавляет свойства
+			property-owners / \property
+		property-target *
+			entity-kind / \property_link
+			entity-name * ru \Указывает на тип
+			property-target / \entity
+			property-owners / \property
+		property-back *
+			entity-kind / \property_link
+			entity-name * ru \Обратное свойство в целевом типе
+			property-target / \property
+			property-owners / \property
+		property-owners *
+			entity-kind / \property_link
+			entity-name * ru \Сущность
+			property-target / \entity
+			property-back / \entity-properties
+			property-owners / \entity
+		place *
+			entity-kind / \entity
+			entity-name * ru \Площадка
+			entity-properties /
+				\place-title
+				\place-address
+				\place-meetup
+			entity-members /
+				\place-online
+		place-title *
+			entity-kind / \property_string
+			entity-name * ru \Название
+			property-locale true
+			property-owners / \place
+			property-main true
+		place-address *
+			entity-kind / \property_text
+			entity-name * ru \Адрес
+			property-locale true
+			property-owners / \place
+		place-meetup *
+			entity-kind / \property_link
+			entity-name * ru \Митапы
+			property-target / \meetup
+			property-back / \meetup-place
+			property-owners / \place
+		meetup *
+			entity-kind / \entity
+			entity-name * ru \Митап
+			entity-properties /
+				\meetup-name
+				\meetup-translation
+				\meetup-place
+				\meetup-speeches
+				\meetup-host
+			entity-members /
+				\meetup-66
+		meetup-name *
+			entity-kind / \property_string
+			entity-name * ru \Номер
+			property-owners / \meetup
+			property-main true
+		meetup-translation *
+			entity-kind / \property_string
+			entity-name * ru \Трансляция
+			property-owners / \meetup
+		meetup-place *
+			entity-kind / \property_link
+			entity-name * ru \Площадка
+			property-target / \place
+			property-back / \place-meetup
+			property-owners / \meetup
+		meetup-speeches *
+			entity-kind / \property_link
+			entity-name * ru \Выступления
+			property-target / \speech
+			property-back / \speech-meetup
+			property-owners / \meetup
+		meetup-host *
+			entity-kind / \property_link
+			entity-name * ru \Ведущие
+			property-target / \user
+			property-back / \user-host-of-meetup
+			property-owners / \meetup
+		user *
+			entity-kind / \entity
+			entity-name * ru \Персона
+			entity-properties /
+				\user-name
+				\user-email
+				\user-host-of-meetup
+				\user-speeches
+			entity-members /
+				\user-vas
+		user-name *
+			entity-kind / \property_string
+			entity-name * ru \Имя
+			property-locale true
+			property-owners / \user
+			property-main true
+		user-email *
+			entity-kind / \property_string
+			entity-name * ru \Почта
+			property-owners / \user
+		user-host-of-meetup *
+			entity-kind / \property_link
+			entity-name * ru \Ведущий митапов
+			property-target / \meetup
+			property-back / \meetup-host
+			property-owners / \user
+		user-speeches *
+			entity-kind / \property_link
+			entity-name * ru \Выступления
+			property-target / \speech
+			property-back / \speech-speakers
+			property-owners / \user
+		speech *
+			entity-kind / \entity
+			entity-name * ru \Выступление
+			entity-properties /
+				\speech-title
+				\speech-description
+				\speech-duration
+				\speech-meetup
+				\speech-speakers
+			entity-members /
+				\speech-copy-paste
+				\speech-kung-fu
+				\speech-deps
+		speech-title *
+			entity-kind / \property_string
+			entity-name * ru \Название
+			property-locale true
+			property-owners / \speech
+			property-main true
+		speech-description *
+			entity-kind / \property_text
+			entity-name * ru \Описание
+			property-locale true
+			property-owners / \speech
+		speech-duration *
+			entity-kind / \property_integer
+			entity-name * ru \Длительность
+			property-suggest true
+			property-owners / \speech
+			property-main true
+		speech-meetup *
+			entity-kind / \property_link
+			entity-name * ru \Митап
+			property-target / \meetup
+			property-back / \meetup-speeches
+			property-owners / \speech
+		speech-speakers *
+			entity-kind / \property_link
+			entity-name * ru \Докладчики
+			property-target / \user
+			property-back / \user-speeches
+			property-owners / \speech
+		place-online *
+			entity-kind / \place
+			place-title * ru \Онлайн
+			place-address * ru \До конца эпидемии встречаемся онлайн
+			place-meetup / \meetup-66
+		meetup-66 *
+			entity-kind / \meetup
+			meetup-name \#66
+			meetup-translation \https://youtube.com/piterjs
+			meetup-place / \place-online
+			meetup-host / \user-vas
+			meetup-speeches /
+				\speech-copy-paste
+				\speech-kung-fu
+				\speech-deps
+		user-vas *
+			entity-kind / \user
+			user-name * ru \Василий Пупкин
+			user-email \pupa@example.org
+			user-host-of-meetup / \meetup-66
+			user-speeches /
+				\speech-copy-paste
+				\speech-kung-fu
+		speech-copy-paste *
+			entity-kind / \speech
+			speech-title * ru \Как победить копипасту?
+			speech-description * ru \Расскажу о своём ноу-хау.
+			speech-duration 40
+			speech-speakers / \user-vas
+			speech-meetup / \meetup-66
+		speech-kung-fu *
+			entity-kind / \speech
+			speech-title * ru \Слепое программирование
+			speech-description * ru \Настоящее кунг-фу программирования.
+			speech-duration 30
+			speech-speakers / \user-vas
+			speech-meetup / \meetup-66
+		speech-deps *
+			entity-kind / \speech
+			speech-title * ru \Зависимость от программирования
+			speech-description * ru \Обмениваемся опытом слезания с кодинга.
+			speech-duration 60
+			speech-meetup / \meetup-66
 
 $mol_view_tree_test_attributes_super $mol_view
 	some *

@@ -1151,23 +1151,24 @@ declare namespace $ {
     class $hyoo_case_entity extends $mol_store<Record<string, ReturnType<$hyoo_case_property['data']>>> {
         id(): string;
         domain(): $hyoo_case_domain;
-        scheme(): $hyoo_case_entity[];
         property(id: string): $hyoo_case_property;
-        property_list(): string[];
-        name(lang: string): string;
-        target(): $hyoo_case_entity[];
-        color(): string;
-        type(): "" | "string" | "boolean" | "text" | "type" | "integer" | "float" | "duration" | "color" | "link";
-        locale(): boolean;
-        suggest(): boolean;
-        main(): boolean;
-        least(): boolean;
-        unit(): string;
-        back(): string;
-        property_all(): $hyoo_case_property[];
-        instance_all(): $hyoo_case_entity[];
-        property_main(): $hyoo_case_property[];
-        property_least(): $hyoo_case_property[];
+        properties_id(): string[];
+        entity_name(lang: string): string;
+        property_target(): $hyoo_case_entity[];
+        entity_kind(): $hyoo_case_entity[];
+        entity_kind_id(): "property_string" | "property_text" | "property_integer" | "property_boolean" | "property_link";
+        property_locale(): boolean;
+        property_suggest(): boolean;
+        property_main(): boolean;
+        property_least(): boolean;
+        property_unit(): string;
+        property_back(): string;
+        entity_parents(): $hyoo_case_entity[];
+        entity_ancestors(): Set<$hyoo_case_entity>;
+        entity_properties(): $hyoo_case_property[];
+        entity_members(): $hyoo_case_entity[];
+        entity_properties_main(): $hyoo_case_property[];
+        entity_properties_least(): $hyoo_case_property[];
     }
 }
 
@@ -1176,7 +1177,7 @@ declare namespace $ {
         id(): string;
         entity(): $hyoo_case_entity;
         domain(): $hyoo_case_domain;
-        scheme(): $hyoo_case_entity;
+        kind(): $hyoo_case_entity;
         filled(): boolean;
         locale(lang: string, next?: string): string;
         links(next?: $hyoo_case_entity[]): $hyoo_case_entity[];
@@ -2592,7 +2593,7 @@ declare namespace $ {
         Numb(): $$.$mol_number;
         Text_view(): $mol_view;
         Link_view(id: any): $$.$mol_link;
-        scheme(): $hyoo_case_entity;
+        kind(): $hyoo_case_entity;
         Title(): $$.$hyoo_case_entity_snippet;
         pick(val?: any): any;
         pick_options(): readonly string[];
@@ -2626,9 +2627,9 @@ declare namespace $.$$ {
 
 declare namespace $.$$ {
     class $hyoo_case_property_row extends $.$hyoo_case_property_row {
-        scheme(): $hyoo_case_entity;
+        kind(): $hyoo_case_entity;
         title(): string;
-        type(): "" | "string" | "boolean" | "text" | "type" | "integer" | "float" | "duration" | "color" | "link";
+        type(): "property_string" | "property_text" | "property_integer" | "property_boolean" | "property_link";
         label(): ($mol_button_minor | $hyoo_case_entity_snippet | $mol_select)[];
         content(): ($mol_view | $mol_string)[] | ($mol_view | $mol_textarea)[] | ($mol_view | $mol_number)[] | $mol_check_box[];
         link_content(id: number): ($mol_button_minor | $hyoo_case_entity_snippet)[];
