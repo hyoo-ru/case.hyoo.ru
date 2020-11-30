@@ -41,18 +41,23 @@ namespace $ {
 		}
 
 		links( next?: $hyoo_case_entity[] ): $hyoo_case_entity[] {
+			
 			const domain = this.domain()
 			const arg = next === undefined ? undefined : next.map( item => item.id() )
-			return ( ( this.data( arg ) as any ?? [] ) as string[] ).map( id => domain.entity( id ) )
+			
+			let val = this.data( arg )
+			if( !val || typeof val !== 'object' ) val = [] 	
+			
+			return ( val as string[] ).map( id => domain.entity( id ) )
 		}
 
 		back( index: number ) {
-			return this.links()[ index ]?.property( this.kind().property_back() ) ?? null
+			return this.links()[ index ]?.property( this.kind().property_back()[0]?.id() ) ?? null
 		}
 
 		target_new() {
 			const target = this.domain().entity_new()
-			target.property( 'entity-kind' ).target_join( this.kind().property_target() )
+			target.property( 'meta-kind' ).target_join( this.kind().property_target() )
 			this.target_join([ target ])
 			return target
 		}
@@ -67,8 +72,10 @@ namespace $ {
 				
 				this.links( links = [ ... links, target ] )
 				
-				const back = target.property( this.kind().property_back() )
-				back.links([ ... back.links(), entity ])
+				for( const Back of this.kind().property_back() ) {
+					const back = target.property( Back.id() )
+					back.links([ ... back.links(), entity ])
+				}
 
 			}
 

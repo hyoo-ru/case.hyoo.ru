@@ -1,15 +1,16 @@
 namespace $.$$ {
 	export class $hyoo_case_entity_page extends $.$hyoo_case_entity_page {
 
-		scheme() {
-			return this.entity().entity_kind()[0]
+		kind() {
+			return this.entity().meta_kind()[0]
 		}
 
 		@ $mol_mem
-		property_list() {
-			let props = this.entity().entity_properties()
+		property_list(): readonly $mol_view[] {
+			let props = this.entity().properties()
 			if( !this.editable() ) {
 				props = props.filter( prop => prop.kind().property_least() )
+				props = props.filter( prop => !prop.kind().property_hidden() )
 			}
 			return props.map( property => this.Property( property.id() ) )
 		}
@@ -21,7 +22,7 @@ namespace $.$$ {
 		config_arg() {
 			return this.$.$hyoo_case_route_arg(
 				this.entity(),
-				this.entity().entity_kind()[0]
+				this.kind()
 			)
 		}
 

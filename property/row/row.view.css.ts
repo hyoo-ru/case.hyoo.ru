@@ -19,6 +19,8 @@ namespace $.$$ {
 		},
 
 		Title: {
+			padding: 0,
+			color: $mol_theme.shade,
 			flex: {
 				grow: 0,
 			},

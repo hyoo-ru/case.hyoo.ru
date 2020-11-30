@@ -17,8 +17,8 @@ namespace $ {
 		const index_source = keys.indexOf( source.id() )
 		keys.splice( index_source + 1, 1000 )
 		
-		const scheme_target = target.entity_kind()
-		const index_target = keys.findIndex( id => this.$mol_compare_array( domain.entity( id ).entity_kind() , scheme_target ) )
+		const scheme_target = target.meta_kind()
+		const index_target = keys.findIndex( id => this.$mol_compare_array( domain.entity( id ).meta_kind() , scheme_target ) )
 
 		keys.splice( 0, index_target + 1 )
 		keys.push( target.id() )

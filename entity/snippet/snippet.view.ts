@@ -3,7 +3,7 @@ namespace $.$$ {
 
 		title() {
 
-			const main = this.entity().entity_properties_main()
+			const main = this.entity().properties_main()
 			if( main.length === 0 ) return this.entity().id()
 
 			return main.map( prop => prop.locale( $mol_locale.lang() ) ).join( ' ' )
@@ -11,9 +11,9 @@ namespace $.$$ {
 			// return this.entity().scheme().name( $mol_locale.lang() ) + ' ' + this.entity().id()
 		}
 
-		property_list() {
+		property_list(): $mol_view_content[] {
 			
-			const main = this.entity().entity_properties_main()
+			const main = this.entity().properties_main()
 			if( main.length === 0 ) return [ this.entity().id() ]
 
 			return main.map( prop => this.Property( prop.id() ) )

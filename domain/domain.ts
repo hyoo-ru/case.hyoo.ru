@@ -9,7 +9,7 @@ namespace $ {
 		@ $mol_mem_key
 		entity( id : string ) {
 
-			const store = new $hyoo_case_entity({})
+			const store = new $hyoo_case_entity({ 'meta-kind': [] })
 
 			store.id = $mol_const( id )
 			store.domain = $mol_const( this )

@@ -6,21 +6,48 @@ namespace $.$$ {
 		}
 
 		title() {
-			return this.property().kind().entity_name( $mol_locale.lang() )
+			return this.property().kind().meta_name( $mol_locale.lang() )
 		}
 
 		@ $mol_mem
 		type() {
-			return this.property().kind().entity_kind_id()
+			return this.property().kind().property_kind_id()
+		}
+
+		@ $mol_mem
+		title_arg() {
+			return this.$.$hyoo_case_route_arg(
+				this.property().entity(),
+				this.property().kind(),
+			)
 		}
 
 		@ $mol_mem
 		label() {
 			return [
 				this.Title(),
-				... this.type() === 'property_link' && this.editable() && this.pick_options().length ? [ this.Pick() ] : [],
-				... this.type() === 'property_link' ? [ this.Add() ] : [],
+				... this.pick_allowed() ? [ this.Pick() ] : [],
+				... this.add_allowed() ? [ this.Add() ] : [],
 			]
+		}
+
+		suggest() {
+			return this.property().kind().property_suggest()
+		}
+
+		@ $mol_mem
+		pick_allowed() {
+			if( !this.editable() ) return false
+			if( this.type() !== 'property_link' ) return false
+			if( !this.suggest() ) return false
+			if( this.pick_options().length === 0 ) return false
+			return true
+		}
+		
+		@ $mol_mem
+		add_allowed() {
+			if( this.type() !== 'property_link' ) return false
+			return true
 		}
 		
 		@ $mol_mem
@@ -35,7 +62,7 @@ namespace $.$$ {
 				case "property_integer": return [ this.editable() ? this.Numb() : this.Text_view() ]
 				case "property_boolean": return [ this.Bool() ]
 				case "property_link": return this.property().links().map( ( _, i )=> this.Link_view( i ) )
-				default: return [ this.editable() ? this.String() : this.Text_view() ]
+				default: return []
 			}
 		}
 
@@ -90,7 +117,7 @@ namespace $.$$ {
 			
 			for( const scheme of this.property().kind().property_target() ) {
 
-				for( const inst of scheme.entity_members() ) {
+				for( const inst of scheme.members() ) {
 					if( exists.has( inst ) ) continue
 					options.push( inst.id() )
 				}

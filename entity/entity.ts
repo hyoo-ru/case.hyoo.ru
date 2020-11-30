@@ -20,15 +20,10 @@ namespace $ {
 			return this.sub( id , store )
 		}
 
-		@ $mol_mem
-		properties_id() {
-			return Object.keys( this.data() )
-		}
-
-		entity_name( lang: string ): string {
-			const name = this.value( 'entity-name' )
+		meta_name( lang: string ): string {
+			const name = this.value( 'meta-name' )
 			if( name === undefined ) {
-				return this.property_target().find( t => t.entity_name( lang ) )?.entity_name( lang ) ?? this.id()
+				return this.property_target().find( t => t.meta_name( lang ) )?.meta_name( lang ) ?? this.id()
 			}
 			return String( name[ lang ] )
 		}
@@ -37,12 +32,17 @@ namespace $ {
 			return this.property( 'property-target' ).links()
 		}
 
-		entity_kind() {
-			return this.property( 'entity-kind' ).links()
+		meta_kind() {
+			return this.property( 'meta-kind' ).links()
 		}
 
-		entity_kind_id() {
-			return this.entity_kind()[0].id() as
+		property_kind() {
+			return this.property( 'property-kind' ).links()
+		}
+
+		property_kind_id() {
+			return ( this.property_kind()[0]?.id() ?? null ) as
+			| null
 			| 'property_string'
 			| 'property_text'
 			| 'property_integer'
@@ -63,7 +63,15 @@ namespace $ {
 		}
 
 		property_least() {
-			return this.entity_kind_id() === 'property_link' || !this.property_main() 
+			return this.property_kind_id() === 'property_link' || !this.property_main() 
+		}
+
+		property_hidden() {
+			return Boolean( this.value( 'property-hidden' ) )
+		}
+
+		property_inherit() {
+			return Boolean( this.value( 'property-inherit' ) )
 		}
 
 		property_unit() {
@@ -71,56 +79,90 @@ namespace $ {
 		}
 
 		property_back() {
-			return String( this.value( 'property-back' ) )
+			return this.property( 'property-back' ).links()
 		}
 
-		entity_parents() {
-			return this.property( 'entity-parents' ).links()
-		}
+		// entity_parents() {
+		// 	return this.property( 'meta-parents' ).links()
+		// }
+
+		// entity_kids() {
+		// 	return this.property( 'meta-kids' ).links()
+		// }
+
+		// @ $mol_mem
+		// ancestors() {
+		// 	const all = [] as $hyoo_case_entity[]
+		// 	for( const parent of this.entity_parents() ) {
+		// 		all.push( ... parent.ancestors(), parent )
+		// 	}
+		// 	return new Set( all )
+		// }
+
+		// @ $mol_mem
+		// descendants() {
+		// 	const all = [] as $hyoo_case_entity[]
+		// 	for( const kid of this.entity_kids() ) {
+		// 		all.push( ... kid.descendants(), kid )
+		// 	}
+		// 	return new Set( all )
+		// }
 
 		@ $mol_mem
-		entity_ancestors() {
-			const all = [] as $hyoo_case_entity[]
-			for( const parent of this.entity_parents() ) {
-				all.push( ... parent.entity_ancestors(), parent )
-			}
-			return new Set( all )
-		}
+		properties() {
 
-		@ $mol_mem
-		entity_properties() {
+			const kinds = [ ... this.meta_kind() ]
 
-			const kinds = [] as $hyoo_case_entity[]
-			for( const kind of this.entity_kind() ) {
-				kinds.push( ... kind.entity_ancestors() )
-				kinds.push( kind )
-			}
-
-			const props = [] as $hyoo_case_property[]
+			const props = new Set< $hyoo_case_property >()
 			
-			for( const kind of kinds ) {
-				for( const prop of kind.property( 'entity-properties' ).links() ) {
-					props.push( this.property( prop.id() ) )
+			while( kinds.length ) {
+				const kind = kinds.pop()!
+				
+				for( const Prop of kind.property( 'meta-properties' ).links() ) {
+					
+					const prop = this.property( Prop.id() )
+					if( props.has( prop ) ) continue
+
+					props.add( prop )
+					
+					if( Prop.property_inherit() ) {
+						for( const target of this.property( Prop.id() ).links() ) {
+							if( kinds.includes( target ) ) continue
+							kinds.push( target )
+						}
+					}
+
 				}
 			}
 			
-			return props
+			return [ ... props ]
+		}
+
+		properties_main() {
+			return this.properties().filter( prop => prop.kind().property_main() )
+		}
+
+		properties_least() {
+			return this.properties().filter( prop => prop.kind().property_least() )
 		}
 
 		@ $mol_mem
-		entity_members() {
-			const domain = this.domain()
-			return ( this.value( 'enity-members' ) as string[] ?? [] ).map( id => domain.entity( id ) )
+		members() {
+
+			const kinds = [] as $hyoo_case_entity[]
+			kinds.push( this )
+
+			const members = [] as $hyoo_case_entity[]
+			
+			for( const kind of kinds ) {
+				for( const member of kind.property( 'meta-members' ).links() ) {
+					members.push( member )
+				}
+			}
+			
+			return members
 		}
 		
-		entity_properties_main() {
-			return this.entity_properties().filter( prop => prop.kind().property_main() )
-		}
-
-		entity_properties_least() {
-			return this.entity_properties().filter( prop => prop.kind().property_least() )
-		}
-
 	}
 
 }

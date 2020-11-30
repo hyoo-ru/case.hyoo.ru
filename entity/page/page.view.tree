@@ -1,8 +1,8 @@
 $hyoo_case_entity_page $mol_page
 	entity $hyoo_case_entity
 	head /
-		<= Snippet_scheme $hyoo_case_entity_snippet
-			entity <= scheme $hyoo_case_entity
+		<= Snippet_kind $hyoo_case_entity_snippet
+			entity <= kind $hyoo_case_entity
 		<= Snippet $hyoo_case_entity_snippet
 			entity <= entity
 			title => title
