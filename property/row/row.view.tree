@@ -10,9 +10,12 @@ $hyoo_case_property_row $mol_labeler
 		<= Pick $mol_select
 			value?val <=> pick?val \
 			options <= pick_options /string
+			filter_pattern => pick_query
 			option_content!id /
 				<= Pick_option!id $hyoo_case_entity_snippet
 					entity <= entity!id $hyoo_case_entity
+					highlight <= pick_query
+			option_label!id <= pick_option_title!id \
 		<= Add $mol_button_minor
 			hint @ \Add new
 			click?event <=> add?event null

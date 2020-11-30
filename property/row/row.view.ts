@@ -126,6 +126,10 @@ namespace $.$$ {
 			return options
 		}
 
+		pick_option_title( id: string ) {
+			return this.property().domain().entity( id ).title( $mol_locale.lang() )
+		}
+
 		entity( id: string ) {
 			return this.property().domain().entity( id )
 		}

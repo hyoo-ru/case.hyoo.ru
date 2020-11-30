@@ -1,5 +1,6 @@
 $hyoo_case_property_snippet $mol_dimmer
-	sub / <= title
+	haystack <= title
+	needle <= highlight \
 	property $hyoo_case_property
 	attr *
 		^
