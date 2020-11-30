@@ -683,6 +683,7 @@ $hyoo_case $mol_book2
 				\property-hidden
 				\property-suggest
 				\property-inherit
+				\property-populate
 		property_type *
 			meta-kind / \meta
 			meta-name * ru \Тип свойства
@@ -704,6 +705,7 @@ $hyoo_case $mol_book2
 			meta-name * ru \Ссылка на сущность
 			meta-properties /
 				\property-inherit
+				\property-populate
 				\property-target
 				\property-back
 				\property-min
@@ -743,6 +745,7 @@ $hyoo_case $mol_book2
 			property-kind / \property_link
 			meta-name * ru \Родительский тип
 			property-inherit true
+			property-populate true
 			property-target / \entity
 			property-owners / \entity
 			property-back / \meta-kids
@@ -750,6 +753,7 @@ $hyoo_case $mol_book2
 			meta-kind / \property
 			property-kind / \property_link
 			meta-name * ru \Дочерние типы
+			property-populate true
 			property-target / \entity
 			property-owners / \entity
 			property-back / \meta-parents
@@ -770,6 +774,7 @@ $hyoo_case $mol_book2
 			meta-kind / \property
 			property-kind / \property_link
 			meta-name * ru \Экземпляры
+			property-populate true
 			property-target /
 			property-back / \meta-kind
 			property-owners / \entity
@@ -781,6 +786,7 @@ $hyoo_case $mol_book2
 			property-back / \property_owners
 			property-owners / \entity
 			property-hidden true
+			property-populate true
 		property-min *
 			meta-kind / \property
 			property-kind / \property_integer
@@ -808,6 +814,11 @@ $hyoo_case $mol_book2
 			property-kind / \property_boolean
 			meta-name * ru \Подсказывать из существующих
 			property-owners / \property
+		property-populate *
+			meta-kind / \property
+			property-kind / \property_boolean
+			meta-name * ru \Разрешено создавать ли новые цели
+			property-owners / \property
 		property-inherit *
 			meta-kind / \property
 			property-kind / \property_boolean
@@ -828,6 +839,7 @@ $hyoo_case $mol_book2
 			property-target / \entity
 			property-owners / \property
 			property-suggest true
+			property-populate true
 		property-back *
 			meta-kind / \property
 			property-kind / \property_link

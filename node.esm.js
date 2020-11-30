@@ -3985,6 +3985,9 @@ var $;
         property_suggest() {
             return Boolean(this.value('property-suggest'));
         }
+        property_populate() {
+            return Boolean(this.value('property-populate'));
+        }
         property_main() {
             return Boolean(this.value('property-main'));
         }
@@ -8726,6 +8729,9 @@ var $;
             suggest() {
                 return this.property().kind().property_suggest();
             }
+            populate() {
+                return this.property().kind().property_populate();
+            }
             pick_allowed() {
                 if (!this.editable())
                     return false;
@@ -8739,6 +8745,8 @@ var $;
             }
             add_allowed() {
                 if (this.type() !== 'property_link')
+                    return false;
+                if (!this.populate())
                     return false;
                 return true;
             }
@@ -9352,7 +9360,8 @@ var $;
                         "property-main",
                         "property-hidden",
                         "property-suggest",
-                        "property-inherit"
+                        "property-inherit",
+                        "property-populate"
                     ]
                 },
                 property_type: {
@@ -9387,6 +9396,7 @@ var $;
                     },
                     "meta-properties": [
                         "property-inherit",
+                        "property-populate",
                         "property-target",
                         "property-back",
                         "property-min",
@@ -9470,6 +9480,7 @@ var $;
                         ru: "Родительский тип"
                     },
                     "property-inherit": true,
+                    "property-populate": true,
                     "property-target": [
                         "entity"
                     ],
@@ -9490,6 +9501,7 @@ var $;
                     "meta-name": {
                         ru: "Дочерние типы"
                     },
+                    "property-populate": true,
                     "property-target": [
                         "entity"
                     ],
@@ -9541,6 +9553,7 @@ var $;
                     "meta-name": {
                         ru: "Экземпляры"
                     },
+                    "property-populate": true,
                     "property-target": [],
                     "property-back": [
                         "meta-kind"
@@ -9568,7 +9581,8 @@ var $;
                     "property-owners": [
                         "entity"
                     ],
-                    "property-hidden": true
+                    "property-hidden": true,
+                    "property-populate": true
                 },
                 "property-min": {
                     "meta-kind": [
@@ -9646,6 +9660,20 @@ var $;
                         "property"
                     ]
                 },
+                "property-populate": {
+                    "meta-kind": [
+                        "property"
+                    ],
+                    "property-kind": [
+                        "property_boolean"
+                    ],
+                    "meta-name": {
+                        ru: "Разрешено создавать ли новые цели"
+                    },
+                    "property-owners": [
+                        "property"
+                    ]
+                },
                 "property-inherit": {
                     "meta-kind": [
                         "property"
@@ -9695,7 +9723,8 @@ var $;
                     "property-owners": [
                         "property"
                     ],
-                    "property-suggest": true
+                    "property-suggest": true,
+                    "property-populate": true
                 },
                 "property-back": {
                     "meta-kind": [

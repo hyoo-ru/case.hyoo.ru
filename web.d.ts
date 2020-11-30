@@ -1162,6 +1162,7 @@ declare namespace $ {
         property_kind_id(): "property_link" | "property_string" | "property_text" | "property_integer" | "property_boolean" | null;
         property_locale(): boolean;
         property_suggest(): boolean;
+        property_populate(): boolean;
         property_main(): boolean;
         property_least(): boolean;
         property_hidden(): boolean;
@@ -2659,6 +2660,7 @@ declare namespace $.$$ {
         title_arg(): Record<string, string | null>;
         label(): ($mol_button_minor | $mol_link | $mol_select)[];
         suggest(): boolean;
+        populate(): boolean;
         pick_allowed(): boolean;
         add_allowed(): boolean;
         content(): ($mol_view | $mol_string)[] | ($mol_view | $mol_textarea)[] | ($mol_view | $mol_number)[] | $mol_check_box[];
