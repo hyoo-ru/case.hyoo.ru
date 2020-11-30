@@ -2922,6 +2922,24 @@ var $;
 "use strict";
 var $;
 (function ($) {
+    $.$mol_style_attach("mol/gap/gap.css", ":root {\n\t--mol_gap_block: .75rem;\n\t--mol_gap_text: .5rem .75rem;\n}\n");
+})($ || ($ = {}));
+//gap.css.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    const { vary } = $.$mol_style_func;
+    $.$mol_gap = {
+        block: vary('--mol_gap_block'),
+        text: vary('--mol_gap_text'),
+    };
+})($ || ($ = {}));
+//gap.js.map
+;
+"use strict";
+var $;
+(function ($) {
     class $mol_scroll extends $.$mol_view {
         minimal_height() {
             return 0;
@@ -3187,24 +3205,6 @@ var $;
     })($$ = $.$$ || ($.$$ = {}));
 })($ || ($ = {}));
 //book2.view.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    $.$mol_style_attach("mol/gap/gap.css", ":root {\n\t--mol_gap_block: .75rem;\n\t--mol_gap_text: .5rem .75rem;\n}\n");
-})($ || ($ = {}));
-//gap.css.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    const { vary } = $.$mol_style_func;
-    $.$mol_gap = {
-        block: vary('--mol_gap_block'),
-        text: vary('--mol_gap_text'),
-    };
-})($ || ($ = {}));
-//gap.js.map
 ;
 "use strict";
 var $;
@@ -3892,6 +3892,9 @@ var $;
                 return this.value(key, next);
             };
             return lens;
+        }
+        reset() {
+            this.data(this.data_default);
         }
     }
     __decorate([
@@ -9213,6 +9216,9 @@ var $;
                 this.Sources(),
                 this.Lights()
             ];
+            obj.foot = () => [
+                this.Reset()
+            ];
             return obj;
         }
         Root_edit(id) {
@@ -9734,6 +9740,17 @@ var $;
             const obj = new this.$.$mol_lights_toggle();
             return obj;
         }
+        reset(event) {
+            if (event !== undefined)
+                return event;
+            return null;
+        }
+        Reset() {
+            const obj = new this.$.$mol_button_minor();
+            obj.title = () => this.$.$mol_locale.text('$hyoo_case_Reset_title');
+            obj.click = (event) => this.reset(event);
+            return obj;
+        }
     }
     __decorate([
         $.$mol_mem
@@ -9762,6 +9779,12 @@ var $;
     __decorate([
         $.$mol_mem
     ], $hyoo_case.prototype, "Lights", null);
+    __decorate([
+        $.$mol_mem
+    ], $hyoo_case.prototype, "reset", null);
+    __decorate([
+        $.$mol_mem
+    ], $hyoo_case.prototype, "Reset", null);
     $.$hyoo_case = $hyoo_case;
 })($ || ($ = {}));
 //case.view.tree.js.map
@@ -9826,6 +9849,9 @@ var $;
                     basis: rem(20),
                 },
             },
+            Reset: {
+                margin: $.$mol_gap.block,
+            },
         });
     })($$ = $.$$ || ($.$$ = {}));
 })($ || ($ = {}));
@@ -9855,6 +9881,10 @@ var $;
             editable(id, next) {
                 const arg = next === undefined ? undefined : next ? 'edit' : '';
                 return this.$.$mol_state_arg.value(id, arg) === 'edit';
+            }
+            reset() {
+                this.domain().reset();
+                this.$.$mol_state_arg.dict({});
             }
         }
         __decorate([

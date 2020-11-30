@@ -900,6 +900,16 @@ declare namespace $ {
 }
 
 declare namespace $ {
+}
+
+declare namespace $ {
+    let $mol_gap: {
+        readonly block: $mol_style_func<"var", "--mol_gap_block">;
+        readonly text: $mol_style_func<"var", "--mol_gap_text">;
+    };
+}
+
+declare namespace $ {
     class $mol_scroll extends $mol_view {
         minimal_height(): number;
         _event_scroll_timer(val?: any): any;
@@ -961,16 +971,6 @@ declare namespace $.$$ {
         title(): string;
         sub(): $mol_view[];
     }
-}
-
-declare namespace $ {
-}
-
-declare namespace $ {
-    let $mol_gap: {
-        readonly block: $mol_style_func<"var", "--mol_gap_block">;
-        readonly text: $mol_style_func<"var", "--mol_gap_text">;
-    };
 }
 
 declare namespace $ {
@@ -1135,6 +1135,7 @@ declare namespace $ {
         snapshot(next?: string): string;
         value<Key extends keyof Data>(key: Key, next?: Data[Key]): NonNullable<Data[Key]>;
         sub<Key extends keyof Data, Lens extends $mol_store<Data[Key]> = $mol_store<Data[Key]>>(key: Key, lens?: Lens): NonNullable<Lens>;
+        reset(): void;
     }
 }
 
@@ -2793,6 +2794,8 @@ declare namespace $ {
         editable(id: any, val?: any): any;
         Sources(): $mol_link_source;
         Lights(): $$.$mol_lights_toggle;
+        reset(event?: any): any;
+        Reset(): $mol_button_minor;
     }
 }
 
@@ -2822,6 +2825,7 @@ declare namespace $.$$ {
         domain(): $hyoo_case_domain;
         entity(id: string): $hyoo_case_entity;
         editable(id: string, next?: boolean): boolean;
+        reset(): void;
     }
 }
 
