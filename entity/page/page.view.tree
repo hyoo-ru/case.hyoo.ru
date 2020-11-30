@@ -1,18 +1,16 @@
 $hyoo_case_entity_page $mol_page
 	entity $hyoo_case_entity
 	head /
-		<= Snippet_kind $hyoo_case_entity_snippet
-			entity <= kind $hyoo_case_entity
+		<= Config $mol_link
+			arg <= config_arg *
+			sub /
+				<= Snippet_kind $hyoo_case_entity_snippet
+					entity <= kind $hyoo_case_entity
 		<= Snippet $hyoo_case_entity_snippet
 			entity <= entity
 			title => title
 		<= Tools
 	tools /
-		<= Config $mol_link
-			arg <= config_arg *
-			hint @ \Configurate properties
-			sub /
-				<= Config_icon $mol_icon_settings
 		<= Edit $mol_check_icon
 			hint @ \Edit mode
 			Icon <= Edit_icon $mol_icon_edit

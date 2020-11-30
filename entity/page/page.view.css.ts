@@ -4,6 +4,10 @@ namespace $.$$ {
 	
 	$mol_style_define( $hyoo_case_entity_page, {
 
+		Config: {
+			padding: 0,
+		},
+
 		Snippet_kind: {
 			color: $mol_theme.shade,
 		},
