@@ -23,11 +23,13 @@ namespace $.$$ {
 		}
 
 		@ $mol_mem
-		label() {
+		sub() {
 			return [
 				this.Title(),
-				... this.pick_allowed() ? [ this.Pick() ] : [],
 				... this.add_allowed() ? [ this.Add() ] : [],
+				... this.pick_allowed() ? [ this.Pick() ] : [],
+				... this.type() === 'property_boolean' ? [ this.Bool() ] : [],
+				... this.content().length ? [ this.Content() ] : [],
 			]
 		}
 
@@ -65,7 +67,6 @@ namespace $.$$ {
 				case "property_string": return [ this.editable() ? this.String() : this.Text_view() ]
 				case "property_text": return [ this.editable() ? this.Text() : this.Text_view() ]
 				case "property_integer": return [ this.editable() ? this.Numb() : this.Text_view() ]
-				case "property_boolean": return [ this.Bool() ]
 				case "property_link": return this.property().links().map( ( _, i )=> this.Link_view( i ) )
 				default: return []
 			}

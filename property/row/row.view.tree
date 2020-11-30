@@ -1,12 +1,17 @@
-$hyoo_case_property_row $mol_labeler
+$hyoo_case_property_row $mol_view
 	editable false
 	property $hyoo_case_property
-	label /
+	sub /
 		<= Title $mol_link
 			arg <= title_arg *
 			sub /
 				<= Title_snippet $hyoo_case_entity_snippet
 					entity <= kind $hyoo_case_entity
+		<= Add $mol_button_minor
+			hint @ \Add new
+			click?event <=> add?event null
+			sub /
+				<= Add_icon $mol_icon_plus
 		<= Pick $mol_select
 			value?val <=> pick?val \
 			options <= pick_options /string
@@ -16,11 +21,7 @@ $hyoo_case_property_row $mol_labeler
 					entity <= entity!id $hyoo_case_entity
 					highlight <= pick_query
 			option_label!id <= pick_option_title!id \
-		<= Add $mol_button_minor
-			hint @ \Add new
-			click?event <=> add?event null
-			sub /
-				<= Add_icon $mol_icon_plus
+		<= Content $mol_view sub <= content /
 	Text $mol_textarea
 		value?val <=> text?val \
 	Bool $mol_check_box

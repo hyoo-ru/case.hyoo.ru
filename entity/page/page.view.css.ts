@@ -8,10 +8,6 @@ namespace $.$$ {
 			padding: 0,
 		},
 
-		Snippet_kind: {
-			color: $mol_theme.shade,
-		},
-
 		Snippet: {
 			textShadow: '0 0',
 		},
@@ -21,11 +17,11 @@ namespace $.$$ {
 		},
 
 		Property_list: {
-			// padding: $mol_gap.block,
+			padding: $mol_gap.block,
 		},
 
 		Property: {
-			padding: $mol_gap.block,
+			padding: [ rem(.75), 0 ],
 		},
 
 	} )
