@@ -22,7 +22,7 @@ namespace $.$$ {
 			return this.domain().entity( id )
 		}
 
-			editable( id: string, next?: boolean ) {
+		editable( id: string, next?: boolean ) {
 			const arg = next === undefined ? undefined : next ? 'edit' : '' 
 			return this.$.$mol_state_arg.value( id, arg ) === 'edit'
 		}

@@ -19,7 +19,7 @@ namespace $.$$ {
 		}
 
 		hint() {
-			return this.property().kind().meta_name( this.$.$mol_locale.lang() )
+			return this.property().kind().title( this.$.$mol_locale.lang() )
 		}
 
 	}

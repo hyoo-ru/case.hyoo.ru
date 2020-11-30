@@ -20,14 +20,6 @@ namespace $ {
 			return this.sub( id , store )
 		}
 
-		meta_name( lang: string ): string {
-			const name = this.value( 'meta-name' )
-			if( name === undefined ) {
-				return this.property_target().find( t => t.meta_name( lang ) )?.meta_name( lang ) ?? this.id()
-			}
-			return String( name[ lang ] )
-		}
-
 		property_target() {
 			return this.property( 'property-target' ).links()
 		}
@@ -144,6 +136,30 @@ namespace $ {
 
 		properties_least() {
 			return this.properties().filter( prop => prop.kind().property_least() )
+		}
+
+		@ $mol_mem_key
+		title( lang: string ) {
+
+			const chunks = [] as string[]
+
+			for( const prop of this.properties_main() ) {
+				
+				switch( prop.kind().property_kind_id() ) {
+					
+					case 'property_link':
+					case 'property_boolean':
+						continue
+					
+					case 'property_string':
+					case 'property_text':
+						chunks.push( prop.locale( lang ).trim() )
+
+				}
+
+			}
+			
+			return chunks.filter( Boolean ).join(' ') || this.id()
 		}
 
 		@ $mol_mem

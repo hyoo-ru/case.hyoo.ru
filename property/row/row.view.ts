@@ -6,7 +6,7 @@ namespace $.$$ {
 		}
 
 		title() {
-			return this.property().kind().meta_name( $mol_locale.lang() )
+			return this.property().kind().title( $mol_locale.lang() )
 		}
 
 		@ $mol_mem
