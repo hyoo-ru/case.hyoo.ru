@@ -4142,324 +4142,6 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    class $mol_list extends $.$mol_view {
-        render_visible_only() {
-            return true;
-        }
-        render_over() {
-            return 0;
-        }
-        sub() {
-            return this.rows();
-        }
-        Empty() {
-            const obj = new this.$.$mol_view();
-            return obj;
-        }
-        Gap_before() {
-            const obj = new this.$.$mol_view();
-            obj.style = () => ({
-                paddingTop: this.gap_before()
-            });
-            return obj;
-        }
-        Gap_after() {
-            const obj = new this.$.$mol_view();
-            obj.style = () => ({
-                paddingTop: this.gap_after()
-            });
-            return obj;
-        }
-        view_window() {
-            return [
-                0,
-                0
-            ];
-        }
-        rows() {
-            return [];
-        }
-        gap_before() {
-            return 0;
-        }
-        gap_after() {
-            return 0;
-        }
-    }
-    __decorate([
-        $.$mol_mem
-    ], $mol_list.prototype, "Empty", null);
-    __decorate([
-        $.$mol_mem
-    ], $mol_list.prototype, "Gap_before", null);
-    __decorate([
-        $.$mol_mem
-    ], $mol_list.prototype, "Gap_after", null);
-    $.$mol_list = $mol_list;
-})($ || ($ = {}));
-//list.view.tree.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    function $mol_support_css_overflow_anchor() {
-        var _a, _b;
-        return (_b = (_a = this.$mol_dom_context.CSS) === null || _a === void 0 ? void 0 : _a.supports('overflow-anchor:auto')) !== null && _b !== void 0 ? _b : false;
-    }
-    $.$mol_support_css_overflow_anchor = $mol_support_css_overflow_anchor;
-})($ || ($ = {}));
-//css.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    class $mol_dom_listener extends $.$mol_object {
-        constructor(_node, _event, _handler, _config = { passive: true }) {
-            super();
-            this._node = _node;
-            this._event = _event;
-            this._handler = _handler;
-            this._config = _config;
-            this._node.addEventListener(this._event, this._handler, this._config);
-        }
-        destructor() {
-            this._node.removeEventListener(this._event, this._handler, this._config);
-            super.destructor();
-        }
-    }
-    $.$mol_dom_listener = $mol_dom_listener;
-})($ || ($ = {}));
-//listener.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    class $mol_print extends $.$mol_object {
-        static before() {
-            return new $.$mol_dom_listener(this.$.$mol_dom_context, 'beforeprint', () => {
-                this.active(true);
-            });
-        }
-        static after() {
-            return new $.$mol_dom_listener(this.$.$mol_dom_context, 'afterprint', () => {
-                this.active(false);
-            });
-        }
-        static active(next) {
-            this.before();
-            this.after();
-            return next || false;
-        }
-    }
-    __decorate([
-        $.$mol_mem
-    ], $mol_print, "before", null);
-    __decorate([
-        $.$mol_mem
-    ], $mol_print, "after", null);
-    __decorate([
-        $.$mol_mem
-    ], $mol_print, "active", null);
-    $.$mol_print = $mol_print;
-})($ || ($ = {}));
-//print.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    $.$mol_style_attach("mol/list/list.view.css", "[mol_list] {\n\twill-change: contents;\n\tdisplay: block;\n\tflex-direction: column;\n\tflex-shrink: 0;\n\t/* display: flex;\n\talign-items: stretch;\n\talign-content: stretch; */\n\ttransition: none;\n\tmin-height: .5rem;\n}\n\n[mol_list_gap_before] ,\n[mol_list_gap_after] {\n\tdisplay: block !important;\n\tflex: none;\n\ttransition: none;\n\toverflow-anchor: none;\n}\n \n[mol_list] > * {\n\tdisplay: flex;\n}\n");
-})($ || ($ = {}));
-//list.view.css.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        class $mol_list extends $.$mol_list {
-            sub() {
-                const rows = this.rows();
-                return (rows.length === 0) ? [this.Empty()] : rows;
-            }
-            render_visible_only() {
-                return this.$.$mol_support_css_overflow_anchor();
-            }
-            view_window() {
-                var _a, _b, _c, _d, _e, _f;
-                const kids = this.sub();
-                if (kids.length < 3)
-                    return [0, kids.length];
-                if (this.$.$mol_print.active())
-                    return [0, kids.length];
-                let [min, max] = (_a = $.$mol_mem_cached(() => this.view_window())) !== null && _a !== void 0 ? _a : [0, 0];
-                let max2 = max = Math.min(max, kids.length);
-                let min2 = min = Math.max(0, Math.min(min, max - 1));
-                const anchoring = this.render_visible_only();
-                const window_height = this.$.$mol_window.size().height + 40;
-                const over = Math.ceil(window_height * this.render_over());
-                const limit_top = -over;
-                const limit_bottom = window_height + over;
-                const rect = this.view_rect();
-                const gap_before = (_b = $.$mol_mem_cached(() => this.gap_before())) !== null && _b !== void 0 ? _b : 0;
-                const gap_after = (_c = $.$mol_mem_cached(() => this.gap_after())) !== null && _c !== void 0 ? _c : 0;
-                let top = Math.ceil((_d = rect === null || rect === void 0 ? void 0 : rect.top) !== null && _d !== void 0 ? _d : 0) + gap_before;
-                let bottom = Math.ceil((_e = rect === null || rect === void 0 ? void 0 : rect.bottom) !== null && _e !== void 0 ? _e : 0) - gap_after;
-                if (top <= limit_top && bottom >= limit_bottom) {
-                    return [min2, max2];
-                }
-                if (anchoring && ((bottom < limit_top) || (top > limit_bottom))) {
-                    min = 0;
-                    top = Math.ceil((_f = rect === null || rect === void 0 ? void 0 : rect.top) !== null && _f !== void 0 ? _f : 0);
-                    while (min < (kids.length - 1)) {
-                        const height = kids[min].minimal_height();
-                        if (top + height >= limit_top)
-                            break;
-                        top += height;
-                        ++min;
-                    }
-                    min2 = min;
-                    max2 = max = min;
-                    bottom = top;
-                }
-                let top2 = top;
-                let bottom2 = bottom;
-                if (anchoring && (top <= limit_top) && (bottom2 < limit_bottom)) {
-                    min2 = max;
-                    top2 = bottom;
-                }
-                if ((bottom >= limit_bottom) && (top2 >= limit_top)) {
-                    max2 = min;
-                    bottom2 = top;
-                }
-                while (bottom2 < limit_bottom && max2 < kids.length) {
-                    bottom2 += kids[max2].minimal_height();
-                    ++max2;
-                }
-                while (anchoring && ((top2 >= limit_top) && (min2 > 0))) {
-                    --min2;
-                    top2 -= kids[min2].minimal_height();
-                }
-                return [min2, max2];
-            }
-            gap_before() {
-                const skipped = this.sub().slice(0, this.view_window()[0]);
-                return Math.max(0, skipped.reduce((sum, view) => sum + view.minimal_height(), 0));
-            }
-            gap_after() {
-                const skipped = this.sub().slice(this.view_window()[1]);
-                return Math.max(0, skipped.reduce((sum, view) => sum + view.minimal_height(), 0));
-            }
-            sub_visible() {
-                var sub = this.sub();
-                const next = sub.slice(...this.view_window());
-                if (this.gap_before())
-                    next.unshift(this.Gap_before());
-                if (this.gap_after())
-                    next.push(this.Gap_after());
-                return next;
-            }
-            minimal_height() {
-                return this.sub().reduce((sum, view) => {
-                    try {
-                        return sum + view.minimal_height();
-                    }
-                    catch (error) {
-                        if (error instanceof Promise) {
-                            $.$mol_atom2.current.subscribe(error);
-                        }
-                        else if ($.$mol_fail_catch(error)) {
-                            console.error(error);
-                        }
-                        return sum;
-                    }
-                }, 0);
-            }
-            force_render(path) {
-                const kids = this.rows();
-                const index = kids.findIndex(item => path.has(item));
-                if (index >= 0) {
-                    const win = this.view_window();
-                    if (index < win[0] || index >= win[1]) {
-                        $.$mol_mem_cached(() => this.view_window(), [index, index + 1]);
-                    }
-                    kids[index].force_render(path);
-                }
-            }
-        }
-        __decorate([
-            $.$mol_mem
-        ], $mol_list.prototype, "sub", null);
-        __decorate([
-            $.$mol_mem
-        ], $mol_list.prototype, "view_window", null);
-        __decorate([
-            $.$mol_mem
-        ], $mol_list.prototype, "gap_before", null);
-        __decorate([
-            $.$mol_mem
-        ], $mol_list.prototype, "gap_after", null);
-        __decorate([
-            $.$mol_mem
-        ], $mol_list.prototype, "sub_visible", null);
-        __decorate([
-            $.$mol_mem
-        ], $mol_list.prototype, "minimal_height", null);
-        $$.$mol_list = $mol_list;
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-//list.view.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    class $mol_labeler extends $.$mol_list {
-        rows() {
-            return [
-                this.Label(),
-                this.Content()
-            ];
-        }
-        label() {
-            return [
-                this.title()
-            ];
-        }
-        Label() {
-            const obj = new this.$.$mol_view();
-            obj.minimal_height = () => 24;
-            obj.sub = () => this.label();
-            return obj;
-        }
-        content() {
-            return [];
-        }
-        Content() {
-            const obj = new this.$.$mol_view();
-            obj.minimal_height = () => 24;
-            obj.sub = () => this.content();
-            return obj;
-        }
-    }
-    __decorate([
-        $.$mol_mem
-    ], $mol_labeler.prototype, "Label", null);
-    __decorate([
-        $.$mol_mem
-    ], $mol_labeler.prototype, "Content", null);
-    $.$mol_labeler = $mol_labeler;
-})($ || ($ = {}));
-//labeler.view.tree.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    $.$mol_style_attach("mol/labeler/labeler.view.css", "[mol_labeler] {\n\tdisplay: flex;\n\tflex-direction: column;\n\talign-items: stretch;\n\tcursor: inherit;\n}\n\n[mol_labeler_label] {\n\tcolor: var(--mol_theme_shade);\n}\n\n[mol_labeler_content] {\n\tdisplay: flex;\n}\n");
-})($ || ($ = {}));
-//labeler.view.css.js.map
-;
-"use strict";
-var $;
-(function ($) {
     class $mol_plugin extends $.$mol_view {
         dom_node(next) {
             const node = next || $.$mol_owning_get(this, $.$mol_view).dom_node();
@@ -4791,6 +4473,276 @@ var $;
     })($$ = $.$$ || ($.$$ = {}));
 })($ || ($ = {}));
 //string.view.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    class $mol_list extends $.$mol_view {
+        render_visible_only() {
+            return true;
+        }
+        render_over() {
+            return 0;
+        }
+        sub() {
+            return this.rows();
+        }
+        Empty() {
+            const obj = new this.$.$mol_view();
+            return obj;
+        }
+        Gap_before() {
+            const obj = new this.$.$mol_view();
+            obj.style = () => ({
+                paddingTop: this.gap_before()
+            });
+            return obj;
+        }
+        Gap_after() {
+            const obj = new this.$.$mol_view();
+            obj.style = () => ({
+                paddingTop: this.gap_after()
+            });
+            return obj;
+        }
+        view_window() {
+            return [
+                0,
+                0
+            ];
+        }
+        rows() {
+            return [];
+        }
+        gap_before() {
+            return 0;
+        }
+        gap_after() {
+            return 0;
+        }
+    }
+    __decorate([
+        $.$mol_mem
+    ], $mol_list.prototype, "Empty", null);
+    __decorate([
+        $.$mol_mem
+    ], $mol_list.prototype, "Gap_before", null);
+    __decorate([
+        $.$mol_mem
+    ], $mol_list.prototype, "Gap_after", null);
+    $.$mol_list = $mol_list;
+})($ || ($ = {}));
+//list.view.tree.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    function $mol_support_css_overflow_anchor() {
+        var _a, _b;
+        return (_b = (_a = this.$mol_dom_context.CSS) === null || _a === void 0 ? void 0 : _a.supports('overflow-anchor:auto')) !== null && _b !== void 0 ? _b : false;
+    }
+    $.$mol_support_css_overflow_anchor = $mol_support_css_overflow_anchor;
+})($ || ($ = {}));
+//css.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    class $mol_dom_listener extends $.$mol_object {
+        constructor(_node, _event, _handler, _config = { passive: true }) {
+            super();
+            this._node = _node;
+            this._event = _event;
+            this._handler = _handler;
+            this._config = _config;
+            this._node.addEventListener(this._event, this._handler, this._config);
+        }
+        destructor() {
+            this._node.removeEventListener(this._event, this._handler, this._config);
+            super.destructor();
+        }
+    }
+    $.$mol_dom_listener = $mol_dom_listener;
+})($ || ($ = {}));
+//listener.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    class $mol_print extends $.$mol_object {
+        static before() {
+            return new $.$mol_dom_listener(this.$.$mol_dom_context, 'beforeprint', () => {
+                this.active(true);
+            });
+        }
+        static after() {
+            return new $.$mol_dom_listener(this.$.$mol_dom_context, 'afterprint', () => {
+                this.active(false);
+            });
+        }
+        static active(next) {
+            this.before();
+            this.after();
+            return next || false;
+        }
+    }
+    __decorate([
+        $.$mol_mem
+    ], $mol_print, "before", null);
+    __decorate([
+        $.$mol_mem
+    ], $mol_print, "after", null);
+    __decorate([
+        $.$mol_mem
+    ], $mol_print, "active", null);
+    $.$mol_print = $mol_print;
+})($ || ($ = {}));
+//print.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    $.$mol_style_attach("mol/list/list.view.css", "[mol_list] {\n\twill-change: contents;\n\tdisplay: block;\n\tflex-direction: column;\n\tflex-shrink: 0;\n\t/* display: flex;\n\talign-items: stretch;\n\talign-content: stretch; */\n\ttransition: none;\n\tmin-height: .5rem;\n}\n\n[mol_list_gap_before] ,\n[mol_list_gap_after] {\n\tdisplay: block !important;\n\tflex: none;\n\ttransition: none;\n\toverflow-anchor: none;\n}\n \n[mol_list] > * {\n\tdisplay: flex;\n}\n");
+})($ || ($ = {}));
+//list.view.css.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        class $mol_list extends $.$mol_list {
+            sub() {
+                const rows = this.rows();
+                return (rows.length === 0) ? [this.Empty()] : rows;
+            }
+            render_visible_only() {
+                return this.$.$mol_support_css_overflow_anchor();
+            }
+            view_window() {
+                var _a, _b, _c, _d, _e, _f;
+                const kids = this.sub();
+                if (kids.length < 3)
+                    return [0, kids.length];
+                if (this.$.$mol_print.active())
+                    return [0, kids.length];
+                let [min, max] = (_a = $.$mol_mem_cached(() => this.view_window())) !== null && _a !== void 0 ? _a : [0, 0];
+                let max2 = max = Math.min(max, kids.length);
+                let min2 = min = Math.max(0, Math.min(min, max - 1));
+                const anchoring = this.render_visible_only();
+                const window_height = this.$.$mol_window.size().height + 40;
+                const over = Math.ceil(window_height * this.render_over());
+                const limit_top = -over;
+                const limit_bottom = window_height + over;
+                const rect = this.view_rect();
+                const gap_before = (_b = $.$mol_mem_cached(() => this.gap_before())) !== null && _b !== void 0 ? _b : 0;
+                const gap_after = (_c = $.$mol_mem_cached(() => this.gap_after())) !== null && _c !== void 0 ? _c : 0;
+                let top = Math.ceil((_d = rect === null || rect === void 0 ? void 0 : rect.top) !== null && _d !== void 0 ? _d : 0) + gap_before;
+                let bottom = Math.ceil((_e = rect === null || rect === void 0 ? void 0 : rect.bottom) !== null && _e !== void 0 ? _e : 0) - gap_after;
+                if (top <= limit_top && bottom >= limit_bottom) {
+                    return [min2, max2];
+                }
+                if (anchoring && ((bottom < limit_top) || (top > limit_bottom))) {
+                    min = 0;
+                    top = Math.ceil((_f = rect === null || rect === void 0 ? void 0 : rect.top) !== null && _f !== void 0 ? _f : 0);
+                    while (min < (kids.length - 1)) {
+                        const height = kids[min].minimal_height();
+                        if (top + height >= limit_top)
+                            break;
+                        top += height;
+                        ++min;
+                    }
+                    min2 = min;
+                    max2 = max = min;
+                    bottom = top;
+                }
+                let top2 = top;
+                let bottom2 = bottom;
+                if (anchoring && (top <= limit_top) && (bottom2 < limit_bottom)) {
+                    min2 = max;
+                    top2 = bottom;
+                }
+                if ((bottom >= limit_bottom) && (top2 >= limit_top)) {
+                    max2 = min;
+                    bottom2 = top;
+                }
+                while (bottom2 < limit_bottom && max2 < kids.length) {
+                    bottom2 += kids[max2].minimal_height();
+                    ++max2;
+                }
+                while (anchoring && ((top2 >= limit_top) && (min2 > 0))) {
+                    --min2;
+                    top2 -= kids[min2].minimal_height();
+                }
+                return [min2, max2];
+            }
+            gap_before() {
+                const skipped = this.sub().slice(0, this.view_window()[0]);
+                return Math.max(0, skipped.reduce((sum, view) => sum + view.minimal_height(), 0));
+            }
+            gap_after() {
+                const skipped = this.sub().slice(this.view_window()[1]);
+                return Math.max(0, skipped.reduce((sum, view) => sum + view.minimal_height(), 0));
+            }
+            sub_visible() {
+                var sub = this.sub();
+                const next = sub.slice(...this.view_window());
+                if (this.gap_before())
+                    next.unshift(this.Gap_before());
+                if (this.gap_after())
+                    next.push(this.Gap_after());
+                return next;
+            }
+            minimal_height() {
+                return this.sub().reduce((sum, view) => {
+                    try {
+                        return sum + view.minimal_height();
+                    }
+                    catch (error) {
+                        if (error instanceof Promise) {
+                            $.$mol_atom2.current.subscribe(error);
+                        }
+                        else if ($.$mol_fail_catch(error)) {
+                            console.error(error);
+                        }
+                        return sum;
+                    }
+                }, 0);
+            }
+            force_render(path) {
+                const kids = this.rows();
+                const index = kids.findIndex(item => path.has(item));
+                if (index >= 0) {
+                    const win = this.view_window();
+                    if (index < win[0] || index >= win[1]) {
+                        $.$mol_mem_cached(() => this.view_window(), [index, index + 1]);
+                    }
+                    kids[index].force_render(path);
+                }
+            }
+        }
+        __decorate([
+            $.$mol_mem
+        ], $mol_list.prototype, "sub", null);
+        __decorate([
+            $.$mol_mem
+        ], $mol_list.prototype, "view_window", null);
+        __decorate([
+            $.$mol_mem
+        ], $mol_list.prototype, "gap_before", null);
+        __decorate([
+            $.$mol_mem
+        ], $mol_list.prototype, "gap_after", null);
+        __decorate([
+            $.$mol_mem
+        ], $mol_list.prototype, "sub_visible", null);
+        __decorate([
+            $.$mol_mem
+        ], $mol_list.prototype, "minimal_height", null);
+        $$.$mol_list = $mol_list;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+//list.view.js.map
 ;
 "use strict";
 var $;
@@ -8372,7 +8324,7 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    class $hyoo_case_property_row extends $.$mol_labeler {
+    class $hyoo_case_property_row extends $.$mol_view {
         editable() {
             return false;
         }
@@ -8380,11 +8332,12 @@ var $;
             const obj = new this.$.$hyoo_case_property();
             return obj;
         }
-        label() {
+        sub() {
             return [
                 this.Title(),
+                this.Add(),
                 this.Pick(),
-                this.Add()
+                this.Content()
             ];
         }
         Text() {
@@ -8440,6 +8393,24 @@ var $;
             ];
             return obj;
         }
+        add(event) {
+            if (event !== undefined)
+                return event;
+            return null;
+        }
+        Add_icon() {
+            const obj = new this.$.$mol_icon_plus();
+            return obj;
+        }
+        Add() {
+            const obj = new this.$.$mol_button_minor();
+            obj.hint = () => this.$.$mol_locale.text('$hyoo_case_property_row_Add_hint');
+            obj.click = (event) => this.add(event);
+            obj.sub = () => [
+                this.Add_icon()
+            ];
+            return obj;
+        }
         pick(val) {
             if (val !== undefined)
                 return val;
@@ -8474,22 +8445,12 @@ var $;
         pick_query() {
             return this.Pick().filter_pattern();
         }
-        add(event) {
-            if (event !== undefined)
-                return event;
-            return null;
+        content() {
+            return [];
         }
-        Add_icon() {
-            const obj = new this.$.$mol_icon_plus();
-            return obj;
-        }
-        Add() {
-            const obj = new this.$.$mol_button_minor();
-            obj.hint = () => this.$.$mol_locale.text('$hyoo_case_property_row_Add_hint');
-            obj.click = (event) => this.add(event);
-            obj.sub = () => [
-                this.Add_icon()
-            ];
+        Content() {
+            const obj = new this.$.$mol_view();
+            obj.sub = () => this.content();
             return obj;
         }
         text(val) {
@@ -8576,6 +8537,15 @@ var $;
     ], $hyoo_case_property_row.prototype, "Title", null);
     __decorate([
         $.$mol_mem
+    ], $hyoo_case_property_row.prototype, "add", null);
+    __decorate([
+        $.$mol_mem
+    ], $hyoo_case_property_row.prototype, "Add_icon", null);
+    __decorate([
+        $.$mol_mem
+    ], $hyoo_case_property_row.prototype, "Add", null);
+    __decorate([
+        $.$mol_mem
     ], $hyoo_case_property_row.prototype, "pick", null);
     __decorate([
         $.$mol_mem_key
@@ -8588,13 +8558,7 @@ var $;
     ], $hyoo_case_property_row.prototype, "Pick", null);
     __decorate([
         $.$mol_mem
-    ], $hyoo_case_property_row.prototype, "add", null);
-    __decorate([
-        $.$mol_mem
-    ], $hyoo_case_property_row.prototype, "Add_icon", null);
-    __decorate([
-        $.$mol_mem
-    ], $hyoo_case_property_row.prototype, "Add", null);
+    ], $hyoo_case_property_row.prototype, "Content", null);
     __decorate([
         $.$mol_mem
     ], $hyoo_case_property_row.prototype, "text", null);
@@ -8669,8 +8633,12 @@ var $;
 (function ($) {
     var $$;
     (function ($$) {
-        const { rem } = $.$mol_style_unit;
+        const { rem, per } = $.$mol_style_unit;
         $.$mol_style_define($$.$hyoo_case_property_row, {
+            alignItems: 'flex-start',
+            flex: {
+                wrap: 'wrap',
+            },
             Text_view: {
                 padding: $.$mol_gap.text,
             },
@@ -8680,14 +8648,23 @@ var $;
             Content: {
                 flex: {
                     direction: 'column',
+                    grow: 1,
+                    basis: per(100),
                 },
+                padding: [0, rem(.75)],
             },
             Title: {
                 padding: 0,
-                color: $.$mol_theme.shade,
+                textShadow: '0 0',
                 flex: {
                     grow: 0,
                 },
+            },
+            Pick: {
+                flex: {
+                    grow: 1000,
+                },
+                padding: [0, rem(.75)],
             },
         });
     })($$ = $.$$ || ($.$$ = {}));
@@ -8712,11 +8689,13 @@ var $;
             title_arg() {
                 return this.$.$hyoo_case_route_arg(this.property().entity(), this.property().kind());
             }
-            label() {
+            sub() {
                 return [
                     this.Title(),
-                    ...this.pick_allowed() ? [this.Pick()] : [],
                     ...this.add_allowed() ? [this.Add()] : [],
+                    ...this.pick_allowed() ? [this.Pick()] : [],
+                    ...this.type() === 'property_boolean' ? [this.Bool()] : [],
+                    ...this.content().length ? [this.Content()] : [],
                 ];
             }
             suggest() {
@@ -8752,7 +8731,6 @@ var $;
                     case "property_string": return [this.editable() ? this.String() : this.Text_view()];
                     case "property_text": return [this.editable() ? this.Text() : this.Text_view()];
                     case "property_integer": return [this.editable() ? this.Numb() : this.Text_view()];
-                    case "property_boolean": return [this.Bool()];
                     case "property_link": return this.property().links().map((_, i) => this.Link_view(i));
                     default: return [];
                 }
@@ -8821,7 +8799,7 @@ var $;
         ], $hyoo_case_property_row.prototype, "title_arg", null);
         __decorate([
             $.$mol_mem
-        ], $hyoo_case_property_row.prototype, "label", null);
+        ], $hyoo_case_property_row.prototype, "sub", null);
         __decorate([
             $.$mol_mem
         ], $hyoo_case_property_row.prototype, "pick_allowed", null);
@@ -9025,18 +9003,17 @@ var $;
             Config: {
                 padding: 0,
             },
-            Snippet_kind: {
-                color: $.$mol_theme.shade,
-            },
             Snippet: {
                 textShadow: '0 0',
             },
             flex: {
                 basis: rem(30),
             },
-            Property_list: {},
-            Property: {
+            Property_list: {
                 padding: $.$mol_gap.block,
+            },
+            Property: {
+                padding: [rem(.75), 0],
             },
         });
     })($$ = $.$$ || ($.$$ = {}));

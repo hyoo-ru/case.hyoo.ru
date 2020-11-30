@@ -1159,7 +1159,7 @@ declare namespace $ {
         property_target(): $hyoo_case_entity[];
         meta_kind(): $hyoo_case_entity[];
         property_kind(): $hyoo_case_entity[];
-        property_kind_id(): "property_link" | "property_string" | "property_text" | "property_integer" | "property_boolean" | null;
+        property_kind_id(): "property_string" | "property_text" | "property_integer" | "property_boolean" | "property_link" | null;
         property_locale(): boolean;
         property_suggest(): boolean;
         property_populate(): boolean;
@@ -1191,77 +1191,6 @@ declare namespace $ {
         target_join(entities: $hyoo_case_entity[]): void;
         target_tear(index: number): void;
     }
-}
-
-declare namespace $ {
-    class $mol_list extends $mol_view {
-        render_visible_only(): boolean;
-        render_over(): number;
-        sub(): readonly $mol_view[];
-        Empty(): $mol_view;
-        Gap_before(): $mol_view;
-        Gap_after(): $mol_view;
-        view_window(): readonly any[];
-        rows(): readonly $mol_view[];
-        gap_before(): number;
-        gap_after(): number;
-    }
-}
-
-declare namespace $ {
-    function $mol_support_css_overflow_anchor(this: $mol_ambient_context): boolean;
-}
-
-declare namespace $ {
-    class $mol_dom_listener extends $mol_object {
-        _node: any;
-        _event: string;
-        _handler: (event: any) => any;
-        _config: boolean | {
-            passive: boolean;
-        };
-        constructor(_node: any, _event: string, _handler: (event: any) => any, _config?: boolean | {
-            passive: boolean;
-        });
-        destructor(): void;
-    }
-}
-
-declare namespace $ {
-    class $mol_print extends $mol_object {
-        static before(): $mol_dom_listener;
-        static after(): $mol_dom_listener;
-        static active(next?: boolean): boolean;
-    }
-}
-
-declare namespace $ {
-}
-
-declare namespace $.$$ {
-    class $mol_list extends $.$mol_list {
-        sub(): readonly $mol_view[];
-        render_visible_only(): boolean;
-        view_window(): [number, number];
-        gap_before(): number;
-        gap_after(): number;
-        sub_visible(): $mol_view[];
-        minimal_height(): number;
-        force_render(path: Set<$mol_view>): void;
-    }
-}
-
-declare namespace $ {
-    class $mol_labeler extends $mol_list {
-        rows(): readonly any[];
-        label(): readonly (string | number | boolean | $mol_view | Node)[];
-        Label(): $mol_view;
-        content(): readonly any[];
-        Content(): $mol_view;
-    }
-}
-
-declare namespace $ {
 }
 
 declare namespace $ {
@@ -1549,6 +1478,64 @@ declare namespace $.$$ {
         event_change(next?: Event): void;
         disabled(): boolean;
         autocomplete_native(): "on" | "off";
+    }
+}
+
+declare namespace $ {
+    class $mol_list extends $mol_view {
+        render_visible_only(): boolean;
+        render_over(): number;
+        sub(): readonly $mol_view[];
+        Empty(): $mol_view;
+        Gap_before(): $mol_view;
+        Gap_after(): $mol_view;
+        view_window(): readonly any[];
+        rows(): readonly $mol_view[];
+        gap_before(): number;
+        gap_after(): number;
+    }
+}
+
+declare namespace $ {
+    function $mol_support_css_overflow_anchor(this: $mol_ambient_context): boolean;
+}
+
+declare namespace $ {
+    class $mol_dom_listener extends $mol_object {
+        _node: any;
+        _event: string;
+        _handler: (event: any) => any;
+        _config: boolean | {
+            passive: boolean;
+        };
+        constructor(_node: any, _event: string, _handler: (event: any) => any, _config?: boolean | {
+            passive: boolean;
+        });
+        destructor(): void;
+    }
+}
+
+declare namespace $ {
+    class $mol_print extends $mol_object {
+        static before(): $mol_dom_listener;
+        static after(): $mol_dom_listener;
+        static active(next?: boolean): boolean;
+    }
+}
+
+declare namespace $ {
+}
+
+declare namespace $.$$ {
+    class $mol_list extends $.$mol_list {
+        sub(): readonly $mol_view[];
+        render_visible_only(): boolean;
+        view_window(): [number, number];
+        gap_before(): number;
+        gap_after(): number;
+        sub_visible(): $mol_view[];
+        minimal_height(): number;
+        force_render(path: Set<$mol_view>): void;
     }
 }
 
@@ -2392,7 +2379,7 @@ declare namespace $.$$ {
 
 declare namespace $.$$ {
     class $hyoo_case_property_snippet extends $.$hyoo_case_property_snippet {
-        type(): "property_link" | "property_string" | "property_text" | "property_integer" | "property_boolean" | null;
+        type(): "property_string" | "property_text" | "property_integer" | "property_boolean" | "property_link" | null;
         title(): string;
         hint(): string;
     }
@@ -2602,10 +2589,10 @@ declare namespace $ {
 }
 
 declare namespace $ {
-    class $hyoo_case_property_row extends $mol_labeler {
+    class $hyoo_case_property_row extends $mol_view {
         editable(): boolean;
         property(): $hyoo_case_property;
-        label(): readonly any[];
+        sub(): readonly any[];
         Text(): $$.$mol_textarea;
         Bool(): $mol_check_box;
         String(): $$.$mol_string;
@@ -2616,6 +2603,9 @@ declare namespace $ {
         kind(): $hyoo_case_entity;
         Title_snippet(): $$.$hyoo_case_entity_snippet;
         Title(): $$.$mol_link;
+        add(event?: any): any;
+        Add_icon(): $mol_icon_plus;
+        Add(): $mol_button_minor;
         pick(val?: any): any;
         pick_options(): readonly string[];
         entity(id: any): $hyoo_case_entity;
@@ -2623,9 +2613,8 @@ declare namespace $ {
         pick_option_title(id: any): string;
         Pick(): $$.$mol_select;
         pick_query(): string;
-        add(event?: any): any;
-        Add_icon(): $mol_icon_plus;
-        Add(): $mol_button_minor;
+        content(): readonly any[];
+        Content(): $mol_view;
         text(val?: any): any;
         bool(val?: any): any;
         numb(val?: any): any;
@@ -2656,14 +2645,14 @@ declare namespace $.$$ {
     class $hyoo_case_property_row extends $.$hyoo_case_property_row {
         kind(): $hyoo_case_entity;
         title(): string;
-        type(): "property_link" | "property_string" | "property_text" | "property_integer" | "property_boolean" | null;
+        type(): "property_string" | "property_text" | "property_integer" | "property_boolean" | "property_link" | null;
         title_arg(): Record<string, string | null>;
-        label(): ($mol_button_minor | $mol_link | $mol_select)[];
+        sub(): ($mol_view | $mol_select | $mol_check_box)[];
         suggest(): boolean;
         populate(): boolean;
         pick_allowed(): boolean;
         add_allowed(): boolean;
-        content(): ($mol_view | $mol_string)[] | ($mol_view | $mol_textarea)[] | ($mol_view | $mol_number)[] | $mol_check_box[];
+        content(): ($mol_view | $mol_string)[] | ($mol_view | $mol_textarea)[] | ($mol_view | $mol_number)[];
         link_content(id: number): ($mol_button_minor | $hyoo_case_entity_snippet)[];
         text(next?: string): string;
         numb(next?: number): string | number | boolean | readonly string[] | Record<string, string>;

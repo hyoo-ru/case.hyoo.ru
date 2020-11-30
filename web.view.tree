@@ -30,27 +30,6 @@ $mol_page $mol_view
 		<= Foot $mol_view
 			sub <= foot /$mol_view
 
-$mol_list $mol_view
-	render_visible_only true
-	render_over 0
-	sub <= rows /$mol_view
-	Empty $mol_view
-	Gap_before $mol_view style * paddingTop <= gap_before 0
-	Gap_after $mol_view style * paddingTop <= gap_after 0
-	view_window /
-		0
-		0
-
-$mol_labeler $mol_list
-	rows /
-		<= Label $mol_view
-			minimal_height 24
-			sub <= label /$mol_view_content
-				<= title
-		<= Content $mol_view
-			minimal_height 24
-			sub <= content /
-
 $mol_hotkey $mol_plugin
 	event *
 		^
@@ -83,6 +62,17 @@ $mol_string $mol_view
 	plugins /
 		<= Submit $mol_hotkey
 			key * enter?event <=> submit?event null
+
+$mol_list $mol_view
+	render_visible_only true
+	render_over 0
+	sub <= rows /$mol_view
+	Empty $mol_view
+	Gap_before $mol_view style * paddingTop <= gap_before 0
+	Gap_after $mol_view style * paddingTop <= gap_after 0
+	view_window /
+		0
+		0
 
 $mol_float $mol_view
 	style *
@@ -503,15 +493,20 @@ $mol_select $mol_pop
 
 $mol_icon_cross $mol_icon path \M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z
 
-$hyoo_case_property_row $mol_labeler
+$hyoo_case_property_row $mol_view
 	editable false
 	property $hyoo_case_property
-	label /
+	sub /
 		<= Title $mol_link
 			arg <= title_arg *
 			sub /
 				<= Title_snippet $hyoo_case_entity_snippet
 					entity <= kind $hyoo_case_entity
+		<= Add $mol_button_minor
+			hint @ \Add new
+			click?event <=> add?event null
+			sub /
+				<= Add_icon $mol_icon_plus
 		<= Pick $mol_select
 			value?val <=> pick?val \
 			options <= pick_options /string
@@ -521,11 +516,7 @@ $hyoo_case_property_row $mol_labeler
 					entity <= entity!id $hyoo_case_entity
 					highlight <= pick_query
 			option_label!id <= pick_option_title!id \
-		<= Add $mol_button_minor
-			hint @ \Add new
-			click?event <=> add?event null
-			sub /
-				<= Add_icon $mol_icon_plus
+		<= Content $mol_view sub <= content /
 	Text $mol_textarea
 		value?val <=> text?val \
 	Bool $mol_check_box
