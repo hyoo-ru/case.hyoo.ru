@@ -24,6 +24,12 @@ namespace $.$$ {
 			padding: [ rem(.75), 0 ],
 		},
 
+		Tools: {
+			flex: {
+				grow: 1,
+			},
+		},
+
 	} )
 
 }

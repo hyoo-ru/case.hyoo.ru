@@ -26,42 +26,39 @@ $hyoo_case $mol_book2
 		meta *
 			meta-kind / \meta
 			meta-name * ru \Мета
+			meta-icon \🌌
 			meta-description * ru \Тип представителями которого являются другие типы
 			meta-properties /
 				\meta-kind
 				\meta-name
+				\meta-icon
 				\meta-description
 				\meta-properties
-				\meta-parents
-				\meta-kids
 				\meta-members
-			meta-parents /
-			meta-kids /
-				\entity
-				\property
 			meta-members /
 				\meta
 				\entity
 				\property
 		entity *
 			meta-kind / \meta
-			meta-parents / \meta
 			meta-name * ru \Сущность
+			meta-icon \🌟
 			meta-description * ru \Базовый тип для прикладных сущностей
 			meta-properties /
 				\meta-name
+				\meta-icon
 				\meta-description
 				\meta-properties
 				\meta-members
-			meta-kids /
 			meta-members /
 				\case
 		property *
 			meta-kind / \meta
-			meta-parents / \meta
 			meta-name * ru \Свойство
+			meta-icon \✨
 			meta-properties /
 				\meta-name
+				\meta-icon
 				\property-kind
 				\property-owners
 				\property-main
@@ -71,8 +68,6 @@ $hyoo_case $mol_book2
 				\meta-kind
 				\meta-name
 				\meta-description
-				\meta-parents
-				\meta-kids
 				\meta-members
 				\meta-properties
 				\property-target
@@ -90,6 +85,7 @@ $hyoo_case $mol_book2
 			meta-name * ru \Тип свойства
 			meta-properties /
 				\meta-name
+				\meta-icon
 				\property-kind
 				\property-owners
 				\property-main
@@ -104,6 +100,7 @@ $hyoo_case $mol_book2
 		property_link *
 			meta-kind / \property_type
 			meta-name * ru \Ссылка на сущность
+			meta-icon \💫
 			meta-properties /
 				\property-inherit
 				\property-populate
@@ -114,24 +111,28 @@ $hyoo_case $mol_book2
 		property_string *
 			meta-kind / \property_type
 			meta-name * ru \Строка текста
+			meta-icon \📟
 			meta-properties /
 				\property-min
 				\property-max
 		property_text *
 			meta-kind / \property_type
 			meta-name * ru \Многострочный текст
+			meta-icon \📃
 			meta-properties /
 				\property-min
 				\property-max
 		property_integer *
 			meta-kind / \property_type
 			meta-name * ru \Целое число
+			meta-icon \🎱
 			meta-properties /
 				\property-min
 				\property-max
 		property_boolean *
 			meta-kind / \property_type
 			meta-name * ru \Флаг
+			meta-icon \🚩
 			meta-properties /
 		meta-kind *
 			meta-kind / \property
@@ -141,23 +142,12 @@ $hyoo_case $mol_book2
 			property-owners / \entity
 			property-back / \meta-members
 			property-min 1
-		meta-parents *
+		meta-icon *
 			meta-kind / \property
-			property-kind / \property_link
-			meta-name * ru \Родительский тип
-			property-inherit true
-			property-populate true
-			property-target / \entity
+			property-kind / \property_string
+			meta-name * ru \Иконка
 			property-owners / \entity
-			property-back / \meta-kids
-		meta-kids *
-			meta-kind / \property
-			property-kind / \property_link
-			meta-name * ru \Дочерние типы
-			property-populate true
-			property-target / \entity
-			property-owners / \entity
-			property-back / \meta-parents
+			property-main true
 		meta-name *
 			meta-kind / \property
 			property-kind / \property_string

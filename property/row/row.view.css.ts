@@ -15,6 +15,7 @@ namespace $.$$ {
 
 		Link_view: {
 			padding: 0,
+			justifyContent: 'space-between',
 		},
 
 		Content: {

@@ -6,10 +6,6 @@ namespace $.$$ {
 
 		padding: rem(.5),
 
-		flex: {
-			grow: 1,
-		},
-		
 		justifyContent: 'space-between',
 		textAlign: 'left',
 
