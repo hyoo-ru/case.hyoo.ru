@@ -3928,7 +3928,7 @@ var $;
 (function ($) {
     class $hyoo_case_domain extends $.$mol_store {
         entity(id) {
-            const store = new $.$hyoo_case_entity({});
+            const store = new $.$hyoo_case_entity({ 'meta-kind': [] });
             store.id = $.$mol_const(id);
             store.domain = $.$mol_const(this);
             return this.sub(id, store);
@@ -3963,25 +3963,26 @@ var $;
             store.entity = $.$mol_const(this);
             return this.sub(id, store);
         }
-        properties_id() {
-            return Object.keys(this.data());
-        }
-        entity_name(lang) {
+        meta_name(lang) {
             var _a, _b;
-            const name = this.value('entity-name');
+            const name = this.value('meta-name');
             if (name === undefined) {
-                return (_b = (_a = this.property_target().find(t => t.entity_name(lang))) === null || _a === void 0 ? void 0 : _a.entity_name(lang)) !== null && _b !== void 0 ? _b : this.id();
+                return (_b = (_a = this.property_target().find(t => t.meta_name(lang))) === null || _a === void 0 ? void 0 : _a.meta_name(lang)) !== null && _b !== void 0 ? _b : this.id();
             }
             return String(name[lang]);
         }
         property_target() {
             return this.property('property-target').links();
         }
-        entity_kind() {
-            return this.property('entity-kind').links();
+        meta_kind() {
+            return this.property('meta-kind').links();
         }
-        entity_kind_id() {
-            return this.entity_kind()[0].id();
+        property_kind() {
+            return this.property('property-kind').links();
+        }
+        property_kind_id() {
+            var _a, _b;
+            return ((_b = (_a = this.property_kind()[0]) === null || _a === void 0 ? void 0 : _a.id()) !== null && _b !== void 0 ? _b : null);
         }
         property_locale() {
             return Boolean(this.value('property-locale'));
@@ -3993,48 +3994,57 @@ var $;
             return Boolean(this.value('property-main'));
         }
         property_least() {
-            return this.entity_kind_id() === 'property_link' || !this.property_main();
+            return this.property_kind_id() === 'property_link' || !this.property_main();
+        }
+        property_hidden() {
+            return Boolean(this.value('property-hidden'));
+        }
+        property_inherit() {
+            return Boolean(this.value('property-inherit'));
         }
         property_unit() {
             return String(this.value('property-unit'));
         }
         property_back() {
-            return String(this.value('property-back'));
+            return this.property('property-back').links();
         }
-        entity_parents() {
-            return this.property('entity-parents').links();
-        }
-        entity_ancestors() {
-            const all = [];
-            for (const parent of this.entity_parents()) {
-                all.push(...parent.entity_ancestors(), parent);
-            }
-            return new Set(all);
-        }
-        entity_properties() {
-            const kinds = [];
-            for (const kind of this.entity_kind()) {
-                kinds.push(...kind.entity_ancestors());
-                kinds.push(kind);
-            }
-            const props = [];
-            for (const kind of kinds) {
-                for (const prop of kind.property('entity-properties').links()) {
-                    props.push(this.property(prop.id()));
+        properties() {
+            const kinds = [...this.meta_kind()];
+            const props = new Set();
+            while (kinds.length) {
+                const kind = kinds.pop();
+                for (const Prop of kind.property('meta-properties').links()) {
+                    const prop = this.property(Prop.id());
+                    if (props.has(prop))
+                        continue;
+                    props.add(prop);
+                    if (Prop.property_inherit()) {
+                        for (const target of this.property(Prop.id()).links()) {
+                            if (kinds.includes(target))
+                                continue;
+                            kinds.push(target);
+                        }
+                    }
                 }
             }
-            return props;
+            return [...props];
         }
-        entity_members() {
-            var _a;
-            const domain = this.domain();
-            return ((_a = this.value('enity-members')) !== null && _a !== void 0 ? _a : []).map(id => domain.entity(id));
+        properties_main() {
+            return this.properties().filter(prop => prop.kind().property_main());
         }
-        entity_properties_main() {
-            return this.entity_properties().filter(prop => prop.kind().property_main());
+        properties_least() {
+            return this.properties().filter(prop => prop.kind().property_least());
         }
-        entity_properties_least() {
-            return this.entity_properties().filter(prop => prop.kind().property_least());
+        members() {
+            const kinds = [];
+            kinds.push(this);
+            const members = [];
+            for (const kind of kinds) {
+                for (const member of kind.property('meta-members').links()) {
+                    members.push(member);
+                }
+            }
+            return members;
         }
     }
     __decorate([
@@ -4042,16 +4052,10 @@ var $;
     ], $hyoo_case_entity.prototype, "property", null);
     __decorate([
         $.$mol_mem
-    ], $hyoo_case_entity.prototype, "properties_id", null);
+    ], $hyoo_case_entity.prototype, "properties", null);
     __decorate([
         $.$mol_mem
-    ], $hyoo_case_entity.prototype, "entity_ancestors", null);
-    __decorate([
-        $.$mol_mem
-    ], $hyoo_case_entity.prototype, "entity_properties", null);
-    __decorate([
-        $.$mol_mem
-    ], $hyoo_case_entity.prototype, "entity_members", null);
+    ], $hyoo_case_entity.prototype, "members", null);
     $.$hyoo_case_entity = $hyoo_case_entity;
 })($ || ($ = {}));
 //entity.js.map
@@ -4083,18 +4087,20 @@ var $;
             return String(value !== null && value !== void 0 ? value : '');
         }
         links(next) {
-            var _a;
             const domain = this.domain();
             const arg = next === undefined ? undefined : next.map(item => item.id());
-            return ((_a = this.data(arg)) !== null && _a !== void 0 ? _a : []).map(id => domain.entity(id));
+            let val = this.data(arg);
+            if (!val || typeof val !== 'object')
+                val = [];
+            return val.map(id => domain.entity(id));
         }
         back(index) {
-            var _a, _b;
-            return (_b = (_a = this.links()[index]) === null || _a === void 0 ? void 0 : _a.property(this.kind().property_back())) !== null && _b !== void 0 ? _b : null;
+            var _a, _b, _c;
+            return (_c = (_a = this.links()[index]) === null || _a === void 0 ? void 0 : _a.property((_b = this.kind().property_back()[0]) === null || _b === void 0 ? void 0 : _b.id())) !== null && _c !== void 0 ? _c : null;
         }
         target_new() {
             const target = this.domain().entity_new();
-            target.property('entity-kind').target_join(this.kind().property_target());
+            target.property('meta-kind').target_join(this.kind().property_target());
             this.target_join([target]);
             return target;
         }
@@ -4105,8 +4111,10 @@ var $;
                 if (links.includes(target))
                     continue;
                 this.links(links = [...links, target]);
-                const back = target.property(this.kind().property_back());
-                back.links([...back.links(), entity]);
+                for (const Back of this.kind().property_back()) {
+                    const back = target.property(Back.id());
+                    back.links([...back.links(), entity]);
+                }
             }
         }
         target_tear(index) {
@@ -7377,7 +7385,7 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    class $hyoo_case_property_snippet extends $.$mol_view {
+    class $hyoo_case_property_snippet extends $.$mol_dimmer {
         sub() {
             return [
                 this.title()
@@ -7420,19 +7428,30 @@ var $;
     var $$;
     (function ($$) {
         class $hyoo_case_property_snippet extends $.$hyoo_case_property_snippet {
+            type() {
+                return this.property().kind().property_kind_id();
+            }
             title() {
-                switch (this.property().kind().entity_kind_id()) {
-                    case 'property_link': return this.property().links().length.toString();
-                    default: return this.text();
+                switch (this.type()) {
+                    case 'property_link': {
+                        const links = this.property().links();
+                        if (links.length === 0)
+                            return '';
+                        return links.length.toString();
+                    }
+                    default: return this.property().locale($.$mol_locale.lang());
                 }
             }
             hint() {
-                return this.property().kind().entity_name(this.$.$mol_locale.lang());
-            }
-            text(next) {
-                return this.property().locale($.$mol_locale.lang(), next);
+                return this.property().kind().meta_name(this.$.$mol_locale.lang());
             }
         }
+        __decorate([
+            $.$mol_mem
+        ], $hyoo_case_property_snippet.prototype, "type", null);
+        __decorate([
+            $.$mol_mem
+        ], $hyoo_case_property_snippet.prototype, "title", null);
         $$.$hyoo_case_property_snippet = $hyoo_case_property_snippet;
     })($$ = $.$$ || ($.$$ = {}));
 })($ || ($ = {}));
@@ -7500,13 +7519,13 @@ var $;
     (function ($$) {
         class $hyoo_case_entity_snippet extends $.$hyoo_case_entity_snippet {
             title() {
-                const main = this.entity().entity_properties_main();
+                const main = this.entity().properties_main();
                 if (main.length === 0)
                     return this.entity().id();
                 return main.map(prop => prop.locale($.$mol_locale.lang())).join(' ');
             }
             property_list() {
-                const main = this.entity().entity_properties_main();
+                const main = this.entity().properties_main();
                 if (main.length === 0)
                     return [this.entity().id()];
                 return main.map(prop => this.Property(prop.id()));
@@ -8388,13 +8407,24 @@ var $;
             obj.sub = () => this.link_content(id);
             return obj;
         }
+        title_arg() {
+            return {};
+        }
         kind() {
             const obj = new this.$.$hyoo_case_entity();
             return obj;
         }
-        Title() {
+        Title_snippet() {
             const obj = new this.$.$hyoo_case_entity_snippet();
             obj.entity = () => this.kind();
+            return obj;
+        }
+        Title() {
+            const obj = new this.$.$mol_link();
+            obj.arg = () => this.title_arg();
+            obj.sub = () => [
+                this.Title_snippet()
+            ];
             return obj;
         }
         pick(val) {
@@ -8519,6 +8549,9 @@ var $;
     ], $hyoo_case_property_row.prototype, "kind", null);
     __decorate([
         $.$mol_mem
+    ], $hyoo_case_property_row.prototype, "Title_snippet", null);
+    __decorate([
+        $.$mol_mem
     ], $hyoo_case_property_row.prototype, "Title", null);
     __decorate([
         $.$mol_mem
@@ -8580,8 +8613,8 @@ var $;
         let keys = Object.keys(arg);
         const index_source = keys.indexOf(source.id());
         keys.splice(index_source + 1, 1000);
-        const scheme_target = target.entity_kind();
-        const index_target = keys.findIndex(id => this.$mol_compare_array(domain.entity(id).entity_kind(), scheme_target));
+        const scheme_target = target.meta_kind();
+        const index_target = keys.findIndex(id => this.$mol_compare_array(domain.entity(id).meta_kind(), scheme_target));
         keys.splice(0, index_target + 1);
         keys.push(target.id());
         if (editable !== this.undefined) {
@@ -8629,6 +8662,8 @@ var $;
                 },
             },
             Title: {
+                padding: 0,
+                color: $.$mol_theme.shade,
                 flex: {
                     grow: 0,
                 },
@@ -8648,17 +8683,39 @@ var $;
                 return this.property().kind();
             }
             title() {
-                return this.property().kind().entity_name($.$mol_locale.lang());
+                return this.property().kind().meta_name($.$mol_locale.lang());
             }
             type() {
-                return this.property().kind().entity_kind_id();
+                return this.property().kind().property_kind_id();
+            }
+            title_arg() {
+                return this.$.$hyoo_case_route_arg(this.property().entity(), this.property().kind());
             }
             label() {
                 return [
                     this.Title(),
-                    ...this.type() === 'property_link' && this.editable() && this.pick_options().length ? [this.Pick()] : [],
-                    ...this.type() === 'property_link' ? [this.Add()] : [],
+                    ...this.pick_allowed() ? [this.Pick()] : [],
+                    ...this.add_allowed() ? [this.Add()] : [],
                 ];
+            }
+            suggest() {
+                return this.property().kind().property_suggest();
+            }
+            pick_allowed() {
+                if (!this.editable())
+                    return false;
+                if (this.type() !== 'property_link')
+                    return false;
+                if (!this.suggest())
+                    return false;
+                if (this.pick_options().length === 0)
+                    return false;
+                return true;
+            }
+            add_allowed() {
+                if (this.type() !== 'property_link')
+                    return false;
+                return true;
             }
             content() {
                 if (this.editable()) {
@@ -8671,7 +8728,7 @@ var $;
                     case "property_integer": return [this.editable() ? this.Numb() : this.Text_view()];
                     case "property_boolean": return [this.Bool()];
                     case "property_link": return this.property().links().map((_, i) => this.Link_view(i));
-                    default: return [this.editable() ? this.String() : this.Text_view()];
+                    default: return [];
                 }
             }
             link_content(id) {
@@ -8709,7 +8766,7 @@ var $;
                 const exists = new Set(this.property().links());
                 const options = [];
                 for (const scheme of this.property().kind().property_target()) {
-                    for (const inst of scheme.entity_members()) {
+                    for (const inst of scheme.members()) {
                         if (exists.has(inst))
                             continue;
                         options.push(inst.id());
@@ -8732,7 +8789,16 @@ var $;
         ], $hyoo_case_property_row.prototype, "type", null);
         __decorate([
             $.$mol_mem
+        ], $hyoo_case_property_row.prototype, "title_arg", null);
+        __decorate([
+            $.$mol_mem
         ], $hyoo_case_property_row.prototype, "label", null);
+        __decorate([
+            $.$mol_mem
+        ], $hyoo_case_property_row.prototype, "pick_allowed", null);
+        __decorate([
+            $.$mol_mem
+        ], $hyoo_case_property_row.prototype, "add_allowed", null);
         __decorate([
             $.$mol_mem
         ], $hyoo_case_property_row.prototype, "content", null);
@@ -8794,7 +8860,7 @@ var $;
         }
         head() {
             return [
-                this.Snippet_scheme(),
+                this.Snippet_kind(),
                 this.Snippet(),
                 this.Tools()
             ];
@@ -8817,13 +8883,13 @@ var $;
             obj.editable = () => this.editable();
             return obj;
         }
-        scheme() {
+        kind() {
             const obj = new this.$.$hyoo_case_entity();
             return obj;
         }
-        Snippet_scheme() {
+        Snippet_kind() {
             const obj = new this.$.$hyoo_case_entity_snippet();
-            obj.entity = () => this.scheme();
+            obj.entity = () => this.kind();
             return obj;
         }
         Snippet() {
@@ -8903,10 +8969,10 @@ var $;
     ], $hyoo_case_entity_page.prototype, "Property", null);
     __decorate([
         $.$mol_mem
-    ], $hyoo_case_entity_page.prototype, "scheme", null);
+    ], $hyoo_case_entity_page.prototype, "kind", null);
     __decorate([
         $.$mol_mem
-    ], $hyoo_case_entity_page.prototype, "Snippet_scheme", null);
+    ], $hyoo_case_entity_page.prototype, "Snippet_kind", null);
     __decorate([
         $.$mol_mem
     ], $hyoo_case_entity_page.prototype, "Snippet", null);
@@ -8948,6 +9014,9 @@ var $;
     (function ($$) {
         const { rem } = $.$mol_style_unit;
         $.$mol_style_define($$.$hyoo_case_entity_page, {
+            Snippet_kind: {
+                color: $.$mol_theme.shade,
+            },
             Snippet: {
                 textShadow: '0 0',
             },
@@ -8969,13 +9038,14 @@ var $;
     var $$;
     (function ($$) {
         class $hyoo_case_entity_page extends $.$hyoo_case_entity_page {
-            scheme() {
-                return this.entity().entity_kind()[0];
+            kind() {
+                return this.entity().meta_kind()[0];
             }
             property_list() {
-                let props = this.entity().entity_properties();
+                let props = this.entity().properties();
                 if (!this.editable()) {
                     props = props.filter(prop => prop.kind().property_least());
+                    props = props.filter(prop => !prop.kind().property_hidden());
                 }
                 return props.map(property => this.Property(property.id()));
             }
@@ -8983,7 +9053,7 @@ var $;
                 return this.entity().property(id);
             }
             config_arg() {
-                return this.$.$hyoo_case_route_arg(this.entity(), this.entity().entity_kind()[0]);
+                return this.$.$hyoo_case_route_arg(this.entity(), this.kind());
             }
             close_arg() {
                 return this.$.$hyoo_case_route_arg(this.entity(), null);
@@ -9155,11 +9225,23 @@ var $;
         Menu() {
             const obj = new this.$.$mol_page();
             obj.title = () => this.$.$mol_locale.text('$hyoo_case_Menu_title');
+            obj.tools = () => [];
+            return obj;
+        }
+        Root_page(id) {
+            const obj = new this.$.$hyoo_case_entity_page();
+            obj.entity = () => this.entity(id);
+            obj.editable = (val) => this.editable(id, val);
+            obj.Snippet_kind = () => null;
             obj.tools = () => [
+                this.Root_edit(id),
                 this.Sources(),
                 this.Lights()
             ];
             return obj;
+        }
+        Root_edit(id) {
+            return this.Root_page(id).Edit();
         }
         Entity_page(id) {
             const obj = new this.$.$hyoo_case_entity_page();
@@ -9169,144 +9251,209 @@ var $;
         }
         domain() {
             const obj = new this.$.$hyoo_case_domain({
-                entity: {
-                    "entity-kind": [
-                        "entity"
+                meta: {
+                    "meta-kind": [
+                        "meta"
                     ],
-                    "entity-name": {
+                    "meta-name": {
+                        ru: "Мета"
+                    },
+                    "meta-description": {
+                        ru: "Тип представителями которого являются другие типы"
+                    },
+                    "meta-properties": [
+                        "meta-kind",
+                        "meta-name",
+                        "meta-description",
+                        "meta-properties",
+                        "meta-parents",
+                        "meta-kids",
+                        "meta-members"
+                    ],
+                    "meta-parents": [],
+                    "meta-kids": [
+                        "entity",
+                        "property"
+                    ],
+                    "meta-members": [
+                        "meta",
+                        "entity",
+                        "property"
+                    ]
+                },
+                entity: {
+                    "meta-kind": [
+                        "meta"
+                    ],
+                    "meta-parents": [
+                        "meta"
+                    ],
+                    "meta-name": {
                         ru: "Сущность"
                     },
-                    "entity-properties": [
-                        "entity-kind",
-                        "entity-members",
-                        "entity-parents",
-                        "entity-kids",
-                        "entity-name",
-                        "entity-description",
-                        "entity-properties"
+                    "meta-description": {
+                        ru: "Базовый тип для прикладных сущностей"
+                    },
+                    "meta-properties": [
+                        "meta-name",
+                        "meta-description",
+                        "meta-properties",
+                        "meta-members"
+                    ],
+                    "meta-kids": [],
+                    "meta-members": [
+                        "case"
                     ]
                 },
                 property: {
-                    "entity-kind": [
-                        "entity"
+                    "meta-kind": [
+                        "meta"
                     ],
-                    "entity-name": {
+                    "meta-parents": [
+                        "meta"
+                    ],
+                    "meta-name": {
                         ru: "Свойство"
                     },
-                    "entity-properties": [
-                        "entity-kind",
-                        "entity-name",
+                    "meta-properties": [
+                        "meta-name",
+                        "property-kind",
                         "property-owners",
                         "property-main",
+                        "property-hidden",
                         "property-suggest"
                     ],
-                    "entity-kids": [
+                    "meta-members": [
+                        "meta-kind",
+                        "meta-name",
+                        "meta-description",
+                        "meta-parents",
+                        "meta-kids",
+                        "meta-members",
+                        "meta-properties",
+                        "property-target",
+                        "property-back",
+                        "property-owners",
+                        "property-min",
+                        "property-max",
+                        "property-main",
+                        "property-hidden",
+                        "property-suggest",
+                        "property-inherit"
+                    ]
+                },
+                property_type: {
+                    "meta-kind": [
+                        "meta"
+                    ],
+                    "meta-name": {
+                        ru: "Тип свойства"
+                    },
+                    "meta-properties": [
+                        "meta-name",
+                        "property-kind",
+                        "property-owners",
+                        "property-main",
+                        "property-hidden",
+                        "property-suggest"
+                    ],
+                    "meta-members": [
                         "property_link",
                         "property_string",
                         "property_text",
-                        "property_number"
+                        "property_integer",
+                        "property_boolean"
                     ]
                 },
                 property_link: {
-                    "entity-kind": [
-                        "entity"
+                    "meta-kind": [
+                        "property_type"
                     ],
-                    "entity-parents": [
-                        "property"
-                    ],
-                    "entity-name": {
+                    "meta-name": {
                         ru: "Ссылка на сущность"
                     },
-                    "entity-properties": [
+                    "meta-properties": [
                         "property-inherit",
                         "property-target",
                         "property-back",
                         "property-min",
                         "property-max"
-                    ],
-                    "entity-members": [
-                        "entity-kind"
                     ]
                 },
                 property_string: {
-                    "entity-kind": [
-                        "entity"
+                    "meta-kind": [
+                        "property_type"
                     ],
-                    "entity-parents": [
-                        "property"
-                    ],
-                    "entity-name": {
+                    "meta-name": {
                         ru: "Строка текста"
                     },
-                    "entity-properties": [
+                    "meta-properties": [
                         "property-min",
                         "property-max"
                     ]
                 },
                 property_text: {
-                    "entity-kind": [
-                        "entity"
+                    "meta-kind": [
+                        "property_type"
                     ],
-                    "entity-parents": [
-                        "property"
-                    ],
-                    "entity-name": {
+                    "meta-name": {
                         ru: "Многострочный текст"
                     },
-                    "entity-properties": [
+                    "meta-properties": [
                         "property-min",
                         "property-max"
                     ]
                 },
                 property_integer: {
-                    "entity-kind": [
-                        "entity"
+                    "meta-kind": [
+                        "property_type"
                     ],
-                    "entity-parents": [
-                        "property"
-                    ],
-                    "entity-name": {
+                    "meta-name": {
                         ru: "Целое число"
                     },
-                    "entity-properties": [
+                    "meta-properties": [
                         "property-min",
                         "property-max"
                     ]
                 },
                 property_boolean: {
-                    "entity-kind": [
-                        "entity"
+                    "meta-kind": [
+                        "property_type"
                     ],
-                    "entity-parents": [
-                        "property"
-                    ],
-                    "entity-name": {
+                    "meta-name": {
                         ru: "Флаг"
                     },
-                    "entity-properties": []
+                    "meta-properties": []
                 },
-                "entity-kind": {
-                    "entity-kind": [
+                "meta-kind": {
+                    "meta-kind": [
+                        "property"
+                    ],
+                    "property-kind": [
                         "property_link"
                     ],
-                    "entity-name": {
+                    "meta-name": {
                         ru: "Тип"
                     },
                     "property-target": [
-                        "entity"
+                        "meta"
                     ],
                     "property-owners": [
                         "entity"
                     ],
                     "property-back": [
-                        "entity-members"
-                    ]
+                        "meta-members"
+                    ],
+                    "property-min": 1
                 },
-                "entity-parents": {
-                    "entity-kind": [
+                "meta-parents": {
+                    "meta-kind": [
+                        "property"
+                    ],
+                    "property-kind": [
                         "property_link"
                     ],
-                    "entity-name": {
+                    "meta-name": {
                         ru: "Родительский тип"
                     },
                     "property-inherit": true,
@@ -9317,17 +9464,19 @@ var $;
                         "entity"
                     ],
                     "property-back": [
-                        "entity-kids"
+                        "meta-kids"
                     ]
                 },
-                "entity-kids": {
-                    "entity-kind": [
+                "meta-kids": {
+                    "meta-kind": [
+                        "property"
+                    ],
+                    "property-kind": [
                         "property_link"
                     ],
-                    "entity-name": {
+                    "meta-name": {
                         ru: "Дочерние типы"
                     },
-                    "property-inherit": true,
                     "property-target": [
                         "entity"
                     ],
@@ -9335,14 +9484,17 @@ var $;
                         "entity"
                     ],
                     "property-back": [
-                        "entity-parent"
+                        "meta-parents"
                     ]
                 },
-                "entity-name": {
-                    "entity-kind": [
+                "meta-name": {
+                    "meta-kind": [
+                        "property"
+                    ],
+                    "property-kind": [
                         "property_string"
                     ],
-                    "entity-name": {
+                    "meta-name": {
                         ru: "Название"
                     },
                     "property-locale": true,
@@ -9351,11 +9503,14 @@ var $;
                     ],
                     "property-main": true
                 },
-                "entity-description": {
-                    "entity-kind": [
+                "meta-description": {
+                    "meta-kind": [
+                        "property"
+                    ],
+                    "property-kind": [
                         "property_text"
                     ],
-                    "entity-name": {
+                    "meta-name": {
                         ru: "Описание"
                     },
                     "property-locale": true,
@@ -9363,26 +9518,32 @@ var $;
                         "entity"
                     ]
                 },
-                "entity-members": {
-                    "entity-kind": [
+                "meta-members": {
+                    "meta-kind": [
+                        "property"
+                    ],
+                    "property-kind": [
                         "property_link"
                     ],
-                    "entity-name": {
+                    "meta-name": {
                         ru: "Экземпляры"
                     },
                     "property-target": [],
                     "property-back": [
-                        "entity-kind"
+                        "meta-kind"
                     ],
                     "property-owners": [
                         "entity"
                     ]
                 },
-                "entity-properties": {
-                    "entity-kind": [
+                "meta-properties": {
+                    "meta-kind": [
+                        "property"
+                    ],
+                    "property-kind": [
                         "property_link"
                     ],
-                    "entity-name": {
+                    "meta-name": {
                         ru: "Свойства"
                     },
                     "property-target": [
@@ -9393,13 +9554,17 @@ var $;
                     ],
                     "property-owners": [
                         "entity"
-                    ]
+                    ],
+                    "property-hidden": true
                 },
                 "property-min": {
-                    "entity-kind": [
+                    "meta-kind": [
+                        "property"
+                    ],
+                    "property-kind": [
                         "property_integer"
                     ],
-                    "entity-name": {
+                    "meta-name": {
                         ru: "Минимальное число"
                     },
                     "property-owners": [
@@ -9407,10 +9572,13 @@ var $;
                     ]
                 },
                 "property-max": {
-                    "entity-kind": [
+                    "meta-kind": [
+                        "property"
+                    ],
+                    "property-kind": [
                         "property_integer"
                     ],
-                    "entity-name": {
+                    "meta-name": {
                         ru: "Максимальное число"
                     },
                     "property-owners": [
@@ -9418,21 +9586,47 @@ var $;
                     ]
                 },
                 "property-main": {
-                    "entity-kind": [
+                    "meta-kind": [
+                        "property"
+                    ],
+                    "property-kind": [
                         "property_boolean"
                     ],
-                    "entity-name": {
+                    "meta-name": {
                         ru: "Основное"
+                    },
+                    "meta-description": {
+                        ru: "Свойство отображается во всех местах упоминания сущности"
+                    },
+                    "property-owners": [
+                        "property"
+                    ]
+                },
+                "property-hidden": {
+                    "meta-kind": [
+                        "property"
+                    ],
+                    "property-kind": [
+                        "property_boolean"
+                    ],
+                    "meta-name": {
+                        ru: "Скрытое"
+                    },
+                    "meta-description": {
+                        ru: "Свойство отображается лишь в режиме редактирования сущности"
                     },
                     "property-owners": [
                         "property"
                     ]
                 },
                 "property-suggest": {
-                    "entity-kind": [
+                    "meta-kind": [
+                        "property"
+                    ],
+                    "property-kind": [
                         "property_boolean"
                     ],
-                    "entity-name": {
+                    "meta-name": {
                         ru: "Подсказывать из существующих"
                     },
                     "property-owners": [
@@ -9440,21 +9634,46 @@ var $;
                     ]
                 },
                 "property-inherit": {
-                    "entity-kind": [
+                    "meta-kind": [
+                        "property"
+                    ],
+                    "property-kind": [
                         "property_boolean"
                     ],
-                    "entity-name": {
+                    "meta-name": {
                         ru: "Добавляет свойства"
                     },
                     "property-owners": [
                         "property"
                     ]
                 },
-                "property-target": {
-                    "entity-kind": [
+                "property-kind": {
+                    "meta-kind": [
+                        "property"
+                    ],
+                    "property-kind": [
                         "property_link"
                     ],
-                    "entity-name": {
+                    "meta-name": {
+                        ru: "Тип свойства"
+                    },
+                    "property-inherit": true,
+                    "property-suggest": true,
+                    "property-target": [
+                        "property_type"
+                    ],
+                    "property-owners": [
+                        "property"
+                    ]
+                },
+                "property-target": {
+                    "meta-kind": [
+                        "property"
+                    ],
+                    "property-kind": [
+                        "property_link"
+                    ],
+                    "meta-name": {
                         ru: "Указывает на тип"
                     },
                     "property-target": [
@@ -9462,13 +9681,17 @@ var $;
                     ],
                     "property-owners": [
                         "property"
-                    ]
+                    ],
+                    "property-suggest": true
                 },
                 "property-back": {
-                    "entity-kind": [
+                    "meta-kind": [
+                        "property"
+                    ],
+                    "property-kind": [
                         "property_link"
                     ],
-                    "entity-name": {
+                    "meta-name": {
                         ru: "Обратное свойство в целевом типе"
                     },
                     "property-target": [
@@ -9476,439 +9699,39 @@ var $;
                     ],
                     "property-owners": [
                         "property"
-                    ]
+                    ],
+                    "property-suggest": true
                 },
                 "property-owners": {
-                    "entity-kind": [
+                    "meta-kind": [
+                        "property"
+                    ],
+                    "property-kind": [
                         "property_link"
                     ],
-                    "entity-name": {
-                        ru: "Сущность"
+                    "meta-name": {
+                        ru: "Владельцы свойства"
                     },
                     "property-target": [
-                        "entity"
+                        "meta"
                     ],
                     "property-back": [
-                        "entity-properties"
+                        "meta-properties"
                     ],
                     "property-owners": [
-                        "entity"
+                        "meta"
                     ]
                 },
-                place: {
-                    "entity-kind": [
-                        "entity"
+                case: {
+                    "meta-kind": [
+                        "case"
                     ],
-                    "entity-name": {
-                        ru: "Площадка"
+                    "meta-name": {
+                        ru: "Бизнес Кейс"
                     },
-                    "entity-properties": [
-                        "place-title",
-                        "place-address",
-                        "place-meetup"
-                    ],
-                    "entity-members": [
-                        "place-online"
-                    ]
-                },
-                "place-title": {
-                    "entity-kind": [
-                        "property_string"
-                    ],
-                    "entity-name": {
-                        ru: "Название"
-                    },
-                    "property-locale": true,
-                    "property-owners": [
-                        "place"
-                    ],
-                    "property-main": true
-                },
-                "place-address": {
-                    "entity-kind": [
-                        "property_text"
-                    ],
-                    "entity-name": {
-                        ru: "Адрес"
-                    },
-                    "property-locale": true,
-                    "property-owners": [
-                        "place"
-                    ]
-                },
-                "place-meetup": {
-                    "entity-kind": [
-                        "property_link"
-                    ],
-                    "entity-name": {
-                        ru: "Митапы"
-                    },
-                    "property-target": [
-                        "meetup"
-                    ],
-                    "property-back": [
-                        "meetup-place"
-                    ],
-                    "property-owners": [
-                        "place"
-                    ]
-                },
-                meetup: {
-                    "entity-kind": [
-                        "entity"
-                    ],
-                    "entity-name": {
-                        ru: "Митап"
-                    },
-                    "entity-properties": [
-                        "meetup-name",
-                        "meetup-translation",
-                        "meetup-place",
-                        "meetup-speeches",
-                        "meetup-host"
-                    ],
-                    "entity-members": [
-                        "meetup-66"
-                    ]
-                },
-                "meetup-name": {
-                    "entity-kind": [
-                        "property_string"
-                    ],
-                    "entity-name": {
-                        ru: "Номер"
-                    },
-                    "property-owners": [
-                        "meetup"
-                    ],
-                    "property-main": true
-                },
-                "meetup-translation": {
-                    "entity-kind": [
-                        "property_string"
-                    ],
-                    "entity-name": {
-                        ru: "Трансляция"
-                    },
-                    "property-owners": [
-                        "meetup"
-                    ]
-                },
-                "meetup-place": {
-                    "entity-kind": [
-                        "property_link"
-                    ],
-                    "entity-name": {
-                        ru: "Площадка"
-                    },
-                    "property-target": [
-                        "place"
-                    ],
-                    "property-back": [
-                        "place-meetup"
-                    ],
-                    "property-owners": [
-                        "meetup"
-                    ]
-                },
-                "meetup-speeches": {
-                    "entity-kind": [
-                        "property_link"
-                    ],
-                    "entity-name": {
-                        ru: "Выступления"
-                    },
-                    "property-target": [
-                        "speech"
-                    ],
-                    "property-back": [
-                        "speech-meetup"
-                    ],
-                    "property-owners": [
-                        "meetup"
-                    ]
-                },
-                "meetup-host": {
-                    "entity-kind": [
-                        "property_link"
-                    ],
-                    "entity-name": {
-                        ru: "Ведущие"
-                    },
-                    "property-target": [
-                        "user"
-                    ],
-                    "property-back": [
-                        "user-host-of-meetup"
-                    ],
-                    "property-owners": [
-                        "meetup"
-                    ]
-                },
-                user: {
-                    "entity-kind": [
-                        "entity"
-                    ],
-                    "entity-name": {
-                        ru: "Персона"
-                    },
-                    "entity-properties": [
-                        "user-name",
-                        "user-email",
-                        "user-host-of-meetup",
-                        "user-speeches"
-                    ],
-                    "entity-members": [
-                        "user-vas"
-                    ]
-                },
-                "user-name": {
-                    "entity-kind": [
-                        "property_string"
-                    ],
-                    "entity-name": {
-                        ru: "Имя"
-                    },
-                    "property-locale": true,
-                    "property-owners": [
-                        "user"
-                    ],
-                    "property-main": true
-                },
-                "user-email": {
-                    "entity-kind": [
-                        "property_string"
-                    ],
-                    "entity-name": {
-                        ru: "Почта"
-                    },
-                    "property-owners": [
-                        "user"
-                    ]
-                },
-                "user-host-of-meetup": {
-                    "entity-kind": [
-                        "property_link"
-                    ],
-                    "entity-name": {
-                        ru: "Ведущий митапов"
-                    },
-                    "property-target": [
-                        "meetup"
-                    ],
-                    "property-back": [
-                        "meetup-host"
-                    ],
-                    "property-owners": [
-                        "user"
-                    ]
-                },
-                "user-speeches": {
-                    "entity-kind": [
-                        "property_link"
-                    ],
-                    "entity-name": {
-                        ru: "Выступления"
-                    },
-                    "property-target": [
-                        "speech"
-                    ],
-                    "property-back": [
-                        "speech-speakers"
-                    ],
-                    "property-owners": [
-                        "user"
-                    ]
-                },
-                speech: {
-                    "entity-kind": [
-                        "entity"
-                    ],
-                    "entity-name": {
-                        ru: "Выступление"
-                    },
-                    "entity-properties": [
-                        "speech-title",
-                        "speech-description",
-                        "speech-duration",
-                        "speech-meetup",
-                        "speech-speakers"
-                    ],
-                    "entity-members": [
-                        "speech-copy-paste",
-                        "speech-kung-fu",
-                        "speech-deps"
-                    ]
-                },
-                "speech-title": {
-                    "entity-kind": [
-                        "property_string"
-                    ],
-                    "entity-name": {
-                        ru: "Название"
-                    },
-                    "property-locale": true,
-                    "property-owners": [
-                        "speech"
-                    ],
-                    "property-main": true
-                },
-                "speech-description": {
-                    "entity-kind": [
-                        "property_text"
-                    ],
-                    "entity-name": {
-                        ru: "Описание"
-                    },
-                    "property-locale": true,
-                    "property-owners": [
-                        "speech"
-                    ]
-                },
-                "speech-duration": {
-                    "entity-kind": [
-                        "property_integer"
-                    ],
-                    "entity-name": {
-                        ru: "Длительность"
-                    },
-                    "property-suggest": true,
-                    "property-owners": [
-                        "speech"
-                    ],
-                    "property-main": true
-                },
-                "speech-meetup": {
-                    "entity-kind": [
-                        "property_link"
-                    ],
-                    "entity-name": {
-                        ru: "Митап"
-                    },
-                    "property-target": [
-                        "meetup"
-                    ],
-                    "property-back": [
-                        "meetup-speeches"
-                    ],
-                    "property-owners": [
-                        "speech"
-                    ]
-                },
-                "speech-speakers": {
-                    "entity-kind": [
-                        "property_link"
-                    ],
-                    "entity-name": {
-                        ru: "Докладчики"
-                    },
-                    "property-target": [
-                        "user"
-                    ],
-                    "property-back": [
-                        "user-speeches"
-                    ],
-                    "property-owners": [
-                        "speech"
-                    ]
-                },
-                "place-online": {
-                    "entity-kind": [
-                        "place"
-                    ],
-                    "place-title": {
-                        ru: "Онлайн"
-                    },
-                    "place-address": {
-                        ru: "До конца эпидемии встречаемся онлайн"
-                    },
-                    "place-meetup": [
-                        "meetup-66"
-                    ]
-                },
-                "meetup-66": {
-                    "entity-kind": [
-                        "meetup"
-                    ],
-                    "meetup-name": "#66",
-                    "meetup-translation": "https://youtube.com/piterjs",
-                    "meetup-place": [
-                        "place-online"
-                    ],
-                    "meetup-host": [
-                        "user-vas"
-                    ],
-                    "meetup-speeches": [
-                        "speech-copy-paste",
-                        "speech-kung-fu",
-                        "speech-deps"
-                    ]
-                },
-                "user-vas": {
-                    "entity-kind": [
-                        "user"
-                    ],
-                    "user-name": {
-                        ru: "Василий Пупкин"
-                    },
-                    "user-email": "pupa@example.org",
-                    "user-host-of-meetup": [
-                        "meetup-66"
-                    ],
-                    "user-speeches": [
-                        "speech-copy-paste",
-                        "speech-kung-fu"
-                    ]
-                },
-                "speech-copy-paste": {
-                    "entity-kind": [
-                        "speech"
-                    ],
-                    "speech-title": {
-                        ru: "Как победить копипасту?"
-                    },
-                    "speech-description": {
-                        ru: "Расскажу о своём ноу-хау."
-                    },
-                    "speech-duration": 40,
-                    "speech-speakers": [
-                        "user-vas"
-                    ],
-                    "speech-meetup": [
-                        "meetup-66"
-                    ]
-                },
-                "speech-kung-fu": {
-                    "entity-kind": [
-                        "speech"
-                    ],
-                    "speech-title": {
-                        ru: "Слепое программирование"
-                    },
-                    "speech-description": {
-                        ru: "Настоящее кунг-фу программирования."
-                    },
-                    "speech-duration": 30,
-                    "speech-speakers": [
-                        "user-vas"
-                    ],
-                    "speech-meetup": [
-                        "meetup-66"
-                    ]
-                },
-                "speech-deps": {
-                    "entity-kind": [
-                        "speech"
-                    ],
-                    "speech-title": {
-                        ru: "Зависимость от программирования"
-                    },
-                    "speech-description": {
-                        ru: "Обмениваемся опытом слезания с кодинга."
-                    },
-                    "speech-duration": 60,
-                    "speech-meetup": [
-                        "meetup-66"
+                    "meta-properties": [
+                        "meta-name",
+                        "meta-properties"
                     ]
                 }
             });
@@ -9916,15 +9739,6 @@ var $;
         }
         Theme() {
             const obj = new this.$.$mol_theme_auto();
-            return obj;
-        }
-        Sources() {
-            const obj = new this.$.$mol_link_source();
-            obj.uri = () => "https://github.com/hyoo-ru/case.hyoo.ru";
-            return obj;
-        }
-        Lights() {
-            const obj = new this.$.$mol_lights_toggle();
             return obj;
         }
         entity(id) {
@@ -9936,10 +9750,22 @@ var $;
                 return val;
             return false;
         }
+        Sources() {
+            const obj = new this.$.$mol_link_source();
+            obj.uri = () => "https://github.com/hyoo-ru/case.hyoo.ru";
+            return obj;
+        }
+        Lights() {
+            const obj = new this.$.$mol_lights_toggle();
+            return obj;
+        }
     }
     __decorate([
         $.$mol_mem
     ], $hyoo_case.prototype, "Menu", null);
+    __decorate([
+        $.$mol_mem_key
+    ], $hyoo_case.prototype, "Root_page", null);
     __decorate([
         $.$mol_mem_key
     ], $hyoo_case.prototype, "Entity_page", null);
@@ -9950,17 +9776,17 @@ var $;
         $.$mol_mem
     ], $hyoo_case.prototype, "Theme", null);
     __decorate([
-        $.$mol_mem
-    ], $hyoo_case.prototype, "Sources", null);
-    __decorate([
-        $.$mol_mem
-    ], $hyoo_case.prototype, "Lights", null);
-    __decorate([
         $.$mol_mem_key
     ], $hyoo_case.prototype, "entity", null);
     __decorate([
         $.$mol_mem_key
     ], $hyoo_case.prototype, "editable", null);
+    __decorate([
+        $.$mol_mem
+    ], $hyoo_case.prototype, "Sources", null);
+    __decorate([
+        $.$mol_mem
+    ], $hyoo_case.prototype, "Lights", null);
     $.$hyoo_case = $hyoo_case;
 })($ || ($ = {}));
 //case.view.tree.js.map
@@ -10039,8 +9865,10 @@ var $;
             pages() {
                 const params = this.$.$mol_state_arg.dict();
                 return [
-                    this.Menu(),
-                    ...Object.keys(params).map(id => this.Entity_page(id))
+                    this.Root_page('case'),
+                    ...Object.keys(params)
+                        .filter(key => key !== 'case')
+                        .map(id => this.Entity_page(id))
                 ];
             }
             domain() {

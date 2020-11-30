@@ -394,7 +394,7 @@ $mol_number $mol_view
 			enabled <= inc_enabled <= enabled true
 			sub / <= inc_icon $mol_icon_plus
 
-$hyoo_case_property_snippet $mol_view
+$hyoo_case_property_snippet $mol_dimmer
 	sub / <= title
 	property $hyoo_case_property
 	attr *
@@ -505,8 +505,11 @@ $hyoo_case_property_row $mol_labeler
 	editable false
 	property $hyoo_case_property
 	label /
-		<= Title $hyoo_case_entity_snippet
-			entity <= kind $hyoo_case_entity
+		<= Title $mol_link
+			arg <= title_arg *
+			sub /
+				<= Title_snippet $hyoo_case_entity_snippet
+					entity <= kind $hyoo_case_entity
 		<= Pick $mol_select
 			value?val <=> pick?val \
 			options <= pick_options /string
@@ -548,8 +551,8 @@ $mol_check_icon $mol_check
 $hyoo_case_entity_page $mol_page
 	entity $hyoo_case_entity
 	head /
-		<= Snippet_scheme $hyoo_case_entity_snippet
-			entity <= scheme $hyoo_case_entity
+		<= Snippet_kind $hyoo_case_entity_snippet
+			entity <= kind $hyoo_case_entity
 		<= Snippet $hyoo_case_entity_snippet
 			entity <= entity
 			title => title
@@ -599,6 +602,13 @@ $hyoo_case $mol_book2
 	Menu $mol_page
 		title @ \Business case
 		tools /
+	Root_page!id $hyoo_case_entity_page
+		entity <= entity!id $hyoo_case_entity
+		editable?val <=> editable!id?val false
+		Snippet_kind null
+		Edit => Root_edit!id
+		tools /
+			<= Root_edit!id
 			<= Sources $mol_link_source
 				uri \https://github.com/hyoo-ru/case.hyoo.ru
 			<= Lights $mol_lights_toggle
@@ -607,329 +617,232 @@ $hyoo_case $mol_book2
 		editable?val <=> editable!id?val false
 	-
 	domain $hyoo_case_domain / *
+		meta *
+			meta-kind / \meta
+			meta-name * ru \Мета
+			meta-description * ru \Тип представителями которого являются другие типы
+			meta-properties /
+				\meta-kind
+				\meta-name
+				\meta-description
+				\meta-properties
+				\meta-parents
+				\meta-kids
+				\meta-members
+			meta-parents /
+			meta-kids /
+				\entity
+				\property
+			meta-members /
+				\meta
+				\entity
+				\property
 		entity *
-			entity-kind / \entity
-			entity-name * ru \Сущность
-			entity-properties /
-				\entity-kind
-				\entity-members
-				\entity-parents
-				\entity-kids
-				\entity-name
-				\entity-description
-				\entity-properties
+			meta-kind / \meta
+			meta-parents / \meta
+			meta-name * ru \Сущность
+			meta-description * ru \Базовый тип для прикладных сущностей
+			meta-properties /
+				\meta-name
+				\meta-description
+				\meta-properties
+				\meta-members
+			meta-kids /
+			meta-members /
+				\case
 		property *
-			entity-kind / \entity
-			entity-name * ru \Свойство
-			entity-properties /
-				\entity-kind
-				\entity-name
+			meta-kind / \meta
+			meta-parents / \meta
+			meta-name * ru \Свойство
+			meta-properties /
+				\meta-name
+				\property-kind
 				\property-owners
 				\property-main
+				\property-hidden
 				\property-suggest
-			entity-kids /
+			meta-members /
+				\meta-kind
+				\meta-name
+				\meta-description
+				\meta-parents
+				\meta-kids
+				\meta-members
+				\meta-properties
+				\property-target
+				\property-back
+				\property-owners
+				\property-min
+				\property-max
+				\property-main
+				\property-hidden
+				\property-suggest
+				\property-inherit
+		property_type *
+			meta-kind / \meta
+			meta-name * ru \Тип свойства
+			meta-properties /
+				\meta-name
+				\property-kind
+				\property-owners
+				\property-main
+				\property-hidden
+				\property-suggest
+			meta-members /
 				\property_link
 				\property_string
 				\property_text
-				\property_number
+				\property_integer
+				\property_boolean
 		property_link *
-			entity-kind / \entity
-			entity-parents / \property
-			entity-name * ru \Ссылка на сущность
-			entity-properties /
+			meta-kind / \property_type
+			meta-name * ru \Ссылка на сущность
+			meta-properties /
 				\property-inherit
 				\property-target
 				\property-back
 				\property-min
 				\property-max
-			entity-members /
-				\entity-kind
 		property_string *
-			entity-kind / \entity
-			entity-parents / \property
-			entity-name * ru \Строка текста
-			entity-properties /
+			meta-kind / \property_type
+			meta-name * ru \Строка текста
+			meta-properties /
 				\property-min
 				\property-max
 		property_text *
-			entity-kind / \entity
-			entity-parents / \property
-			entity-name * ru \Многострочный текст
-			entity-properties /
+			meta-kind / \property_type
+			meta-name * ru \Многострочный текст
+			meta-properties /
 				\property-min
 				\property-max
 		property_integer *
-			entity-kind / \entity
-			entity-parents / \property
-			entity-name * ru \Целое число
-			entity-properties /
+			meta-kind / \property_type
+			meta-name * ru \Целое число
+			meta-properties /
 				\property-min
 				\property-max
 		property_boolean *
-			entity-kind / \entity
-			entity-parents / \property
-			entity-name * ru \Флаг
-			entity-properties /
-		entity-kind *
-			entity-kind / \property_link
-			entity-name * ru \Тип
-			property-target / \entity
+			meta-kind / \property_type
+			meta-name * ru \Флаг
+			meta-properties /
+		meta-kind *
+			meta-kind / \property
+			property-kind / \property_link
+			meta-name * ru \Тип
+			property-target / \meta
 			property-owners / \entity
-			property-back / \entity-members
-		entity-parents *
-			entity-kind / \property_link
-			entity-name * ru \Родительский тип
+			property-back / \meta-members
+			property-min 1
+		meta-parents *
+			meta-kind / \property
+			property-kind / \property_link
+			meta-name * ru \Родительский тип
 			property-inherit true
 			property-target / \entity
 			property-owners / \entity
-			property-back / \entity-kids
-		entity-kids *
-			entity-kind / \property_link
-			entity-name * ru \Дочерние типы
-			property-inherit true
+			property-back / \meta-kids
+		meta-kids *
+			meta-kind / \property
+			property-kind / \property_link
+			meta-name * ru \Дочерние типы
 			property-target / \entity
 			property-owners / \entity
-			property-back / \entity-parent
-		entity-name *
-			entity-kind / \property_string
-			entity-name * ru \Название
+			property-back / \meta-parents
+		meta-name *
+			meta-kind / \property
+			property-kind / \property_string
+			meta-name * ru \Название
 			property-locale true
 			property-owners / \entity
 			property-main true
-		entity-description *
-			entity-kind / \property_text
-			entity-name * ru \Описание
+		meta-description *
+			meta-kind / \property
+			property-kind / \property_text
+			meta-name * ru \Описание
 			property-locale true
 			property-owners / \entity
-		entity-members *
-			entity-kind / \property_link
-			entity-name * ru \Экземпляры
+		meta-members *
+			meta-kind / \property
+			property-kind / \property_link
+			meta-name * ru \Экземпляры
 			property-target /
-			property-back / \entity-kind
+			property-back / \meta-kind
 			property-owners / \entity
-		entity-properties *
-			entity-kind / \property_link
-			entity-name * ru \Свойства
+		meta-properties *
+			meta-kind / \property
+			property-kind / \property_link
+			meta-name * ru \Свойства
 			property-target / \property
 			property-back / \property_owners
 			property-owners / \entity
+			property-hidden true
 		property-min *
-			entity-kind / \property_integer
-			entity-name * ru \Минимальное число
+			meta-kind / \property
+			property-kind / \property_integer
+			meta-name * ru \Минимальное число
 			property-owners / \property
 		property-max *
-			entity-kind / \property_integer
-			entity-name * ru \Максимальное число
+			meta-kind / \property
+			property-kind / \property_integer
+			meta-name * ru \Максимальное число
 			property-owners / \property
 		property-main *
-			entity-kind / \property_boolean
-			entity-name * ru \Основное
+			meta-kind / \property
+			property-kind / \property_boolean
+			meta-name * ru \Основное
+			meta-description * ru \Свойство отображается во всех местах упоминания сущности
+			property-owners / \property
+		property-hidden *
+			meta-kind / \property
+			property-kind / \property_boolean
+			meta-name * ru \Скрытое
+			meta-description * ru \Свойство отображается лишь в режиме редактирования сущности
 			property-owners / \property
 		property-suggest *
-			entity-kind / \property_boolean
-			entity-name * ru \Подсказывать из существующих
+			meta-kind / \property
+			property-kind / \property_boolean
+			meta-name * ru \Подсказывать из существующих
 			property-owners / \property
 		property-inherit *
-			entity-kind / \property_boolean
-			entity-name * ru \Добавляет свойства
+			meta-kind / \property
+			property-kind / \property_boolean
+			meta-name * ru \Добавляет свойства
+			property-owners / \property
+		property-kind *
+			meta-kind / \property
+			property-kind / \property_link
+			meta-name * ru \Тип свойства
+			property-inherit true
+			property-suggest true
+			property-target / \property_type
 			property-owners / \property
 		property-target *
-			entity-kind / \property_link
-			entity-name * ru \Указывает на тип
+			meta-kind / \property
+			property-kind / \property_link
+			meta-name * ru \Указывает на тип
 			property-target / \entity
 			property-owners / \property
+			property-suggest true
 		property-back *
-			entity-kind / \property_link
-			entity-name * ru \Обратное свойство в целевом типе
+			meta-kind / \property
+			property-kind / \property_link
+			meta-name * ru \Обратное свойство в целевом типе
 			property-target / \property
 			property-owners / \property
-		property-owners *
-			entity-kind / \property_link
-			entity-name * ru \Сущность
-			property-target / \entity
-			property-back / \entity-properties
-			property-owners / \entity
-		place *
-			entity-kind / \entity
-			entity-name * ru \Площадка
-			entity-properties /
-				\place-title
-				\place-address
-				\place-meetup
-			entity-members /
-				\place-online
-		place-title *
-			entity-kind / \property_string
-			entity-name * ru \Название
-			property-locale true
-			property-owners / \place
-			property-main true
-		place-address *
-			entity-kind / \property_text
-			entity-name * ru \Адрес
-			property-locale true
-			property-owners / \place
-		place-meetup *
-			entity-kind / \property_link
-			entity-name * ru \Митапы
-			property-target / \meetup
-			property-back / \meetup-place
-			property-owners / \place
-		meetup *
-			entity-kind / \entity
-			entity-name * ru \Митап
-			entity-properties /
-				\meetup-name
-				\meetup-translation
-				\meetup-place
-				\meetup-speeches
-				\meetup-host
-			entity-members /
-				\meetup-66
-		meetup-name *
-			entity-kind / \property_string
-			entity-name * ru \Номер
-			property-owners / \meetup
-			property-main true
-		meetup-translation *
-			entity-kind / \property_string
-			entity-name * ru \Трансляция
-			property-owners / \meetup
-		meetup-place *
-			entity-kind / \property_link
-			entity-name * ru \Площадка
-			property-target / \place
-			property-back / \place-meetup
-			property-owners / \meetup
-		meetup-speeches *
-			entity-kind / \property_link
-			entity-name * ru \Выступления
-			property-target / \speech
-			property-back / \speech-meetup
-			property-owners / \meetup
-		meetup-host *
-			entity-kind / \property_link
-			entity-name * ru \Ведущие
-			property-target / \user
-			property-back / \user-host-of-meetup
-			property-owners / \meetup
-		user *
-			entity-kind / \entity
-			entity-name * ru \Персона
-			entity-properties /
-				\user-name
-				\user-email
-				\user-host-of-meetup
-				\user-speeches
-			entity-members /
-				\user-vas
-		user-name *
-			entity-kind / \property_string
-			entity-name * ru \Имя
-			property-locale true
-			property-owners / \user
-			property-main true
-		user-email *
-			entity-kind / \property_string
-			entity-name * ru \Почта
-			property-owners / \user
-		user-host-of-meetup *
-			entity-kind / \property_link
-			entity-name * ru \Ведущий митапов
-			property-target / \meetup
-			property-back / \meetup-host
-			property-owners / \user
-		user-speeches *
-			entity-kind / \property_link
-			entity-name * ru \Выступления
-			property-target / \speech
-			property-back / \speech-speakers
-			property-owners / \user
-		speech *
-			entity-kind / \entity
-			entity-name * ru \Выступление
-			entity-properties /
-				\speech-title
-				\speech-description
-				\speech-duration
-				\speech-meetup
-				\speech-speakers
-			entity-members /
-				\speech-copy-paste
-				\speech-kung-fu
-				\speech-deps
-		speech-title *
-			entity-kind / \property_string
-			entity-name * ru \Название
-			property-locale true
-			property-owners / \speech
-			property-main true
-		speech-description *
-			entity-kind / \property_text
-			entity-name * ru \Описание
-			property-locale true
-			property-owners / \speech
-		speech-duration *
-			entity-kind / \property_integer
-			entity-name * ru \Длительность
 			property-suggest true
-			property-owners / \speech
-			property-main true
-		speech-meetup *
-			entity-kind / \property_link
-			entity-name * ru \Митап
-			property-target / \meetup
-			property-back / \meetup-speeches
-			property-owners / \speech
-		speech-speakers *
-			entity-kind / \property_link
-			entity-name * ru \Докладчики
-			property-target / \user
-			property-back / \user-speeches
-			property-owners / \speech
-		place-online *
-			entity-kind / \place
-			place-title * ru \Онлайн
-			place-address * ru \До конца эпидемии встречаемся онлайн
-			place-meetup / \meetup-66
-		meetup-66 *
-			entity-kind / \meetup
-			meetup-name \#66
-			meetup-translation \https://youtube.com/piterjs
-			meetup-place / \place-online
-			meetup-host / \user-vas
-			meetup-speeches /
-				\speech-copy-paste
-				\speech-kung-fu
-				\speech-deps
-		user-vas *
-			entity-kind / \user
-			user-name * ru \Василий Пупкин
-			user-email \pupa@example.org
-			user-host-of-meetup / \meetup-66
-			user-speeches /
-				\speech-copy-paste
-				\speech-kung-fu
-		speech-copy-paste *
-			entity-kind / \speech
-			speech-title * ru \Как победить копипасту?
-			speech-description * ru \Расскажу о своём ноу-хау.
-			speech-duration 40
-			speech-speakers / \user-vas
-			speech-meetup / \meetup-66
-		speech-kung-fu *
-			entity-kind / \speech
-			speech-title * ru \Слепое программирование
-			speech-description * ru \Настоящее кунг-фу программирования.
-			speech-duration 30
-			speech-speakers / \user-vas
-			speech-meetup / \meetup-66
-		speech-deps *
-			entity-kind / \speech
-			speech-title * ru \Зависимость от программирования
-			speech-description * ru \Обмениваемся опытом слезания с кодинга.
-			speech-duration 60
-			speech-meetup / \meetup-66
+		property-owners *
+			meta-kind / \property
+			property-kind / \property_link
+			meta-name * ru \Владельцы свойства
+			property-target / \meta
+			property-back / \meta-properties
+			property-owners / \meta
+		case *
+			meta-kind / \case
+			meta-name * ru \Бизнес Кейс
+			meta-properties /
+				\meta-name
+				\meta-properties
 
 $mol_view_tree_test_attributes_super $mol_view
 	some *

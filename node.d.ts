@@ -1153,23 +1153,23 @@ declare namespace $ {
         id(): string;
         domain(): $hyoo_case_domain;
         property(id: string): $hyoo_case_property;
-        properties_id(): string[];
-        entity_name(lang: string): string;
+        meta_name(lang: string): string;
         property_target(): $hyoo_case_entity[];
-        entity_kind(): $hyoo_case_entity[];
-        entity_kind_id(): "property_string" | "property_text" | "property_integer" | "property_boolean" | "property_link";
+        meta_kind(): $hyoo_case_entity[];
+        property_kind(): $hyoo_case_entity[];
+        property_kind_id(): "property_link" | "property_string" | "property_text" | "property_integer" | "property_boolean" | null;
         property_locale(): boolean;
         property_suggest(): boolean;
         property_main(): boolean;
         property_least(): boolean;
+        property_hidden(): boolean;
+        property_inherit(): boolean;
         property_unit(): string;
-        property_back(): string;
-        entity_parents(): $hyoo_case_entity[];
-        entity_ancestors(): Set<$hyoo_case_entity>;
-        entity_properties(): $hyoo_case_property[];
-        entity_members(): $hyoo_case_entity[];
-        entity_properties_main(): $hyoo_case_property[];
-        entity_properties_least(): $hyoo_case_property[];
+        property_back(): $hyoo_case_entity[];
+        properties(): $hyoo_case_property[];
+        properties_main(): $hyoo_case_property[];
+        properties_least(): $hyoo_case_property[];
+        members(): $hyoo_case_entity[];
     }
 }
 
@@ -2360,7 +2360,7 @@ declare namespace $.$$ {
 }
 
 declare namespace $ {
-    class $hyoo_case_property_snippet extends $mol_view {
+    class $hyoo_case_property_snippet extends $mol_dimmer {
         sub(): readonly any[];
         property(): $hyoo_case_property;
         attr(): {
@@ -2375,9 +2375,9 @@ declare namespace $.$$ {
 
 declare namespace $.$$ {
     class $hyoo_case_property_snippet extends $.$hyoo_case_property_snippet {
+        type(): "property_link" | "property_string" | "property_text" | "property_integer" | "property_boolean" | null;
         title(): string;
         hint(): string;
-        text(next?: string): string;
     }
 }
 
@@ -2397,7 +2397,7 @@ declare namespace $.$$ {
 declare namespace $.$$ {
     class $hyoo_case_entity_snippet extends $.$hyoo_case_entity_snippet {
         title(): string;
-        property_list(): string[] | $hyoo_case_property_snippet[];
+        property_list(): $mol_view_content[];
         property(id: string): $hyoo_case_property;
     }
 }
@@ -2594,8 +2594,10 @@ declare namespace $ {
         Numb(): $$.$mol_number;
         Text_view(): $mol_view;
         Link_view(id: any): $$.$mol_link;
+        title_arg(): {};
         kind(): $hyoo_case_entity;
-        Title(): $$.$hyoo_case_entity_snippet;
+        Title_snippet(): $$.$hyoo_case_entity_snippet;
+        Title(): $$.$mol_link;
         pick(val?: any): any;
         pick_options(): readonly string[];
         entity(id: any): $hyoo_case_entity;
@@ -2630,8 +2632,12 @@ declare namespace $.$$ {
     class $hyoo_case_property_row extends $.$hyoo_case_property_row {
         kind(): $hyoo_case_entity;
         title(): string;
-        type(): "property_string" | "property_text" | "property_integer" | "property_boolean" | "property_link";
-        label(): ($mol_button_minor | $hyoo_case_entity_snippet | $mol_select)[];
+        type(): "property_link" | "property_string" | "property_text" | "property_integer" | "property_boolean" | null;
+        title_arg(): Record<string, string | null>;
+        label(): ($mol_button_minor | $mol_link | $mol_select)[];
+        suggest(): boolean;
+        pick_allowed(): boolean;
+        add_allowed(): boolean;
         content(): ($mol_view | $mol_string)[] | ($mol_view | $mol_textarea)[] | ($mol_view | $mol_number)[] | $mol_check_box[];
         link_content(id: number): ($mol_button_minor | $hyoo_case_entity_snippet)[];
         text(next?: string): string;
@@ -2674,8 +2680,8 @@ declare namespace $ {
         tools(): readonly any[];
         body(): readonly any[];
         Property(id: any): $$.$hyoo_case_property_row;
-        scheme(): $hyoo_case_entity;
-        Snippet_scheme(): $$.$hyoo_case_entity_snippet;
+        kind(): $hyoo_case_entity;
+        Snippet_kind(): $$.$hyoo_case_entity_snippet;
         Snippet(): $$.$hyoo_case_entity_snippet;
         title(): string;
         config_arg(): {};
@@ -2698,8 +2704,8 @@ declare namespace $.$$ {
 
 declare namespace $.$$ {
     class $hyoo_case_entity_page extends $.$hyoo_case_entity_page {
-        scheme(): $hyoo_case_entity;
-        property_list(): $hyoo_case_property_row[];
+        kind(): $hyoo_case_entity;
+        property_list(): readonly $mol_view[];
         property(id: string): $hyoo_case_property;
         config_arg(): Record<string, string | null>;
         close_arg(): Record<string, string | null>;
@@ -2768,13 +2774,15 @@ declare namespace $ {
     class $hyoo_case extends $mol_book2 {
         plugins(): readonly any[];
         Menu(): $$.$mol_page;
+        Root_page(id: any): $$.$hyoo_case_entity_page;
+        Root_edit(id: any): $mol_check_icon;
         Entity_page(id: any): $$.$hyoo_case_entity_page;
         domain(): $hyoo_case_domain;
         Theme(): $$.$mol_theme_auto;
-        Sources(): $mol_link_source;
-        Lights(): $$.$mol_lights_toggle;
         entity(id: any): $hyoo_case_entity;
         editable(id: any, val?: any): any;
+        Sources(): $mol_link_source;
+        Lights(): $$.$mol_lights_toggle;
     }
 }
 
@@ -2797,7 +2805,7 @@ declare namespace $.$$ {
 
 declare namespace $.$$ {
     class $hyoo_case extends $.$hyoo_case {
-        pages(): ($mol_page | $hyoo_case_entity_page)[];
+        pages(): $hyoo_case_entity_page[];
         domain(): $hyoo_case_domain;
         entity(id: string): $hyoo_case_entity;
         editable(id: string, next?: boolean): boolean;
