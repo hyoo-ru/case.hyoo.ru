@@ -9321,7 +9321,7 @@ var $;
                         "property"
                     ],
                     "property-back": [
-                        "property_owners"
+                        "property-owners"
                     ],
                     "property-owners": [
                         "entity"
@@ -9430,7 +9430,7 @@ var $;
                         "property_boolean"
                     ],
                     "meta-name": {
-                        ru: "Разрешено создавать ли новые цели"
+                        ru: "Разрешено ли создавать новые цели"
                     },
                     "property-owners": [
                         "property"
@@ -9524,7 +9524,8 @@ var $;
                     ],
                     "property-owners": [
                         "meta"
-                    ]
+                    ],
+                    "property-suggest": true
                 },
                 case: {
                     "meta-kind": [
