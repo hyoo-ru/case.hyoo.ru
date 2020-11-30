@@ -7477,9 +7477,6 @@ var $;
         const { rem } = $.$mol_style_unit;
         $.$mol_style_define($$.$hyoo_case_entity_snippet, {
             padding: rem(.5),
-            flex: {
-                grow: 1,
-            },
             justifyContent: 'space-between',
             textAlign: 'left',
         });
@@ -8651,6 +8648,7 @@ var $;
             },
             Link_view: {
                 padding: 0,
+                justifyContent: 'space-between',
             },
             Content: {
                 flex: {
@@ -9022,6 +9020,11 @@ var $;
             Property: {
                 padding: [rem(.75), 0],
             },
+            Tools: {
+                flex: {
+                    grow: 1,
+                },
+            },
         });
     })($$ = $.$$ || ($.$$ = {}));
 })($ || ($ = {}));
@@ -9256,22 +9259,17 @@ var $;
                     "meta-name": {
                         ru: "Мета"
                     },
+                    "meta-icon": "🌌",
                     "meta-description": {
                         ru: "Тип представителями которого являются другие типы"
                     },
                     "meta-properties": [
                         "meta-kind",
                         "meta-name",
+                        "meta-icon",
                         "meta-description",
                         "meta-properties",
-                        "meta-parents",
-                        "meta-kids",
                         "meta-members"
-                    ],
-                    "meta-parents": [],
-                    "meta-kids": [
-                        "entity",
-                        "property"
                     ],
                     "meta-members": [
                         "meta",
@@ -9283,22 +9281,20 @@ var $;
                     "meta-kind": [
                         "meta"
                     ],
-                    "meta-parents": [
-                        "meta"
-                    ],
                     "meta-name": {
                         ru: "Сущность"
                     },
+                    "meta-icon": "🌟",
                     "meta-description": {
                         ru: "Базовый тип для прикладных сущностей"
                     },
                     "meta-properties": [
                         "meta-name",
+                        "meta-icon",
                         "meta-description",
                         "meta-properties",
                         "meta-members"
                     ],
-                    "meta-kids": [],
                     "meta-members": [
                         "case"
                     ]
@@ -9307,14 +9303,13 @@ var $;
                     "meta-kind": [
                         "meta"
                     ],
-                    "meta-parents": [
-                        "meta"
-                    ],
                     "meta-name": {
                         ru: "Свойство"
                     },
+                    "meta-icon": "✨",
                     "meta-properties": [
                         "meta-name",
+                        "meta-icon",
                         "property-kind",
                         "property-owners",
                         "property-main",
@@ -9325,8 +9320,6 @@ var $;
                         "meta-kind",
                         "meta-name",
                         "meta-description",
-                        "meta-parents",
-                        "meta-kids",
                         "meta-members",
                         "meta-properties",
                         "property-target",
@@ -9350,6 +9343,7 @@ var $;
                     },
                     "meta-properties": [
                         "meta-name",
+                        "meta-icon",
                         "property-kind",
                         "property-owners",
                         "property-main",
@@ -9371,6 +9365,7 @@ var $;
                     "meta-name": {
                         ru: "Ссылка на сущность"
                     },
+                    "meta-icon": "💫",
                     "meta-properties": [
                         "property-inherit",
                         "property-populate",
@@ -9387,6 +9382,7 @@ var $;
                     "meta-name": {
                         ru: "Строка текста"
                     },
+                    "meta-icon": "📟",
                     "meta-properties": [
                         "property-min",
                         "property-max"
@@ -9399,6 +9395,7 @@ var $;
                     "meta-name": {
                         ru: "Многострочный текст"
                     },
+                    "meta-icon": "📃",
                     "meta-properties": [
                         "property-min",
                         "property-max"
@@ -9411,6 +9408,7 @@ var $;
                     "meta-name": {
                         ru: "Целое число"
                     },
+                    "meta-icon": "🎱",
                     "meta-properties": [
                         "property-min",
                         "property-max"
@@ -9423,6 +9421,7 @@ var $;
                     "meta-name": {
                         ru: "Флаг"
                     },
+                    "meta-icon": "🚩",
                     "meta-properties": []
                 },
                 "meta-kind": {
@@ -9446,48 +9445,20 @@ var $;
                     ],
                     "property-min": 1
                 },
-                "meta-parents": {
+                "meta-icon": {
                     "meta-kind": [
                         "property"
                     ],
                     "property-kind": [
-                        "property_link"
+                        "property_string"
                     ],
                     "meta-name": {
-                        ru: "Родительский тип"
+                        ru: "Иконка"
                     },
-                    "property-inherit": true,
-                    "property-populate": true,
-                    "property-target": [
-                        "entity"
-                    ],
                     "property-owners": [
                         "entity"
                     ],
-                    "property-back": [
-                        "meta-kids"
-                    ]
-                },
-                "meta-kids": {
-                    "meta-kind": [
-                        "property"
-                    ],
-                    "property-kind": [
-                        "property_link"
-                    ],
-                    "meta-name": {
-                        ru: "Дочерние типы"
-                    },
-                    "property-populate": true,
-                    "property-target": [
-                        "entity"
-                    ],
-                    "property-owners": [
-                        "entity"
-                    ],
-                    "property-back": [
-                        "meta-parents"
-                    ]
+                    "property-main": true
                 },
                 "meta-name": {
                     "meta-kind": [
