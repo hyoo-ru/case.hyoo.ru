@@ -2654,12 +2654,6 @@ declare namespace $.$$ {
 }
 
 declare namespace $ {
-    class $mol_icon_settings extends $mol_icon {
-        path(): string;
-    }
-}
-
-declare namespace $ {
     class $mol_icon_edit extends $mol_icon {
         path(): string;
     }
@@ -2680,13 +2674,12 @@ declare namespace $ {
         tools(): readonly any[];
         body(): readonly any[];
         Property(id: any): $$.$hyoo_case_property_row;
+        config_arg(): {};
         kind(): $hyoo_case_entity;
         Snippet_kind(): $$.$hyoo_case_entity_snippet;
+        Config(): $$.$mol_link;
         Snippet(): $$.$hyoo_case_entity_snippet;
         title(): string;
-        config_arg(): {};
-        Config_icon(): $mol_icon_settings;
-        Config(): $$.$mol_link;
         Edit_icon(): $mol_icon_edit;
         editable(val?: any): any;
         Edit(): $mol_check_icon;
