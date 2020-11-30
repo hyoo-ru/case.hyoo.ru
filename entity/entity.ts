@@ -50,6 +50,10 @@ namespace $ {
 			return Boolean( this.value( 'property-suggest' ) )
 		}
 
+		property_populate() {
+			return Boolean( this.value( 'property-populate' ) )
+		}
+
 		property_main() {
 			return Boolean( this.value( 'property-main' ) )
 		}

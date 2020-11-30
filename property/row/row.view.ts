@@ -35,6 +35,10 @@ namespace $.$$ {
 			return this.property().kind().property_suggest()
 		}
 
+		populate() {
+			return this.property().kind().property_populate()
+		}
+
 		@ $mol_mem
 		pick_allowed() {
 			if( !this.editable() ) return false
@@ -47,6 +51,7 @@ namespace $.$$ {
 		@ $mol_mem
 		add_allowed() {
 			if( this.type() !== 'property_link' ) return false
+			if( !this.populate() ) return false
 			return true
 		}
 		
