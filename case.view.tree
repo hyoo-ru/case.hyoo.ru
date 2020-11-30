@@ -176,7 +176,7 @@ $hyoo_case $mol_book2
 			property-kind / \property_link
 			meta-name * ru \Свойства
 			property-target / \property
-			property-back / \property_owners
+			property-back / \property-owners
 			property-owners / \entity
 			property-hidden true
 			property-populate true
@@ -216,7 +216,7 @@ $hyoo_case $mol_book2
 		property-populate *
 			meta-kind / \property
 			property-kind / \property_boolean
-			meta-name * ru \Разрешено создавать ли новые цели
+			meta-name * ru \Разрешено ли создавать новые цели
 			property-owners / \property
 		property-inherit *
 			meta-kind / \property
@@ -253,6 +253,7 @@ $hyoo_case $mol_book2
 			property-target / \meta
 			property-back / \meta-properties
 			property-owners / \meta
+			property-suggest true
 		case *
 			meta-kind / \case
 			meta-name * ru \Бизнес Кейс
