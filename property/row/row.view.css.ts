@@ -15,7 +15,6 @@ namespace $.$$ {
 
 		Link_view: {
 			padding: 0,
-			justifyContent: 'space-between',
 		},
 
 		Content: {
@@ -39,7 +38,7 @@ namespace $.$$ {
 			flex: {
 				grow: 1000,
 			},
-			padding: [ 0, rem(.75) ],
+			margin: [ 0, rem(.75) ],
 		},
 
 	} )
