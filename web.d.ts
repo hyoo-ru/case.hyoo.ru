@@ -1156,7 +1156,6 @@ declare namespace $ {
         id(): string;
         domain(): $hyoo_case_domain;
         property(id: string): $hyoo_case_property;
-        meta_name(lang: string): string;
         property_target(): $hyoo_case_entity[];
         meta_kind(): $hyoo_case_entity[];
         property_kind(): $hyoo_case_entity[];
@@ -1172,6 +1171,7 @@ declare namespace $ {
         properties(): $hyoo_case_property[];
         properties_main(): $hyoo_case_property[];
         properties_least(): $hyoo_case_property[];
+        title(lang: string): string;
         members(): $hyoo_case_entity[];
     }
 }

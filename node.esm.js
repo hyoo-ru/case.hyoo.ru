@@ -2324,7 +2324,7 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    $.$mol_style_attach("mol/view/view/view.css", "[mol_view] {\n\ttransition-property: background-color, height, width, min-height, min-width, max-width, max-height, transform;\n\ttransition-duration: .2s;\n\ttransition-timing-function: ease-out;\n\t-webkit-appearance: none;\n\tword-break: break-word;\n\tbox-sizing: border-box;\n\tdisplay: flex;\n\tcontain: style;\n\ttab-size: 4;\n}\n\n[mol_view]::selection {\n\tbackground: var(--mol_theme_current);\n}\n\n[mol_view] > * {\n\tword-break: inherit;\n}\n\n[mol_view_root] {\n\tmargin: 0;\n\tpadding: 0;\n\twidth: 100%;\n\theight: 100%;\n\tbox-sizing: border-box;\n\tfont: var(--mol_skin_font);\n\tbackground: var(--mol_theme_back);\n\tcolor: var(--mol_theme_text);\n}\n\n[mol_view][mol_view_error]:not([mol_view_error=\"Promise\"]) {\n\tbackground-image: repeating-linear-gradient(\n\t\t135deg,\n\t\trgb(162, 90, 90),\n\t\trgb(162, 90, 90) 11px,\n\t\trgb(255,255,220) 10px,\n\t\trgb(255,255,220) 20px\n\t);\n\tbackground-size: 28px 28px;\n\tcolor: black;\n}\n\n@keyframes mol_view_wait_move {\n\tfrom {\n\t\tbackground-position: 0 0;\n\t}\n\tto {\n\t\tbackground-position: 200vmax 0;\n\t}\n}\n\n@keyframes mol_view_wait_show {\n\tto {\n\t\tbackground-image: repeating-linear-gradient(\n\t\t\t45deg,\n\t\t\thsla( 0 , 0% , 50% , .25 ) 0% ,\n\t\t\thsla( 0 , 0% , 50% , 0 ) 5% ,\n\t\t\thsla( 0 , 0% , 50% , 0 ) 45% ,\n\t\t\thsla( 0 , 0% , 50% , .25 ) 50% ,\n\t\t\thsla( 0 , 0% , 50% , 0 ) 55% ,\n\t\t\thsla( 0 , 0% , 50% , 0 ) 95% ,\n\t\t\thsla( 0 , 0% , 50% , .25 ) 100%\n\t\t);\n\t\tbackground-size: 200vmax 200vmax;\n\t}\n}\n\n[mol_view][mol_view_error=\"Promise\"] {\n\tanimation: mol_view_wait_show .5s .5s linear forwards , mol_view_wait_move 1s linear infinite;\n\topacity: .75;\n}\n");
+    $.$mol_style_attach("mol/view/view/view.css", "[mol_view] {\n\ttransition-property: height, width, min-height, min-width, max-width, max-height, transform;\n\ttransition-duration: .2s;\n\ttransition-timing-function: ease-out;\n\t-webkit-appearance: none;\n\tword-break: break-word;\n\tbox-sizing: border-box;\n\tdisplay: flex;\n\tcontain: style;\n\ttab-size: 4;\n}\n\n[mol_view]::selection {\n\tbackground: var(--mol_theme_current);\n}\n\n[mol_view] > * {\n\tword-break: inherit;\n}\n\n[mol_view_root] {\n\tmargin: 0;\n\tpadding: 0;\n\twidth: 100%;\n\theight: 100%;\n\tbox-sizing: border-box;\n\tfont: var(--mol_skin_font);\n\tbackground: var(--mol_theme_back);\n\tcolor: var(--mol_theme_text);\n}\n\n[mol_view][mol_view_error]:not([mol_view_error=\"Promise\"]) {\n\tbackground-image: repeating-linear-gradient(\n\t\t135deg,\n\t\trgb(162, 90, 90),\n\t\trgb(162, 90, 90) 11px,\n\t\trgb(255,255,220) 10px,\n\t\trgb(255,255,220) 20px\n\t);\n\tbackground-size: 28px 28px;\n\tcolor: black;\n}\n\n@keyframes mol_view_wait_move {\n\tfrom {\n\t\tbackground-position: 0 0;\n\t}\n\tto {\n\t\tbackground-position: 200vmax 0;\n\t}\n}\n\n@keyframes mol_view_wait_show {\n\tto {\n\t\tbackground-image: repeating-linear-gradient(\n\t\t\t45deg,\n\t\t\thsla( 0 , 0% , 50% , .25 ) 0% ,\n\t\t\thsla( 0 , 0% , 50% , 0 ) 5% ,\n\t\t\thsla( 0 , 0% , 50% , 0 ) 45% ,\n\t\t\thsla( 0 , 0% , 50% , .25 ) 50% ,\n\t\t\thsla( 0 , 0% , 50% , 0 ) 55% ,\n\t\t\thsla( 0 , 0% , 50% , 0 ) 95% ,\n\t\t\thsla( 0 , 0% , 50% , .25 ) 100%\n\t\t);\n\t\tbackground-size: 200vmax 200vmax;\n\t}\n}\n\n[mol_view][mol_view_error=\"Promise\"] {\n\tanimation: mol_view_wait_show .5s .5s linear forwards , mol_view_wait_move 1s linear infinite;\n\topacity: .75;\n}\n");
 })($ || ($ = {}));
 //view.css.js.map
 ;
@@ -3966,14 +3966,6 @@ var $;
             store.entity = $.$mol_const(this);
             return this.sub(id, store);
         }
-        meta_name(lang) {
-            var _a, _b;
-            const name = this.value('meta-name');
-            if (name === undefined) {
-                return (_b = (_a = this.property_target().find(t => t.meta_name(lang))) === null || _a === void 0 ? void 0 : _a.meta_name(lang)) !== null && _b !== void 0 ? _b : this.id();
-            }
-            return String(name[lang]);
-        }
         property_target() {
             return this.property('property-target').links();
         }
@@ -4038,6 +4030,20 @@ var $;
         properties_least() {
             return this.properties().filter(prop => prop.kind().property_least());
         }
+        title(lang) {
+            const chunks = [];
+            for (const prop of this.properties_main()) {
+                switch (prop.kind().property_kind_id()) {
+                    case 'property_link':
+                    case 'property_boolean':
+                        continue;
+                    case 'property_string':
+                    case 'property_text':
+                        chunks.push(prop.locale(lang).trim());
+                }
+            }
+            return chunks.filter(Boolean).join(' ') || this.id();
+        }
         members() {
             const kinds = [];
             kinds.push(this);
@@ -4056,6 +4062,9 @@ var $;
     __decorate([
         $.$mol_mem
     ], $hyoo_case_entity.prototype, "properties", null);
+    __decorate([
+        $.$mol_mem_key
+    ], $hyoo_case_entity.prototype, "title", null);
     __decorate([
         $.$mol_mem
     ], $hyoo_case_entity.prototype, "members", null);
@@ -7446,7 +7455,7 @@ var $;
                 }
             }
             hint() {
-                return this.property().kind().meta_name(this.$.$mol_locale.lang());
+                return this.property().kind().title(this.$.$mol_locale.lang());
             }
         }
         __decorate([
@@ -7522,10 +7531,7 @@ var $;
     (function ($$) {
         class $hyoo_case_entity_snippet extends $.$hyoo_case_entity_snippet {
             title() {
-                const main = this.entity().properties_main();
-                if (main.length === 0)
-                    return this.entity().id();
-                return main.map(prop => prop.locale($.$mol_locale.lang())).join(' ');
+                return this.entity().title($.$mol_locale.lang());
             }
             property_list() {
                 const main = this.entity().properties_main();
@@ -8686,7 +8692,7 @@ var $;
                 return this.property().kind();
             }
             title() {
-                return this.property().kind().meta_name($.$mol_locale.lang());
+                return this.property().kind().title($.$mol_locale.lang());
             }
             type() {
                 return this.property().kind().property_kind_id();
