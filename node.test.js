@@ -7391,10 +7391,11 @@ var $;
 var $;
 (function ($) {
     class $hyoo_case_property_snippet extends $.$mol_dimmer {
-        sub() {
-            return [
-                this.title()
-            ];
+        haystack() {
+            return this.title();
+        }
+        needle() {
+            return this.highlight();
         }
         property() {
             const obj = new this.$.$hyoo_case_property();
@@ -7402,6 +7403,9 @@ var $;
         }
         attr() {
             return Object.assign(Object.assign({}, super.attr()), { title: this.hint() });
+        }
+        highlight() {
+            return "";
         }
         hint() {
             return "";
@@ -7476,6 +7480,7 @@ var $;
         Property(id) {
             const obj = new this.$.$hyoo_case_property_snippet();
             obj.property = () => this.property(id);
+            obj.highlight = () => this.highlight();
             return obj;
         }
         property_list() {
@@ -7484,6 +7489,9 @@ var $;
         property(id) {
             const obj = new this.$.$hyoo_case_property();
             return obj;
+        }
+        highlight() {
+            return "";
         }
     }
     __decorate([
@@ -8444,7 +8452,11 @@ var $;
         Pick_option(id) {
             const obj = new this.$.$hyoo_case_entity_snippet();
             obj.entity = () => this.entity(id);
+            obj.highlight = () => this.pick_query();
             return obj;
+        }
+        pick_option_title(id) {
+            return "";
         }
         Pick() {
             const obj = new this.$.$mol_select();
@@ -8453,7 +8465,11 @@ var $;
             obj.option_content = (id) => [
                 this.Pick_option(id)
             ];
+            obj.option_label = (id) => this.pick_option_title(id);
             return obj;
+        }
+        pick_query() {
+            return this.Pick().filter_pattern();
         }
         add(event) {
             if (event !== undefined)
@@ -8775,6 +8791,9 @@ var $;
                     }
                 }
                 return options;
+            }
+            pick_option_title(id) {
+                return this.property().domain().entity(id).title($.$mol_locale.lang());
             }
             entity(id) {
                 return this.property().domain().entity(id);

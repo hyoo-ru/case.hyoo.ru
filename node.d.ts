@@ -2362,11 +2362,13 @@ declare namespace $.$$ {
 
 declare namespace $ {
     class $hyoo_case_property_snippet extends $mol_dimmer {
-        sub(): readonly any[];
+        haystack(): string;
+        needle(): string;
         property(): $hyoo_case_property;
         attr(): {
             title: string;
         };
+        highlight(): string;
         hint(): string;
     }
 }
@@ -2389,6 +2391,7 @@ declare namespace $ {
         Property(id: any): $$.$hyoo_case_property_snippet;
         property_list(): readonly any[];
         property(id: any): $hyoo_case_property;
+        highlight(): string;
     }
 }
 
@@ -2603,7 +2606,9 @@ declare namespace $ {
         pick_options(): readonly string[];
         entity(id: any): $hyoo_case_entity;
         Pick_option(id: any): $$.$hyoo_case_entity_snippet;
+        pick_option_title(id: any): string;
         Pick(): $$.$mol_select;
+        pick_query(): string;
         add(event?: any): any;
         Add_icon(): $mol_icon_plus;
         Add(): $mol_button_minor;
@@ -2649,6 +2654,7 @@ declare namespace $.$$ {
         drop(index: number, event?: Event): void;
         add(): void;
         pick_options(): string[];
+        pick_option_title(id: string): string;
         entity(id: string): $hyoo_case_entity;
         pick(id: string): string;
     }

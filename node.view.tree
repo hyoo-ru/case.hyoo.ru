@@ -395,7 +395,8 @@ $mol_number $mol_view
 			sub / <= inc_icon $mol_icon_plus
 
 $hyoo_case_property_snippet $mol_dimmer
-	sub / <= title
+	haystack <= title
+	needle <= highlight \
 	property $hyoo_case_property
 	attr *
 		^
@@ -406,6 +407,7 @@ $hyoo_case_entity_snippet $mol_view
 	sub <= property_list /
 	Property!id $hyoo_case_property_snippet
 		property <= property!id $hyoo_case_property
+		highlight <= highlight \
 
 $mol_meter $mol_plugin
 	zoom 1
@@ -513,9 +515,12 @@ $hyoo_case_property_row $mol_labeler
 		<= Pick $mol_select
 			value?val <=> pick?val \
 			options <= pick_options /string
+			filter_pattern => pick_query
 			option_content!id /
 				<= Pick_option!id $hyoo_case_entity_snippet
 					entity <= entity!id $hyoo_case_entity
+					highlight <= pick_query
+			option_label!id <= pick_option_title!id \
 		<= Add $mol_button_minor
 			hint @ \Add new
 			click?event <=> add?event null
