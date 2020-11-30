@@ -27,5 +27,10 @@ namespace $.$$ {
 			return this.$.$mol_state_arg.value( id, arg ) === 'edit'
 		}
 
+		reset() {
+			this.domain().reset()
+			this.$.$mol_state_arg.dict({})
+		}
+
 	}
 }

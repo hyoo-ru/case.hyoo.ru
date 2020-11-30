@@ -14,6 +14,10 @@ $hyoo_case $mol_book2
 			<= Sources $mol_link_source
 				uri \https://github.com/hyoo-ru/case.hyoo.ru
 			<= Lights $mol_lights_toggle
+		foot /
+			<= Reset $mol_button_minor
+				title @ \Reset all data
+				click?event <=> reset?event null
 	Entity_page!id $hyoo_case_entity_page
 		entity <= entity!id $hyoo_case_entity
 		editable?val <=> editable!id?val false
