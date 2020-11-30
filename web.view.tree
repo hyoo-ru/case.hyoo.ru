@@ -703,6 +703,7 @@ $hyoo_case $mol_book2
 			meta-name * ru \Строка текста
 			meta-icon \📟
 			meta-properties /
+				\property-locale
 				\property-min
 				\property-max
 		property_text *
@@ -710,6 +711,7 @@ $hyoo_case $mol_book2
 			meta-name * ru \Многострочный текст
 			meta-icon \📃
 			meta-properties /
+				\property-locale
 				\property-min
 				\property-max
 		property_integer *
@@ -777,6 +779,12 @@ $hyoo_case $mol_book2
 			meta-kind / \property
 			property-kind / \property_integer
 			meta-name * ru \Максимальное число
+			property-owners / \property
+		property-locale *
+			meta-kind / \property
+			property-kind / \property_boolean
+			meta-name * ru \Переводимое
+			meta-description * ru \Значение свойства зависит от языка
 			property-owners / \property
 		property-main *
 			meta-kind / \property

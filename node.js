@@ -9381,6 +9381,7 @@ var $;
                     },
                     "meta-icon": "📟",
                     "meta-properties": [
+                        "property-locale",
                         "property-min",
                         "property-max"
                     ]
@@ -9394,6 +9395,7 @@ var $;
                     },
                     "meta-icon": "📃",
                     "meta-properties": [
+                        "property-locale",
                         "property-min",
                         "property-max"
                     ]
@@ -9552,6 +9554,23 @@ var $;
                     ],
                     "meta-name": {
                         ru: "Максимальное число"
+                    },
+                    "property-owners": [
+                        "property"
+                    ]
+                },
+                "property-locale": {
+                    "meta-kind": [
+                        "property"
+                    ],
+                    "property-kind": [
+                        "property_boolean"
+                    ],
+                    "meta-name": {
+                        ru: "Переводимое"
+                    },
+                    "meta-description": {
+                        ru: "Значение свойства зависит от языка"
                     },
                     "property-owners": [
                         "property"
