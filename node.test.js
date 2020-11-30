@@ -7470,6 +7470,9 @@ var $;
         const { rem } = $.$mol_style_unit;
         $.$mol_style_define($$.$hyoo_case_entity_snippet, {
             padding: rem(.5),
+            flex: {
+                grow: 1,
+            },
             justifyContent: 'space-between',
             textAlign: 'left',
         });
@@ -8641,7 +8644,6 @@ var $;
             },
             Link_view: {
                 padding: 0,
-                justifyContent: 'space-between',
             },
             Content: {
                 flex: {
@@ -8662,7 +8664,7 @@ var $;
                 flex: {
                     grow: 1000,
                 },
-                padding: [0, rem(.75)],
+                margin: [0, rem(.75)],
             },
         });
     })($$ = $.$$ || ($.$$ = {}));
@@ -9012,11 +9014,6 @@ var $;
             },
             Property: {
                 padding: [rem(.75), 0],
-            },
-            Tools: {
-                flex: {
-                    grow: 1,
-                },
             },
         });
     })($$ = $.$$ || ($.$$ = {}));
