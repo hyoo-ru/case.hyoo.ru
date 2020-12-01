@@ -492,6 +492,36 @@ $mol_select $mol_pop
 		enabled <= enabled true
 	Trigger_icon $mol_icon_chevron
 
+$mol_ghost $mol_view
+	Sub $mol_view
+
+$mol_drop $mol_ghost
+	event *
+		dragenter?event <=> enter?event null
+		dragover?event <=> move?event null
+		dragleave?event <=> leave?event null
+		drop?event <=> drop?event null
+	attr * mol_drop_status <= status?val \ready
+	adopt?transfer *
+	receive?transfer null
+
+$mol_drag $mol_ghost
+	event *
+		dragstart?event <=> start?event null
+		drag?event <=> move?event null
+		dragend?event <=> end?event null
+	attr *
+		draggable true
+		mol_drag_status <= status?val \ready
+	transfer *
+		text/plain \
+		text/html \
+		text/uri-list \
+	allow_copy true
+	allow_link true
+	allow_move true
+	image <= dom_node
+
 $mol_icon_cross $mol_icon path \M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z
 
 $hyoo_case_property_row $mol_view
@@ -531,13 +561,22 @@ $hyoo_case_property_row $mol_view
 	Link_view!id $mol_link
 		arg <= link_arg!id *
 		sub <= link_content!id /
-			<= Link_snippet!id $hyoo_case_entity_snippet
-				entity <= link_entity!id $hyoo_case_entity
+			<= Link_drag!id $mol_drag
+				transfer *
+					text/plain <= link_title!id \
+					text/html <= link_html!id \
+					text/uri-list <= link_uri!id \
+				Sub <= Link_drop!id $mol_drop
+					adopt?transfer <=> transfer_adopt?transfer null
+					receive?obj <=> receive_before!id?obj null
+					Sub <= Link_snippet!id $hyoo_case_entity_snippet
+						entity <= link_entity!id $hyoo_case_entity
 			<= Drop!id $mol_button_minor
 				hint @ \Drop link
 				click?event <=> drop!id?event null
 				sub /
 					<= Drop_icon!id $mol_icon_cross
+
 
 
 $mol_icon_edit $mol_icon path \M5,3C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19H5V5H12V3H5M17.78,4C17.61,4 17.43,4.07 17.3,4.2L16.08,5.41L18.58,7.91L19.8,6.7C20.06,6.44 20.06,6 19.8,5.75L18.25,4.2C18.12,4.07 17.95,4 17.78,4M15.37,6.12L8,13.5V16H10.5L17.87,8.62L15.37,6.12Z
@@ -704,7 +743,7 @@ $hyoo_case $mol_book2
 				\property-max
 		property_text *
 			meta-kind / \property_type
-			meta-name * ru \Многострочный текст
+			meta-name * ru \Текст
 			meta-icon \📃
 			meta-properties /
 				\property-locale

@@ -2575,6 +2575,99 @@ declare namespace $.$$ {
 }
 
 declare namespace $ {
+    class $mol_ghost extends $mol_view {
+        Sub(): $mol_view;
+    }
+}
+
+declare namespace $ {
+    function $mol_dom_render_events(el: Element, events: {
+        [key: string]: (event: Event) => any;
+    }): void;
+    function $mol_dom_render_events_async(el: Element, events: {
+        [key: string]: (event: Event) => any;
+    }): void;
+}
+
+declare namespace $.$$ {
+    class $mol_ghost extends $.$mol_ghost {
+        dom_node(): Element;
+        dom_node_actual(): Element;
+        dom_tree(): Element;
+        title(): string;
+        minimal_width(): number;
+        minimal_height(): number;
+    }
+}
+
+declare namespace $ {
+    class $mol_drop extends $mol_ghost {
+        event(): {
+            dragenter: (event?: any) => any;
+            dragover: (event?: any) => any;
+            dragleave: (event?: any) => any;
+            drop: (event?: any) => any;
+        };
+        attr(): {
+            mol_drop_status: any;
+        };
+        adopt(transfer?: any): any;
+        receive(transfer?: any): any;
+        enter(event?: any): any;
+        move(event?: any): any;
+        leave(event?: any): any;
+        drop(event?: any): any;
+        status(val?: any): any;
+    }
+}
+
+declare namespace $.$$ {
+    class $mol_drop extends $.$mol_drop {
+        status(next?: "ready" | "drag"): "ready" | "drag";
+        enter(event: DragEvent): void;
+        move(event: DragEvent): void;
+        leave(event: DragEvent): void;
+        receive(transfer: DataTransfer): unknown;
+        drop(event: DragEvent): void;
+    }
+}
+
+declare namespace $ {
+    class $mol_drag extends $mol_ghost {
+        event(): {
+            dragstart: (event?: any) => any;
+            drag: (event?: any) => any;
+            dragend: (event?: any) => any;
+        };
+        attr(): {
+            draggable: boolean;
+            mol_drag_status: any;
+        };
+        transfer(): {
+            "text/plain": string;
+            "text/html": string;
+            "text/uri-list": string;
+        };
+        allow_copy(): boolean;
+        allow_link(): boolean;
+        allow_move(): boolean;
+        image(): Element;
+        start(event?: any): any;
+        move(event?: any): any;
+        end(event?: any): any;
+        status(val?: any): any;
+    }
+}
+
+declare namespace $.$$ {
+    class $mol_drag extends $.$mol_drag {
+        status(next?: "ready" | "drag"): "ready" | "drag";
+        start(event: DragEvent): void;
+        end(event: DragEvent): void;
+    }
+}
+
+declare namespace $ {
     class $mol_icon_cross extends $mol_icon {
         path(): string;
     }
@@ -2612,8 +2705,15 @@ declare namespace $ {
         bool(val?: any): any;
         numb(val?: any): any;
         link_arg(id: any): {};
+        link_title(id: any): string;
+        link_html(id: any): string;
+        link_uri(id: any): string;
+        transfer_adopt(transfer?: any): any;
+        receive_before(id: any, obj?: any): any;
         link_entity(id: any): $hyoo_case_entity;
         Link_snippet(id: any): $$.$hyoo_case_entity_snippet;
+        Link_drop(id: any): $$.$mol_drop;
+        Link_drag(id: any): $$.$mol_drag;
         drop(id: any, event?: any): any;
         Drop_icon(id: any): $mol_icon_cross;
         Drop(id: any): $mol_button_minor;
@@ -2642,7 +2742,7 @@ declare namespace $.$$ {
         pick_allowed(): boolean;
         add_allowed(): boolean;
         content(): ($mol_view | $mol_textarea)[];
-        link_content(id: number): ($mol_button_minor | $hyoo_case_entity_snippet)[];
+        link_content(id: number): ($mol_button_minor | $mol_drag)[];
         text(next?: string): string;
         numb(next?: number): number;
         bool(next?: boolean): boolean;
@@ -2654,6 +2754,11 @@ declare namespace $.$$ {
         pick_option_title(id: string): string;
         entity(id: string): $hyoo_case_entity;
         pick(id: string): string;
+        link_title(index: string): string;
+        link_html(index: string): string;
+        link_uri(index: string): string;
+        transfer_adopt(transfer: DataTransfer): string | undefined;
+        receive_before(anchor: number, id: string): void;
     }
 }
 
