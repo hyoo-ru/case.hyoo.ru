@@ -13,6 +13,17 @@ namespace $.$$ {
 			padding: $mol_gap.text,
 		},
 
+		Numb: {
+			margin: [ 0, rem(.75) ],
+			flex: {
+				grow: 1,
+			},
+		},
+
+		Numb_view: {
+			padding: $mol_gap.text,
+		},
+
 		Link_view: {
 			padding: 0,
 		},
@@ -28,7 +39,7 @@ namespace $.$$ {
 
 		Title: {
 			padding: 0,
-			textShadow: '0 0',
+			opacity: .75,
 			flex: {
 				grow: 0,
 			},
