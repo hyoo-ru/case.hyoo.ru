@@ -2637,6 +2637,7 @@ declare namespace $ {
 declare namespace $.$$ {
     class $mol_drop extends $.$mol_drop {
         status(next?: "ready" | "drag"): "ready" | "drag";
+        _target: EventTarget | null;
         enter(event: DragEvent): void;
         move(event: DragEvent): void;
         leave(event: DragEvent): void;
@@ -2774,8 +2775,8 @@ declare namespace $.$$ {
         link_title(index: string): string;
         link_html(index: string): string;
         link_uri(index: string): string;
-        transfer_adopt(transfer: DataTransfer): string | undefined;
-        receive_before(anchor: number, id: string): void;
+        transfer_adopt(transfer: DataTransfer): $hyoo_case_entity | undefined;
+        receive_before(anchor: number, target: $hyoo_case_entity): void;
     }
 }
 
