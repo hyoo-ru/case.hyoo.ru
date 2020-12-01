@@ -159,23 +159,28 @@ namespace $.$$ {
 		
 		transfer_adopt( transfer : DataTransfer ) {
 
-			const uri = transfer.getData( "text/uri-list" )
-			if( !uri ) return
+			const id = transfer.getData( "text/uri-list" ).replace( /^.*#/, '' )
+			if( !id ) return
 
-			return uri.replace( /^.*#/, '' )
+			const target = this.property().domain().entity( id )
+			
+			const kind = target.meta_kind()	
+			if( kind.length === 0 ) return
+			if( kind[0] !== this.property().kind().property_target()[0] ) return
+
+			return target
 
 		}
 
-		receive_before( anchor: number, id : string ) {
+		receive_before( anchor: number, target : $hyoo_case_entity ) {
 			const prop = this.property()
 			let links = [ ... prop.links() ]
-			const trans = prop.domain().entity( id )
-			let index = links.indexOf( trans )
+			let index = links.indexOf( target )
 			if( index >=0 ) {
 				links.splice( index, 1 )
 				if( index < anchor ) --anchor
 			}
-			links.splice( anchor, 0, trans )
+			links.splice( anchor, 0, target )
 			prop.links( links )
 		}
 
