@@ -9428,7 +9428,7 @@ var $;
                         "property_type"
                     ],
                     "meta-name": {
-                        ru: "Многострочный текст"
+                        ru: "Текст"
                     },
                     "meta-icon": "📃",
                     "meta-properties": [
