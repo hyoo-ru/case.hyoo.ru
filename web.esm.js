@@ -2949,6 +2949,7 @@ var $;
         }
         Head() {
             const obj = new this.$.$mol_view();
+            obj.minimal_height = () => 64;
             obj.sub = () => this.head();
             return obj;
         }
@@ -3696,9 +3697,11 @@ var $;
         entity_list() {
             return Object.keys(this.data());
         }
-        entity_new() {
+        entity_new(...kind) {
             const id = $.$mol_guid(id => id in this.data());
-            return this.entity(id);
+            const entity = this.entity(id);
+            entity.property('meta-kind').target_join(...kind);
+            return entity;
         }
     }
     __decorate([
@@ -3799,7 +3802,7 @@ var $;
                         continue;
                     case 'property_string':
                     case 'property_text':
-                        chunks.push(prop.locale(lang).trim());
+                        chunks.push(prop.text(lang).trim());
                 }
             }
             return chunks.filter(Boolean).join(' ') || this.id();
@@ -3841,9 +3844,17 @@ var $;
         domain() { return this.entity().domain(); }
         kind() { return this.domain().entity(this.id()); }
         filled() {
-            return this.data() != null;
+            var _a, _b;
+            switch (this.kind().property_kind_id()) {
+                case 'property_link': return this.links().length > 0;
+                case 'property_string': return this.text($.$mol_locale.lang()).length > 0;
+                case 'property_text': return this.text($.$mol_locale.lang()).length > 0;
+                case 'property_integer': return ((_a = this.data()) !== null && _a !== void 0 ? _a : this.integer_default()) != null;
+                case 'property_boolean': return ((_b = this.data()) !== null && _b !== void 0 ? _b : this.bool_default()) != null;
+            }
         }
-        locale(lang, next) {
+        text(lang, next) {
+            var _a;
             if (next !== undefined) {
                 if (this.kind().property_locale()) {
                     this.data(Object.assign(Object.assign({}, this.data()), { [lang]: next }));
@@ -3852,11 +3863,21 @@ var $;
                     this.data(next);
                 }
             }
-            let value = this.data();
+            let value = (_a = this.data()) !== null && _a !== void 0 ? _a : this.text_default();
             if (value && (typeof value === 'object')) {
                 value = value[lang];
             }
             return String(value !== null && value !== void 0 ? value : '');
+        }
+        integer(next) {
+            var _a;
+            const data = (_a = this.data(next)) !== null && _a !== void 0 ? _a : this.integer_default();
+            return Number(data || 0);
+        }
+        bool(next) {
+            var _a;
+            const data = (_a = this.data(next)) !== null && _a !== void 0 ? _a : this.bool_default();
+            return Boolean(data || false);
         }
         links(next) {
             const domain = this.domain();
@@ -3866,17 +3887,25 @@ var $;
                 val = [];
             return val.map(id => domain.entity(id));
         }
+        text_default() {
+            return this.kind().property('property_text-default').data();
+        }
+        integer_default() {
+            return this.kind().property('property_integer-default').data();
+        }
+        bool_default() {
+            return this.kind().property('property_boolean-default').data();
+        }
         back(index) {
             var _a, _b, _c;
             return (_c = (_a = this.links()[index]) === null || _a === void 0 ? void 0 : _a.property((_b = this.kind().property_back()[0]) === null || _b === void 0 ? void 0 : _b.id())) !== null && _c !== void 0 ? _c : null;
         }
         target_new() {
-            const target = this.domain().entity_new();
-            target.property('meta-kind').target_join(this.kind().property_target());
-            this.target_join([target]);
+            const target = this.domain().entity_new(...this.kind().property_target());
+            this.target_join(target);
             return target;
         }
-        target_join(entities) {
+        target_join(...entities) {
             const entity = this.entity();
             let links = this.links();
             for (const target of entities) {
@@ -3899,6 +3928,21 @@ var $;
             back.target_tear(back.links().indexOf(this.entity()));
         }
     }
+    __decorate([
+        $.$mol_mem
+    ], $hyoo_case_property.prototype, "filled", null);
+    __decorate([
+        $.$mol_mem_key
+    ], $hyoo_case_property.prototype, "text", null);
+    __decorate([
+        $.$mol_mem
+    ], $hyoo_case_property.prototype, "integer", null);
+    __decorate([
+        $.$mol_mem
+    ], $hyoo_case_property.prototype, "bool", null);
+    __decorate([
+        $.$mol_mem
+    ], $hyoo_case_property.prototype, "links", null);
     $.$hyoo_case_property = $hyoo_case_property;
 })($ || ($ = {}));
 //property.js.map
@@ -4211,7 +4255,7 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    $.$mol_style_attach("mol/string/string.view.css", "[mol_string] {\n\tbox-sizing: border-box;\n\toutline-offset: 0;\n\tborder: none;\n\tborder-radius: var(--mol_skin_round);\n\twhite-space: nowrap;\n\toverflow: hidden;\n\tpadding: var(--mol_gap_text);\n\ttext-align: left;\n\tposition: relative;\n\tz-index: 0;\n\tfont: inherit;\n\tflex: 0 1 auto;\n\tbackground: var(--mol_theme_field);\n\tcolor: var(--mol_theme_text);\n\tbox-shadow: inset 0 0 0 .5px var(--mol_theme_line);\n}\n\n[mol_string]:disabled {\n\tbackground-color: transparent;\n}\n\n[mol_string]:focus {\n\toutline: none;\n\tz-index: 1;\n\tbox-shadow: inset 0 0 0 .5px var(--mol_theme_focus);\n}\n\n[mol_string]::-ms-clear {\n\tdisplay: none;\n}\n");
+    $.$mol_style_attach("mol/string/string.view.css", "[mol_string] {\n\tbox-sizing: border-box;\n\toutline-offset: 0;\n\tborder: none;\n\tborder-radius: var(--mol_skin_round);\n\twhite-space: nowrap;\n\toverflow: hidden;\n\tpadding: var(--mol_gap_text);\n\ttext-align: left;\n\tposition: relative;\n\tz-index: 0;\n\tfont: inherit;\n\tflex: 0 1 auto;\n\tbackground: var(--mol_theme_field);\n\tcolor: var(--mol_theme_text);\n\tbox-shadow: inset 0 0 0 1px var(--mol_theme_line);\n}\n\n[mol_string]:disabled {\n\tbackground-color: transparent;\n}\n\n[mol_string]:focus {\n\toutline: none;\n\tz-index: 1;\n\tbox-shadow: inset 0 0 0 1px var(--mol_theme_focus);\n}\n\n[mol_string]::-ms-clear {\n\tdisplay: none;\n}\n");
 })($ || ($ = {}));
 //string.view.css.js.map
 ;
@@ -5552,7 +5596,7 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    $.$mol_style_attach("mol/grid/grid.view.css", "[mol_grid] {\n\tdisplay: block;\n\tflex: 1 1 auto;\n\tposition: relative;\n}\n\n[mol_grid_gap] {\n\tposition: absolute;\n\tpadding: .1px;\n\ttop: 0;\n\ttransform: translateZ(0);\n}\n\n[mol_grid_table] {\n\tborder-spacing: 0;\n\tdisplay: table-row-group;\n\tposition: relative;\n}\n\n[mol_grid_table] > * {\n\tdisplay: table-row;\n\ttransition: none;\n}\n\n[mol_grid_head] > * ,\n[mol_grid_table] > * > * {\n\tdisplay: table-cell;\n\tpadding: var(--mol_gap_text);\n\twhite-space: nowrap;\n\tvertical-align: middle;\n\tbox-shadow: inset 0 0 0 .5px var(--mol_theme_line);\n}\n\n[mol_grid_head] {\n\tdisplay: table-row;\n\ttransform: none !important;\n}\n\n[mol_grid_head] > * {\n\tbackground: var(--mol_theme_back);\n}\n\n[mol_grid_cell_number] {\n\ttext-align: right;\n}\n\n[mol_grid_col_head] {\n\tfont-weight: inherit;\n\ttext-align: inherit;\n\tdisplay: table-cell;\n}\n\n[mol_grid_cell_dimmer] {\n\tdisplay: inline-block;\n\tvertical-align: inherit;\n}\n");
+    $.$mol_style_attach("mol/grid/grid.view.css", "[mol_grid] {\n\tdisplay: block;\n\tflex: 1 1 auto;\n\tposition: relative;\n}\n\n[mol_grid_gap] {\n\tposition: absolute;\n\tpadding: .1px;\n\ttop: 0;\n\ttransform: translateZ(0);\n}\n\n[mol_grid_table] {\n\tborder-spacing: 0;\n\tdisplay: table-row-group;\n\tposition: relative;\n}\n\n[mol_grid_table] > * {\n\tdisplay: table-row;\n\ttransition: none;\n}\n\n[mol_grid_head] > * ,\n[mol_grid_table] > * > * {\n\tdisplay: table-cell;\n\tpadding: var(--mol_gap_text);\n\twhite-space: nowrap;\n\tvertical-align: middle;\n\tbox-shadow: inset 0 0 0 1px var(--mol_theme_line);\n}\n\n[mol_grid_head] {\n\tdisplay: table-row;\n\ttransform: none !important;\n}\n\n[mol_grid_head] > * {\n\tbackground: var(--mol_theme_back);\n}\n\n[mol_grid_cell_number] {\n\ttext-align: right;\n}\n\n[mol_grid_col_head] {\n\tfont-weight: inherit;\n\ttext-align: inherit;\n\tdisplay: table-cell;\n}\n\n[mol_grid_cell_dimmer] {\n\tdisplay: inline-block;\n\tvertical-align: inherit;\n}\n");
 })($ || ($ = {}));
 //grid.view.css.js.map
 ;
@@ -7090,7 +7134,7 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    $.$mol_style_attach("mol/number/number.css", "[mol_number] {\n\tdisplay: flex;\n\tflex: 0 1 auto;\n\tposition: relative;\n\talign-items: stretch;\n\tmax-width: 100%;\n}\n\n[mol_number]:hover {\n\tz-index: 2;\n}\n\n[mol_number_string] {\n\tappearance: textfield;\n\ttext-align: right;\n\tposition: relative;\n\tflex: 1 1 7rem;\n\twidth: 7rem;\n}\n\n[mol_number_string]::-webkit-inner-spin-button {\n\tdisplay: none;\n}\n\n[mol_number_inc] ,\n[mol_number_dec] {\n\tmargin: 0;\n\tflex: 0 0 auto;\n\tposition: absolute;\n\ttop: 0;\n\tdisplay: none;\n\tz-index: 1;\n\tpadding: var(--mol_gap_text);\n}\n\n[mol_number_inc] {\n\tleft: calc( 100% - .5rem );\n}\n\n[mol_number_dec] {\n\tright: calc( 100% - .5rem );\n}\n\n[mol_number]:focus-within [mol_number_inc]:not([disabled]) ,\n[mol_number]:focus-within [mol_number_dec]:not([disabled]) {\n\tdisplay: flex;\n}\n\n[mol_number_inc_icon] ,\n[mol_number_dec_icon] {\n\tdisplay: block;\n\twidth: 1rem;\n\theight: 1rem;\n}\n");
+    $.$mol_style_attach("mol/number/number.css", "[mol_number] {\n\tdisplay: flex;\n\tflex: 0 1 auto;\n\tposition: relative;\n\talign-items: stretch;\n\tmax-width: 100%;\n}\n\n[mol_number]:hover {\n\tz-index: 2;\n}\n\n[mol_number_string] {\n\tappearance: textfield;\n\tposition: relative;\n\tflex: 1 1 7rem;\n\twidth: 7rem;\n}\n\n[mol_number_string]::-webkit-inner-spin-button {\n\tdisplay: none;\n}\n\n[mol_number_inc] ,\n[mol_number_dec] {\n\tmargin: 0;\n\tflex: 0 0 auto;\n\tposition: absolute;\n\ttop: 0;\n\tdisplay: none;\n\tz-index: 1;\n\tpadding: .5rem;\n}\n\n[mol_number_inc] {\n\tleft: calc( 100% - .5rem );\n}\n\n[mol_number_dec] {\n\tright: calc( 100% - .5rem );\n}\n\n[mol_number]:focus-within [mol_number_inc]:not([disabled]) ,\n[mol_number]:focus-within [mol_number_dec]:not([disabled]) {\n\tdisplay: flex;\n}\n\n[mol_number_inc_icon] ,\n[mol_number_dec_icon] {\n\tdisplay: block;\n\twidth: 1rem;\n\theight: 1rem;\n}\n");
 })($ || ($ = {}));
 //number.css.js.map
 ;
@@ -7189,7 +7233,7 @@ var $;
                             return '';
                         return links.length.toString();
                     }
-                    default: return this.property().locale($.$mol_locale.lang());
+                    default: return this.property().text($.$mol_locale.lang());
                 }
             }
             hint() {
@@ -8153,6 +8197,13 @@ var $;
             ];
             return obj;
         }
+        Numb_view() {
+            const obj = new this.$.$mol_view();
+            obj.sub = () => [
+                this.numb()
+            ];
+            return obj;
+        }
         Link_view(id) {
             const obj = new this.$.$mol_link();
             obj.arg = () => this.link_arg(id);
@@ -8309,6 +8360,9 @@ var $;
     __decorate([
         $.$mol_mem
     ], $hyoo_case_property_row.prototype, "Text_view", null);
+    __decorate([
+        $.$mol_mem
+    ], $hyoo_case_property_row.prototype, "Numb_view", null);
     __decorate([
         $.$mol_mem_key
     ], $hyoo_case_property_row.prototype, "Link_view", null);
@@ -8535,7 +8589,7 @@ var $;
                 switch (this.type()) {
                     case "property_string": return [this.editable() ? this.String() : this.Text_view()];
                     case "property_text": return [this.editable() ? this.Text() : this.Text_view()];
-                    case "property_integer": return [this.editable() ? this.Numb() : this.Text_view()];
+                    case "property_integer": return [this.editable() ? this.Numb() : this.Numb_view()];
                     case "property_link": return this.property().links().map((_, i) => this.Link_view(i));
                     default: return [];
                 }
@@ -8547,14 +8601,13 @@ var $;
                 ];
             }
             text(next) {
-                return this.property().locale($.$mol_locale.lang(), next);
+                return this.property().text($.$mol_locale.lang(), next);
             }
             numb(next) {
-                var _a;
-                return (_a = this.property().data(next)) !== null && _a !== void 0 ? _a : 0;
+                return this.property().integer(next);
             }
             bool(next) {
-                return this.property().data(next) === true;
+                return this.property().bool(next);
             }
             link_arg(index) {
                 return this.$.$hyoo_case_route_arg(this.property().entity(), this.property().links()[index]);
@@ -8591,7 +8644,7 @@ var $;
             }
             pick(id) {
                 if (id) {
-                    this.property().target_join([this.entity(id)]);
+                    this.property().target_join(this.entity(id));
                 }
                 return '';
             }
@@ -9126,7 +9179,10 @@ var $;
                         "property-hidden",
                         "property-suggest",
                         "property-inherit",
-                        "property-populate"
+                        "property-populate",
+                        "property_text-default",
+                        "property_integer-default",
+                        "property_boolean-default"
                     ]
                 },
                 property_type: {
@@ -9180,6 +9236,7 @@ var $;
                     "meta-icon": "📟",
                     "meta-properties": [
                         "property-locale",
+                        "property_text-default",
                         "property-min",
                         "property-max"
                     ]
@@ -9194,6 +9251,7 @@ var $;
                     "meta-icon": "📃",
                     "meta-properties": [
                         "property-locale",
+                        "property_text-default",
                         "property-min",
                         "property-max"
                     ]
@@ -9207,6 +9265,7 @@ var $;
                     },
                     "meta-icon": "🎱",
                     "meta-properties": [
+                        "property_integer-default",
                         "property-min",
                         "property-max"
                     ]
@@ -9219,7 +9278,51 @@ var $;
                         ru: "Флаг"
                     },
                     "meta-icon": "🚩",
-                    "meta-properties": []
+                    "meta-properties": [
+                        "property_boolean-default"
+                    ]
+                },
+                "property_text-default": {
+                    "meta-kind": [
+                        "property"
+                    ],
+                    "property-kind": [
+                        "property_text"
+                    ],
+                    "meta-name": {
+                        ru: "Значение по умолчанию"
+                    },
+                    "property-owners": [
+                        "property"
+                    ]
+                },
+                "property_integer-default": {
+                    "meta-kind": [
+                        "property"
+                    ],
+                    "property-kind": [
+                        "property_integer"
+                    ],
+                    "meta-name": {
+                        ru: "Значение по умолчанию"
+                    },
+                    "property-owners": [
+                        "property"
+                    ]
+                },
+                "property_boolean-default": {
+                    "meta-kind": [
+                        "property"
+                    ],
+                    "property-kind": [
+                        "property_boolean"
+                    ],
+                    "meta-name": {
+                        ru: "Значение по умолчанию"
+                    },
+                    "property-owners": [
+                        "property"
+                    ]
                 },
                 "meta-kind": {
                     "meta-kind": [
@@ -9504,7 +9607,8 @@ var $;
                     "property-owners": [
                         "property"
                     ],
-                    "property-suggest": true
+                    "property-suggest": true,
+                    "property-populate": true
                 },
                 "property-owners": {
                     "meta-kind": [
@@ -9517,15 +9621,16 @@ var $;
                         ru: "Владельцы свойства"
                     },
                     "property-target": [
-                        "meta"
+                        "entity"
                     ],
                     "property-back": [
                         "meta-properties"
                     ],
                     "property-owners": [
-                        "meta"
+                        "entity"
                     ],
-                    "property-suggest": true
+                    "property-suggest": true,
+                    "property-populate": true
                 },
                 case: {
                     "meta-kind": [

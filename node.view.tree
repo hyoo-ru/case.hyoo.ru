@@ -18,6 +18,7 @@ $mol_book2 $mol_scroll
 $mol_page $mol_view
 	sub /
 		<= Head $mol_view
+			minimal_height 64
 			sub <= head /
 				<= Title $mol_view
 					sub /
@@ -526,6 +527,7 @@ $hyoo_case_property_row $mol_view
 	Numb $mol_number
 		value?val <=> numb?val 0
 	Text_view $mol_view sub / <= text
+	Numb_view $mol_view sub / <= numb
 	Link_view!id $mol_link
 		arg <= link_arg!id *
 		sub <= link_content!id /
@@ -670,6 +672,9 @@ $hyoo_case $mol_book2
 				\property-suggest
 				\property-inherit
 				\property-populate
+				\property_text-default
+				\property_integer-default
+				\property_boolean-default
 		property_type *
 			meta-kind / \meta
 			meta-name * ru \Тип свойства
@@ -704,6 +709,7 @@ $hyoo_case $mol_book2
 			meta-icon \📟
 			meta-properties /
 				\property-locale
+				\property_text-default
 				\property-min
 				\property-max
 		property_text *
@@ -712,6 +718,7 @@ $hyoo_case $mol_book2
 			meta-icon \📃
 			meta-properties /
 				\property-locale
+				\property_text-default
 				\property-min
 				\property-max
 		property_integer *
@@ -719,6 +726,7 @@ $hyoo_case $mol_book2
 			meta-name * ru \Целое число
 			meta-icon \🎱
 			meta-properties /
+				\property_integer-default
 				\property-min
 				\property-max
 		property_boolean *
@@ -726,6 +734,22 @@ $hyoo_case $mol_book2
 			meta-name * ru \Флаг
 			meta-icon \🚩
 			meta-properties /
+				\property_boolean-default
+		property_text-default *
+			meta-kind / \property
+			property-kind / \property_text
+			meta-name * ru \Значение по умолчанию
+			property-owners / \property
+		property_integer-default *
+			meta-kind / \property
+			property-kind / \property_integer
+			meta-name * ru \Значение по умолчанию
+			property-owners / \property
+		property_boolean-default *
+			meta-kind / \property
+			property-kind / \property_boolean
+			meta-name * ru \Значение по умолчанию
+			property-owners / \property
 		meta-kind *
 			meta-kind / \property
 			property-kind / \property_link
@@ -836,14 +860,16 @@ $hyoo_case $mol_book2
 			property-target / \property
 			property-owners / \property
 			property-suggest true
+			property-populate true
 		property-owners *
 			meta-kind / \property
 			property-kind / \property_link
 			meta-name * ru \Владельцы свойства
-			property-target / \meta
+			property-target / \entity
 			property-back / \meta-properties
-			property-owners / \meta
+			property-owners / \entity
 			property-suggest true
+			property-populate true
 		case *
 			meta-kind / \case
 			meta-name * ru \Бизнес Кейс

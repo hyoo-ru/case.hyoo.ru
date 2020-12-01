@@ -1147,7 +1147,7 @@ declare namespace $ {
     class $hyoo_case_domain extends $mol_store<Record<string, ReturnType<$hyoo_case_entity['data']>>> {
         entity(id: string): $hyoo_case_entity;
         entity_list(): string[];
-        entity_new(): $hyoo_case_entity;
+        entity_new(...kind: $hyoo_case_entity[]): $hyoo_case_entity;
     }
 }
 
@@ -1183,12 +1183,17 @@ declare namespace $ {
         entity(): $hyoo_case_entity;
         domain(): $hyoo_case_domain;
         kind(): $hyoo_case_entity;
-        filled(): boolean;
-        locale(lang: string, next?: string): string;
+        filled(): boolean | undefined;
+        text(lang: string, next?: string): string;
+        integer(next?: number): number;
+        bool(next?: boolean): boolean;
         links(next?: $hyoo_case_entity[]): $hyoo_case_entity[];
+        text_default(): string | number | boolean | readonly string[] | Record<string, string>;
+        integer_default(): string | number | boolean | readonly string[] | Record<string, string>;
+        bool_default(): string | number | boolean | readonly string[] | Record<string, string>;
         back(index: number): $hyoo_case_property;
         target_new(): $hyoo_case_entity;
-        target_join(entities: $hyoo_case_entity[]): void;
+        target_join(...entities: $hyoo_case_entity[]): void;
         target_tear(index: number): void;
     }
 }
@@ -2598,6 +2603,7 @@ declare namespace $ {
         String(): $$.$mol_string;
         Numb(): $$.$mol_number;
         Text_view(): $mol_view;
+        Numb_view(): $mol_view;
         Link_view(id: any): $$.$mol_link;
         title_arg(): {};
         kind(): $hyoo_case_entity;
@@ -2655,7 +2661,7 @@ declare namespace $.$$ {
         content(): ($mol_view | $mol_string)[] | ($mol_view | $mol_textarea)[] | ($mol_view | $mol_number)[];
         link_content(id: number): ($mol_button_minor | $hyoo_case_entity_snippet)[];
         text(next?: string): string;
-        numb(next?: number): string | number | boolean | readonly string[] | Record<string, string>;
+        numb(next?: number): number;
         bool(next?: boolean): boolean;
         link_arg(index: number): Record<string, string | null>;
         link_entity(index: number): $hyoo_case_entity;
