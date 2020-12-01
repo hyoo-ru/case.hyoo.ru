@@ -35,11 +35,20 @@ $hyoo_case_property_row $mol_view
 	Link_view!id $mol_link
 		arg <= link_arg!id *
 		sub <= link_content!id /
-			<= Link_snippet!id $hyoo_case_entity_snippet
-				entity <= link_entity!id $hyoo_case_entity
+			<= Link_drag!id $mol_drag
+				transfer *
+					text/plain <= link_title!id \
+					text/html <= link_html!id \
+					text/uri-list <= link_uri!id \
+				Sub <= Link_drop!id $mol_drop
+					adopt?transfer <=> transfer_adopt?transfer null
+					receive?obj <=> receive_before!id?obj null
+					Sub <= Link_snippet!id $hyoo_case_entity_snippet
+						entity <= link_entity!id $hyoo_case_entity
 			<= Drop!id $mol_button_minor
 				hint @ \Drop link
 				click?event <=> drop!id?event null
 				sub /
 					<= Drop_icon!id $mol_icon_cross
+
 

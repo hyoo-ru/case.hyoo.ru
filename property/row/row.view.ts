@@ -69,7 +69,7 @@ namespace $.$$ {
 
 		link_content( id: number ) {
 			return [
-				this.Link_snippet( id ),
+				this.Link_drag( id ),
 				... this.editable() ? [ this.Drop( id ) ] : [],
 			]
 		}
@@ -140,6 +140,43 @@ namespace $.$$ {
 				this.property().target_join( this.entity( id ) )
 			}
 			return ''
+		}
+
+		link_title( index: string ) {
+			const target = this.property().links()[ index ]
+			return `#${ target.id() }`
+		}
+		
+		link_html( index: string ) {
+			const target = this.property().links()[ index ]
+			return `#${ target.id() }`
+		}
+		
+		link_uri( index: string ) {
+			const target = this.property().links()[ index ]
+			return this.$.$mol_state_arg.make_link({ [ target.id() ]: '' })
+		}
+		
+		transfer_adopt( transfer : DataTransfer ) {
+
+			const uri = transfer.getData( "text/uri-list" )
+			if( !uri ) return
+
+			return uri.replace( /^.*#/, '' )
+
+		}
+
+		receive_before( anchor: number, id : string ) {
+			const prop = this.property()
+			let links = [ ... prop.links() ]
+			const trans = prop.domain().entity( id )
+			let index = links.indexOf( trans )
+			if( index >=0 ) {
+				links.splice( index, 1 )
+				if( index < anchor ) --anchor
+			}
+			links.splice( anchor, 0, trans )
+			prop.links( links )
 		}
 
 	}

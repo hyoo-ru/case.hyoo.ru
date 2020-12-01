@@ -52,6 +52,16 @@ namespace $.$$ {
 			margin: [ 0, rem(.75) ],
 		},
 
+		Link_drop:{
+			'@': {
+				mol_drop_status: {
+					drag: {
+						boxShadow: `0 -1px 0 0px ${ $mol_theme.focus }`,
+					},
+				},
+			},
+		},
+
 	} )
 
 }
