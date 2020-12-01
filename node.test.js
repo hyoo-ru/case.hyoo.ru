@@ -4036,7 +4036,6 @@ var $;
                     case 'property_link':
                     case 'property_boolean':
                         continue;
-                    case 'property_string':
                     case 'property_text':
                         chunks.push(prop.text(lang).trim());
                 }
@@ -4083,7 +4082,6 @@ var $;
             var _a, _b;
             switch (this.kind().property_kind_id()) {
                 case 'property_link': return this.links().length > 0;
-                case 'property_string': return this.text($.$mol_locale.lang()).length > 0;
                 case 'property_text': return this.text($.$mol_locale.lang()).length > 0;
                 case 'property_integer': return ((_a = this.data()) !== null && _a !== void 0 ? _a : this.integer_default()) != null;
                 case 'property_boolean': return ((_b = this.data()) !== null && _b !== void 0 ? _b : this.bool_default()) != null;
@@ -7425,6 +7423,7 @@ var $;
         const { rem } = $.$mol_style_unit;
         $.$mol_style_define($$.$hyoo_case_property_snippet, {
             padding: [0, rem(.25)],
+            whiteSpace: 'pre-wrap',
         });
     })($$ = $.$$ || ($.$$ = {}));
 })($ || ($ = {}));
@@ -8787,12 +8786,7 @@ var $;
                 return true;
             }
             content() {
-                if (this.editable()) {
-                    switch (this.type()) {
-                    }
-                }
                 switch (this.type()) {
-                    case "property_string": return [this.editable() ? this.String() : this.Text_view()];
                     case "property_text": return [this.editable() ? this.Text() : this.Text_view()];
                     case "property_link": return this.property().links().map((_, i) => this.Link_view(i));
                     default: return [];
@@ -9407,7 +9401,6 @@ var $;
                     ],
                     "meta-members": [
                         "property_link",
-                        "property_string",
                         "property_text",
                         "property_integer",
                         "property_boolean"
@@ -9426,21 +9419,6 @@ var $;
                         "property-populate",
                         "property-target",
                         "property-back",
-                        "property-min",
-                        "property-max"
-                    ]
-                },
-                property_string: {
-                    "meta-kind": [
-                        "property_type"
-                    ],
-                    "meta-name": {
-                        ru: "Строка текста"
-                    },
-                    "meta-icon": "📟",
-                    "meta-properties": [
-                        "property-locale",
-                        "property_text-default",
                         "property-min",
                         "property-max"
                     ]
@@ -9554,7 +9532,7 @@ var $;
                         "property"
                     ],
                     "property-kind": [
-                        "property_string"
+                        "property_text"
                     ],
                     "meta-name": {
                         ru: "Иконка"
@@ -9569,7 +9547,7 @@ var $;
                         "property"
                     ],
                     "property-kind": [
-                        "property_string"
+                        "property_text"
                     ],
                     "meta-name": {
                         ru: "Название"
