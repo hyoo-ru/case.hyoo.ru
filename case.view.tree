@@ -112,7 +112,7 @@ $hyoo_case $mol_book2
 				\property-max
 		property_text *
 			meta-kind / \property_type
-			meta-name * ru \Многострочный текст
+			meta-name * ru \Текст
 			meta-icon \📃
 			meta-properties /
 				\property-locale
