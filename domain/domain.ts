@@ -22,9 +22,11 @@ namespace $ {
 			return Object.keys( this.data() )
 		}
 
-		entity_new() {
+		entity_new( ... kind: $hyoo_case_entity[] ) {
 			const id = $mol_guid( id => id in this.data() )
-			return this.entity( id )
+			const entity = this.entity( id )
+			entity.property( 'meta-kind' ).target_join( ... kind )
+			return entity
 		}
 
 	}

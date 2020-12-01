@@ -142,7 +142,7 @@ namespace $.$$ {
 
 		pick( id: string ) {
 			if( id ) {
-				this.property().target_join([ this.entity( id ) ])
+				this.property().target_join( this.entity( id ) )
 			}
 			return ''
 		}

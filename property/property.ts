@@ -56,13 +56,14 @@ namespace $ {
 		}
 
 		target_new() {
-			const target = this.domain().entity_new()
-			target.property( 'meta-kind' ).target_join( this.kind().property_target() )
-			this.target_join([ target ])
+
+			const target = this.domain().entity_new( ... this.kind().property_target() )
+			this.target_join( target )
+			
 			return target
 		}
 
-		target_join( entities: $hyoo_case_entity[] ) {
+		target_join( ... entities: $hyoo_case_entity[] ) {
 			
 			const entity = this.entity()
 			let links = this.links()

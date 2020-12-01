@@ -246,14 +246,16 @@ $hyoo_case $mol_book2
 			property-target / \property
 			property-owners / \property
 			property-suggest true
+			property-populate true
 		property-owners *
 			meta-kind / \property
 			property-kind / \property_link
 			meta-name * ru \Владельцы свойства
-			property-target / \meta
+			property-target / \entity
 			property-back / \meta-properties
-			property-owners / \meta
+			property-owners / \entity
 			property-suggest true
+			property-populate true
 		case *
 			meta-kind / \case
 			meta-name * ru \Бизнес Кейс
