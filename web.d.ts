@@ -1159,7 +1159,7 @@ declare namespace $ {
         property_target(): $hyoo_case_entity[];
         meta_kind(): $hyoo_case_entity[];
         property_kind(): $hyoo_case_entity[];
-        property_kind_id(): "property_string" | "property_text" | "property_integer" | "property_boolean" | "property_link" | null;
+        property_kind_id(): "property_text" | "property_integer" | "property_boolean" | "property_link" | null;
         property_locale(): boolean;
         property_suggest(): boolean;
         property_populate(): boolean;
@@ -2384,7 +2384,7 @@ declare namespace $.$$ {
 
 declare namespace $.$$ {
     class $hyoo_case_property_snippet extends $.$hyoo_case_property_snippet {
-        type(): "property_string" | "property_text" | "property_integer" | "property_boolean" | "property_link" | null;
+        type(): "property_text" | "property_integer" | "property_boolean" | "property_link" | null;
         title(): string;
         hint(): string;
     }
@@ -2651,14 +2651,14 @@ declare namespace $.$$ {
     class $hyoo_case_property_row extends $.$hyoo_case_property_row {
         kind(): $hyoo_case_entity;
         title(): string;
-        type(): "property_string" | "property_text" | "property_integer" | "property_boolean" | "property_link" | null;
+        type(): "property_text" | "property_integer" | "property_boolean" | "property_link" | null;
         title_arg(): Record<string, string | null>;
-        sub(): ($mol_view | $mol_select | $mol_check_box)[];
+        sub(): ($mol_view | $mol_number | $mol_select | $mol_check_box)[];
         suggest(): boolean;
         populate(): boolean;
         pick_allowed(): boolean;
         add_allowed(): boolean;
-        content(): ($mol_view | $mol_string)[] | ($mol_view | $mol_textarea)[] | ($mol_view | $mol_number)[];
+        content(): ($mol_view | $mol_textarea)[];
         link_content(id: number): ($mol_button_minor | $hyoo_case_entity_snippet)[];
         text(next?: string): string;
         numb(next?: number): number;
