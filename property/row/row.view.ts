@@ -66,7 +66,7 @@ namespace $.$$ {
 			switch( this.type() ) {
 				case "property_string": return [ this.editable() ? this.String() : this.Text_view() ]
 				case "property_text": return [ this.editable() ? this.Text() : this.Text_view() ]
-				case "property_integer": return [ this.editable() ? this.Numb() : this.Text_view() ]
+				case "property_integer": return [ this.editable() ? this.Numb() : this.Numb_view() ]
 				case "property_link": return this.property().links().map( ( _, i )=> this.Link_view( i ) )
 				default: return []
 			}
@@ -80,15 +80,15 @@ namespace $.$$ {
 		}
 
 		text( next? : string ) {
-			return this.property().locale( $mol_locale.lang() , next )
+			return this.property().text( $mol_locale.lang() , next )
 		}
 
 		numb( next? : number ) {
-			return this.property().data( next ) ?? 0
+			return this.property().integer( next )
 		}
 
 		bool( next? : boolean ) {
-			return this.property().data( next ) === true
+			return this.property().bool( next )
 		}
 
 		@ $mol_mem_key

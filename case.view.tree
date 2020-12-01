@@ -80,6 +80,9 @@ $hyoo_case $mol_book2
 				\property-suggest
 				\property-inherit
 				\property-populate
+				\property_text-default
+				\property_integer-default
+				\property_boolean-default
 		property_type *
 			meta-kind / \meta
 			meta-name * ru \Тип свойства
@@ -114,6 +117,7 @@ $hyoo_case $mol_book2
 			meta-icon \📟
 			meta-properties /
 				\property-locale
+				\property_text-default
 				\property-min
 				\property-max
 		property_text *
@@ -122,6 +126,7 @@ $hyoo_case $mol_book2
 			meta-icon \📃
 			meta-properties /
 				\property-locale
+				\property_text-default
 				\property-min
 				\property-max
 		property_integer *
@@ -129,6 +134,7 @@ $hyoo_case $mol_book2
 			meta-name * ru \Целое число
 			meta-icon \🎱
 			meta-properties /
+				\property_integer-default
 				\property-min
 				\property-max
 		property_boolean *
@@ -136,6 +142,22 @@ $hyoo_case $mol_book2
 			meta-name * ru \Флаг
 			meta-icon \🚩
 			meta-properties /
+				\property_boolean-default
+		property_text-default *
+			meta-kind / \property
+			property-kind / \property_text
+			meta-name * ru \Значение по умолчанию
+			property-owners / \property
+		property_integer-default *
+			meta-kind / \property
+			property-kind / \property_integer
+			meta-name * ru \Значение по умолчанию
+			property-owners / \property
+		property_boolean-default *
+			meta-kind / \property
+			property-kind / \property_boolean
+			meta-name * ru \Значение по умолчанию
+			property-owners / \property
 		meta-kind *
 			meta-kind / \property
 			property-kind / \property_link

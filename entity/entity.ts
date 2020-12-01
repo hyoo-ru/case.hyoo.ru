@@ -157,7 +157,7 @@ namespace $ {
 					
 					case 'property_string':
 					case 'property_text':
-						chunks.push( prop.locale( lang ).trim() )
+						chunks.push( prop.text( lang ).trim() )
 
 				}
 

@@ -14,11 +14,19 @@ namespace $ {
 		domain() { return this.entity().domain() }
 		kind() { return this.domain().entity( this.id() ) }
 
+		@ $mol_mem
 		filled() {
-			return this.data() != null
+			switch( this.kind().property_kind_id() ) {
+				case 'property_link': return this.links().length > 0
+				case 'property_string': return this.text( $mol_locale.lang() ).length > 0
+				case 'property_text': return this.text( $mol_locale.lang() ).length > 0
+				case 'property_integer': return ( this.data() ?? this.integer_default() ) != null
+				case 'property_boolean': return ( this.data() ?? this.bool_default() ) != null
+			}
 		}
 
-		locale( lang: string, next? : string ) {
+		@ $mol_mem_key
+		text( lang: string, next? : string ) {
 
 			if( next !== undefined ) {
 				if( this.kind().property_locale() ) {
@@ -31,7 +39,7 @@ namespace $ {
 				}
 			}
 
-			let value = this.data()
+			let value = this.data() ?? this.text_default()
 
 			if( value && ( typeof value === 'object' ) ) {
 				value = value[ lang ]
@@ -40,6 +48,19 @@ namespace $ {
 			return String( value ?? '' )
 		}
 
+		@ $mol_mem
+		integer( next? : number ) {
+			const data = this.data( next ) ?? this.integer_default()
+			return Number( data || 0 )
+		}
+		
+		@ $mol_mem
+		bool( next? : boolean ) {
+			const data = this.data( next ) ?? this.bool_default()
+			return Boolean( data || false )
+		}
+
+		@ $mol_mem
 		links( next?: $hyoo_case_entity[] ): $hyoo_case_entity[] {
 			
 			const domain = this.domain()
@@ -49,6 +70,18 @@ namespace $ {
 			if( !val || typeof val !== 'object' ) val = [] 	
 			
 			return ( val as string[] ).map( id => domain.entity( id ) )
+		}
+
+		text_default() {
+			return this.kind().property( 'property_text-default' ).data()
+		}
+
+		integer_default() {
+			return this.kind().property( 'property_integer-default' ).data()
+		}
+
+		bool_default() {
+			return this.kind().property( 'property_boolean-default' ).data()
 		}
 
 		back( index: number ) {

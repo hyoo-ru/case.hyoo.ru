@@ -14,7 +14,7 @@ namespace $.$$ {
 					if( links.length === 0 ) return ''
 					return links.length.toString()
 				}
-				default: return this.property().locale( $mol_locale.lang() )
+				default: return this.property().text( $mol_locale.lang() )
 			}
 		}
 
