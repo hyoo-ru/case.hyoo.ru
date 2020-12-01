@@ -18,7 +18,6 @@ namespace $ {
 		filled() {
 			switch( this.kind().property_kind_id() ) {
 				case 'property_link': return this.links().length > 0
-				case 'property_string': return this.text( $mol_locale.lang() ).length > 0
 				case 'property_text': return this.text( $mol_locale.lang() ).length > 0
 				case 'property_integer': return ( this.data() ?? this.integer_default() ) != null
 				case 'property_boolean': return ( this.data() ?? this.bool_default() ) != null

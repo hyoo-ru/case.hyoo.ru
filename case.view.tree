@@ -96,7 +96,6 @@ $hyoo_case $mol_book2
 				\property-suggest
 			meta-members /
 				\property_link
-				\property_string
 				\property_text
 				\property_integer
 				\property_boolean
@@ -109,15 +108,6 @@ $hyoo_case $mol_book2
 				\property-populate
 				\property-target
 				\property-back
-				\property-min
-				\property-max
-		property_string *
-			meta-kind / \property_type
-			meta-name * ru \Строка текста
-			meta-icon \📟
-			meta-properties /
-				\property-locale
-				\property_text-default
 				\property-min
 				\property-max
 		property_text *
@@ -168,13 +158,13 @@ $hyoo_case $mol_book2
 			property-min 1
 		meta-icon *
 			meta-kind / \property
-			property-kind / \property_string
+			property-kind / \property_text
 			meta-name * ru \Иконка
 			property-owners / \entity
 			property-main true
 		meta-name *
 			meta-kind / \property
-			property-kind / \property_string
+			property-kind / \property_text
 			meta-name * ru \Название
 			property-locale true
 			property-owners / \entity

@@ -60,12 +60,7 @@ namespace $.$$ {
 		
 		@ $mol_mem
 		content() {
-			if( this.editable() ) {
-				switch( this.type() ) {
-				}
-			}
 			switch( this.type() ) {
-				case "property_string": return [ this.editable() ? this.String() : this.Text_view() ]
 				case "property_text": return [ this.editable() ? this.Text() : this.Text_view() ]
 				case "property_link": return this.property().links().map( ( _, i )=> this.Link_view( i ) )
 				default: return []

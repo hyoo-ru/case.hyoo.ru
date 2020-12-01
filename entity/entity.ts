@@ -35,7 +35,6 @@ namespace $ {
 		property_kind_id() {
 			return ( this.property_kind()[0]?.id() ?? null ) as
 			| null
-			| 'property_string'
 			| 'property_text'
 			| 'property_integer'
 			| 'property_boolean'
@@ -155,7 +154,6 @@ namespace $ {
 					case 'property_boolean':
 						continue
 					
-					case 'property_string':
 					case 'property_text':
 						chunks.push( prop.text( lang ).trim() )
 
