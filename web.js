@@ -3909,10 +3909,10 @@ var $;
             for (const target of entities) {
                 if (links.includes(target))
                     continue;
-                this.links(links = [...links, target]);
+                this.links(links = [target, ...links]);
                 for (const Back of this.kind().property_back()) {
                     const back = target.property(Back.id());
-                    back.links([...back.links(), entity]);
+                    back.links([entity, ...back.links()]);
                 }
             }
         }
