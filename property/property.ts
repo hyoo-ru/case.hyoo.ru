@@ -30,9 +30,16 @@ namespace $ {
 			const lang = this.$.$mol_locale.lang()
 
 			if( next !== undefined ) {
+				
+				let value = this.data() as string
+				if( value && ( typeof value === 'object' ) ) {
+					value = value[ 'en' ]
+				}
+	
 				if( this.kind().property_locale() ) {
 					this.data({
 						... this.data() as {},
+						en: value,
 						[ lang ]: next,
 					})
 				} else {
