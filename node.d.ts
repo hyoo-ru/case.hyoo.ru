@@ -1172,7 +1172,7 @@ declare namespace $ {
         properties(): $hyoo_case_property[];
         properties_main(): $hyoo_case_property[];
         properties_least(): $hyoo_case_property[];
-        title(lang: string): string;
+        title(): string;
         members(): $hyoo_case_entity[];
     }
 }
@@ -1184,7 +1184,7 @@ declare namespace $ {
         domain(): $hyoo_case_domain;
         kind(): $hyoo_case_entity;
         filled(): boolean | undefined;
-        text(lang: string, next?: string): string;
+        text(next?: string): string;
         integer(next?: number): number;
         bool(next?: boolean): boolean;
         links(next?: $hyoo_case_entity[]): $hyoo_case_entity[];
@@ -2918,6 +2918,8 @@ declare namespace $.$$ {
 
 declare namespace $.$$ {
     class $hyoo_case extends $.$hyoo_case {
+        get $(): $mol_ambient_context;
+        lang(): string;
         pages(): $hyoo_case_entity_page[];
         domain(): $hyoo_case_domain;
         entity(id: string): $hyoo_case_entity;

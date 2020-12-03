@@ -4042,7 +4042,7 @@ var $;
         properties_least() {
             return this.properties().filter(prop => prop.kind().property_least());
         }
-        title(lang) {
+        title() {
             const chunks = [];
             for (const prop of this.properties_main()) {
                 switch (prop.kind().property_kind_id()) {
@@ -4050,7 +4050,7 @@ var $;
                     case 'property_boolean':
                         continue;
                     case 'property_text':
-                        chunks.push(prop.text(lang).trim());
+                        chunks.push(prop.text().trim());
                 }
             }
             return chunks.filter(Boolean).join(' ') || this.id();
@@ -4074,7 +4074,7 @@ var $;
         $.$mol_mem
     ], $hyoo_case_entity.prototype, "properties", null);
     __decorate([
-        $.$mol_mem_key
+        $.$mol_mem
     ], $hyoo_case_entity.prototype, "title", null);
     __decorate([
         $.$mol_mem
@@ -4095,13 +4095,14 @@ var $;
             var _a, _b;
             switch (this.kind().property_kind_id()) {
                 case 'property_link': return this.links().length > 0;
-                case 'property_text': return this.text($.$mol_locale.lang()).length > 0;
+                case 'property_text': return this.text().length > 0;
                 case 'property_integer': return ((_a = this.data()) !== null && _a !== void 0 ? _a : this.value_default()) != null;
                 case 'property_boolean': return ((_b = this.data()) !== null && _b !== void 0 ? _b : this.value_default()) != null;
             }
         }
-        text(lang, next) {
+        text(next) {
             var _a, _b;
+            const lang = this.$.$mol_locale.lang();
             if (next !== undefined) {
                 if (this.kind().property_locale()) {
                     this.data(Object.assign(Object.assign({}, this.data()), { [lang]: next }));
@@ -4174,7 +4175,7 @@ var $;
         $.$mol_mem
     ], $hyoo_case_property.prototype, "filled", null);
     __decorate([
-        $.$mol_mem_key
+        $.$mol_mem
     ], $hyoo_case_property.prototype, "text", null);
     __decorate([
         $.$mol_mem
@@ -7467,11 +7468,11 @@ var $;
                             return '';
                         return links.length.toString();
                     }
-                    default: return this.property().text($.$mol_locale.lang());
+                    default: return this.property().text();
                 }
             }
             hint() {
-                return this.property().kind().title(this.$.$mol_locale.lang());
+                return this.property().kind().title();
             }
             max_width() {
                 let max = this.property().kind().property_max();
@@ -7559,7 +7560,7 @@ var $;
     (function ($$) {
         class $hyoo_case_entity_snippet extends $.$hyoo_case_entity_snippet {
             title() {
-                return this.entity().title($.$mol_locale.lang());
+                return this.entity().title();
             }
             property_list() {
                 const main = this.entity().properties_main();
@@ -9158,7 +9159,7 @@ var $;
                 return this.property().kind();
             }
             title() {
-                return this.property().kind().title($.$mol_locale.lang());
+                return this.property().kind().title();
             }
             type() {
                 return this.property().kind().property_kind_id();
@@ -9221,7 +9222,7 @@ var $;
                 return this.property().kind().property_max();
             }
             text(next) {
-                return this.property().text($.$mol_locale.lang(), next);
+                return this.property().text(next);
             }
             numb(next) {
                 return this.property().integer(next);
@@ -9257,7 +9258,7 @@ var $;
                 return options;
             }
             pick_option_title(id) {
-                return this.property().domain().entity(id).title($.$mol_locale.lang());
+                return this.property().domain().entity(id).title();
             }
             entity(id) {
                 return this.property().domain().entity(id);
@@ -9807,7 +9808,8 @@ var $;
                         "meta-members"
                     ],
                     "meta-members": [
-                        "case"
+                        "case",
+                        "language"
                     ]
                 },
                 property: {
@@ -9845,7 +9847,8 @@ var $;
                         "property-populate",
                         "property_text-default",
                         "property_integer-default",
-                        "property_boolean-default"
+                        "property_boolean-default",
+                        "case-language"
                     ]
                 },
                 property_type: {
@@ -10323,8 +10326,69 @@ var $;
                     "meta-properties": [
                         "meta-icon",
                         "meta-name",
-                        "meta-properties"
+                        "meta-properties",
+                        "case-language"
+                    ],
+                    "case-language": [
+                        "en"
                     ]
+                },
+                "case-language": {
+                    "meta-kind": [
+                        "property"
+                    ],
+                    "property-kind": [
+                        "property_link"
+                    ],
+                    "meta-name": {
+                        en: "Interface language",
+                        ru: "Язык интерфейса"
+                    },
+                    "property-target": [
+                        "language"
+                    ],
+                    "property-owners": [
+                        "case"
+                    ],
+                    "property-suggest": true,
+                    "property-max": 1
+                },
+                language: {
+                    "meta-kind": [
+                        "entity"
+                    ],
+                    "meta-icon": [
+                        "🏳‍🌈"
+                    ],
+                    "meta-name": {
+                        en: "Language",
+                        ru: "Язык"
+                    },
+                    "meta-properties": [
+                        "meta-name"
+                    ],
+                    "meta-members": [
+                        "en",
+                        "ru"
+                    ]
+                },
+                en: {
+                    "meta-kind": [
+                        "language"
+                    ],
+                    "meta-name": {
+                        en: "English",
+                        ru: "Английский"
+                    }
+                },
+                ru: {
+                    "meta-kind": [
+                        "language"
+                    ],
+                    "meta-name": {
+                        en: "Russian",
+                        ru: "Расский"
+                    }
                 }
             });
             return obj;
@@ -10472,8 +10536,21 @@ var $;
 var $;
 (function ($) {
     var $$;
-    (function ($$) {
+    (function ($$_1) {
         class $hyoo_case extends $.$hyoo_case {
+            get $() {
+                const $$ = super.$;
+                const lang = () => this.lang();
+                return $$.$mol_ambient({
+                    $mol_locale: class extends $$.$mol_locale {
+                        static lang() { return lang(); }
+                    }
+                });
+            }
+            lang() {
+                var _a, _b;
+                return (_b = (_a = this.domain().entity('case').property('case-language').links()[0]) === null || _a === void 0 ? void 0 : _a.id()) !== null && _b !== void 0 ? _b : 'en';
+            }
             pages() {
                 const params = this.$.$mol_state_arg.dict();
                 return [
@@ -10499,9 +10576,12 @@ var $;
             }
         }
         __decorate([
+            $.$mol_memo.field
+        ], $hyoo_case.prototype, "$", null);
+        __decorate([
             $.$mol_mem
         ], $hyoo_case.prototype, "domain", null);
-        $$.$hyoo_case = $hyoo_case;
+        $$_1.$hyoo_case = $hyoo_case;
     })($$ = $.$$ || ($.$$ = {}));
 })($ || ($ = {}));
 //case.view.js.map

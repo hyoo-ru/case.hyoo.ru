@@ -696,6 +696,7 @@ $hyoo_case $mol_book2
 				\meta-members
 			meta-members /
 				\case
+				\language
 		property *
 			meta-kind / \meta
 			meta-name *
@@ -728,6 +729,7 @@ $hyoo_case $mol_book2
 				\property_text-default
 				\property_integer-default
 				\property_boolean-default
+				\case-language
 		property_type *
 			meta-icon \🔱
 			meta-kind / \meta
@@ -981,6 +983,39 @@ $hyoo_case $mol_book2
 				\meta-icon
 				\meta-name
 				\meta-properties
+				\case-language
+			case-language / \en
+		case-language *
+			meta-kind / \property
+			property-kind / \property_link
+			meta-name *
+				en \Interface language
+				ru \Язык интерфейса
+			property-target / \language
+			property-owners / \case
+			property-suggest true
+			property-max 1
+		language *
+			meta-kind / \entity
+			meta-icon / \🏳‍🌈
+			meta-name *
+				en \Language
+				ru \Язык
+			meta-properties /
+				\meta-name
+			meta-members /
+				\en
+				\ru
+		en *
+			meta-kind / \language
+			meta-name *
+				en \English
+				ru \Английский
+		ru *
+			meta-kind / \language
+			meta-name *
+				en \Russian
+				ru \Расский
 
 $mol_view_tree_test_attributes_super $mol_view
 	some *
