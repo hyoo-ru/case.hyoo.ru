@@ -6,6 +6,9 @@ namespace $.$$ {
 
 		Config: {
 			padding: 0,
+			flex: {
+				grow: 1,
+			},
 		},
 
 		Snippet: {

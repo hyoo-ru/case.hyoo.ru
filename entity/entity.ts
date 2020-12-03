@@ -77,6 +77,14 @@ namespace $ {
 			return this.property( 'property-back' ).links()
 		}
 
+		property_min() {
+			return this.property( 'property-min' ).integer()
+		}
+
+		property_max() {
+			return Number( this.property( 'property-max' ).integer() )
+		}
+
 		// entity_parents() {
 		// 	return this.property( 'meta-parents' ).links()
 		// }

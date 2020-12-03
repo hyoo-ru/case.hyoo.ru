@@ -74,6 +74,10 @@ namespace $.$$ {
 			]
 		}
 
+		length_max() {
+			return this.property().kind().property_max()
+		}
+
 		text( next? : string ) {
 			return this.property().text( $mol_locale.lang() , next )
 		}

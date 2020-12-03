@@ -22,5 +22,9 @@ namespace $.$$ {
 			return this.property().kind().title( this.$.$mol_locale.lang() )
 		}
 
+		max_width() {
+			return  this.property().kind().property_max() + 'rem'
+		}
+
 	}
 }

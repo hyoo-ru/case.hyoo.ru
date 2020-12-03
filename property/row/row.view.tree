@@ -24,6 +24,7 @@ $hyoo_case_property_row $mol_view
 		<= Content $mol_view sub <= content /
 	Text $mol_textarea
 		value?val <=> text?val \
+		length_max <= length_max Infinity
 	Bool $mol_check_box
 		checked?val <=> bool?val false
 	String $mol_string

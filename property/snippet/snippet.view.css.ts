@@ -6,6 +6,9 @@ namespace $.$$ {
 
 		padding: [ 0 , rem(.25) ],
 		whiteSpace: 'pre-line',
+		flex: {
+			grow: 1,
+		},
 
 	} )
 

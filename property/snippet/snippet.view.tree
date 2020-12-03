@@ -5,3 +5,6 @@ $hyoo_case_property_snippet $mol_dimmer
 	attr *
 		^
 		title <= hint \
+	style *
+		^
+		maxWidth <= max_width \

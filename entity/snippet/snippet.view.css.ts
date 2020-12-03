@@ -8,9 +8,10 @@ namespace $.$$ {
 
 		flex: {
 			grow: 1,
+			wrap: 'wrap',
 		},
 		
-		justifyContent: 'space-between',
+		justifyContent: 'flex-end',
 		textAlign: 'left',
 
 	} )
