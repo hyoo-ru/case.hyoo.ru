@@ -2706,6 +2706,8 @@ declare namespace $ {
         Text_view(): $mol_view;
         Numb_view(): $mol_view;
         Link_view(id: any): $$.$mol_link;
+        expanded(val?: any): any;
+        Expand(): $$.$mol_check_expand;
         title_arg(): {};
         kind(): $hyoo_case_entity;
         Title_snippet(): $$.$hyoo_case_entity_snippet;
@@ -2721,7 +2723,7 @@ declare namespace $ {
         Pick(): $$.$mol_select;
         pick_query(): string;
         content(): readonly any[];
-        Content(): $mol_view;
+        Content(): $$.$mol_list;
         text(val?: any): any;
         length_max(): number;
         bool(val?: any): any;
@@ -2762,9 +2764,11 @@ declare namespace $.$$ {
         title(): string;
         type(): "property_text" | "property_integer" | "property_boolean" | "property_link" | null;
         title_arg(): Record<string, string | null>;
-        sub(): ($mol_view | $mol_number | $mol_select | $mol_check_box)[];
+        sub(): ($mol_view | $mol_check_expand | $mol_number | $mol_select | $mol_check_box)[];
         suggest(): boolean;
         populate(): boolean;
+        expand_allowed(): boolean;
+        expanded(next?: boolean): boolean;
         pick_allowed(): boolean;
         add_allowed(): boolean;
         drop_allowed(): boolean;

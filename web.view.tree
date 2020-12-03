@@ -532,6 +532,8 @@ $hyoo_case_property_row $mol_view
 	editable false
 	property $hyoo_case_property
 	sub /
+		<= Expand $mol_check_expand
+			expanded?val <=> expanded?val true
 		<= Title $mol_link
 			arg <= title_arg *
 			sub /
@@ -551,7 +553,7 @@ $hyoo_case_property_row $mol_view
 					entity <= entity!id $hyoo_case_entity
 					highlight <= pick_query
 			option_label!id <= pick_option_title!id \
-		<= Content $mol_view sub <= content /
+		<= Content $mol_list rows <= content /
 	Text $mol_textarea
 		value?val <=> text?val \
 		length_max <= length_max Infinity
@@ -682,7 +684,7 @@ $hyoo_case $mol_book2
 		entity *
 			meta-kind / \meta
 			meta-name *
-				en \Entiry
+				en \Entity
 				ru \Сущность
 			meta-icon \🌟
 			meta-description *

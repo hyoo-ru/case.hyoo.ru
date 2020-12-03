@@ -8516,6 +8516,7 @@ var $;
         }
         sub() {
             return [
+                this.Expand(),
                 this.Title(),
                 this.Add(),
                 this.Pick(),
@@ -8561,6 +8562,16 @@ var $;
             const obj = new this.$.$mol_link();
             obj.arg = () => this.link_arg(id);
             obj.sub = () => this.link_content(id);
+            return obj;
+        }
+        expanded(val) {
+            if (val !== undefined)
+                return val;
+            return true;
+        }
+        Expand() {
+            const obj = new this.$.$mol_check_expand();
+            obj.expanded = (val) => this.expanded(val);
             return obj;
         }
         title_arg() {
@@ -8639,8 +8650,8 @@ var $;
             return [];
         }
         Content() {
-            const obj = new this.$.$mol_view();
-            obj.sub = () => this.content();
+            const obj = new this.$.$mol_list();
+            obj.rows = () => this.content();
             return obj;
         }
         text(val) {
@@ -8758,6 +8769,12 @@ var $;
     __decorate([
         $.$mol_mem_key
     ], $hyoo_case_property_row.prototype, "Link_view", null);
+    __decorate([
+        $.$mol_mem
+    ], $hyoo_case_property_row.prototype, "expanded", null);
+    __decorate([
+        $.$mol_mem
+    ], $hyoo_case_property_row.prototype, "Expand", null);
     __decorate([
         $.$mol_mem
     ], $hyoo_case_property_row.prototype, "kind", null);
@@ -8925,6 +8942,10 @@ var $;
                 },
                 padding: [0, rem(.75)],
             },
+            Expand: {
+                margin: [0, rem(-1.25)],
+                zIndex: 1,
+            },
             Title: {
                 padding: 0,
                 opacity: .75,
@@ -8972,6 +8993,7 @@ var $;
             }
             sub() {
                 return [
+                    ...this.expand_allowed() ? [this.Expand()] : [],
                     this.Title(),
                     ...this.add_allowed() ? [this.Add()] : [],
                     ...this.pick_allowed() ? [this.Pick()] : [],
@@ -8985,6 +9007,18 @@ var $;
             }
             populate() {
                 return this.property().kind().property_populate();
+            }
+            expand_allowed() {
+                if (this.type() !== 'property_link')
+                    return false;
+                if (this.property().links().length === 0)
+                    return false;
+                return true;
+            }
+            expanded(next) {
+                var _a;
+                const key = `$hyoo_case_property_row:expanded:${this.property().id()}`;
+                return (_a = this.$.$mol_state_session.value(key, next)) !== null && _a !== void 0 ? _a : true;
             }
             pick_allowed() {
                 if (!this.editable())
@@ -9025,6 +9059,8 @@ var $;
                     case "property_text":
                         return [this.editable() ? this.Text() : this.Text_view()];
                     case "property_link":
+                        if (!this.expanded())
+                            return [];
                         return this.property().links().map((_, i) => this.Link_view(i));
                     default: return [];
                 }
@@ -9135,6 +9171,12 @@ var $;
         __decorate([
             $.$mol_mem
         ], $hyoo_case_property_row.prototype, "sub", null);
+        __decorate([
+            $.$mol_mem
+        ], $hyoo_case_property_row.prototype, "expand_allowed", null);
+        __decorate([
+            $.$mol_mem
+        ], $hyoo_case_property_row.prototype, "expanded", null);
         __decorate([
             $.$mol_mem
         ], $hyoo_case_property_row.prototype, "pick_allowed", null);
@@ -9615,7 +9657,7 @@ var $;
                         "meta"
                     ],
                     "meta-name": {
-                        en: "Entiry",
+                        en: "Entity",
                         ru: "Сущность"
                     },
                     "meta-icon": "🌟",
