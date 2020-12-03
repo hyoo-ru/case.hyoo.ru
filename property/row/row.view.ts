@@ -44,11 +44,14 @@ namespace $.$$ {
 
 		@ $mol_mem
 		pick_allowed() {
-			if( !this.editable() && !this.single_value() ) return false
+			if( !this.editable() ) return false
 			if( this.type() !== 'property_link' ) return false
-			if( !this.single_value() ) {
-				if( this.property().links().length >= this.property().kind().property_max() ) return false
+
+			const max = this.property().kind().property_max()
+			if( max > 1 ) {
+				if( this.property().links().length >= max ) return false
 			}
+
 			if( !this.suggest() ) return false
 			if( this.pick_options().length === 0 ) return false
 			return true
@@ -61,6 +64,15 @@ namespace $.$$ {
 			if( !this.populate() ) return false
 			return true
 		}
+
+
+		@ $mol_mem
+		drop_allowed() {
+			if( !this.editable() ) return false
+			if( this.type() !== 'property_link' ) return false
+			if( this.property().links().length <= this.property().kind().property_min() ) return false
+			return true
+		}
 		
 		@ $mol_mem
 		content() {
@@ -70,7 +82,6 @@ namespace $.$$ {
 					return [ this.editable() ? this.Text() : this.Text_view() ]
 				
 				case "property_link":
-					if( this.single_value() ) return []
 					return this.property().links().map( ( _, i )=> this.Link_view( i ) )
 				
 				default: return []
@@ -80,7 +91,7 @@ namespace $.$$ {
 		link_content( id: number ) {
 			return [
 				this.Link_drag( id ),
-				... this.editable() ? [ this.Drop( id ) ] : [],
+				... this.drop_allowed() ? [ this.Drop( id ) ] : [],
 			]
 		}
 
@@ -149,26 +160,18 @@ namespace $.$$ {
 			return this.property().domain().entity( id )
 		}
 
-		@ $mol_mem
-		single_value() {
-			const kind = this.property().kind()
-			return kind.property_min() === 1 && kind.property_max() === 1
-		}
-
 		pick( id: string ) {
 
-			const single = this.single_value()
-			
 			if( id ) {
-				if( single ) this.property().target_tear_all()
+				
+				if( this.property().kind().property_max() === 1 ) {
+					this.property().target_tear_all()
+				}
+				
 				this.property().target_join( this.entity( id ) )
 			}
 			
-			if( single ) {
-				return this.property().links()[0]?.id() ?? ''
-			} else {
-				return ''
-			}
+			return ''
 
 		}
 
