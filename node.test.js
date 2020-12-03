@@ -4002,6 +4002,12 @@ var $;
         property_back() {
             return this.property('property-back').links();
         }
+        property_min() {
+            return this.property('property-min').integer();
+        }
+        property_max() {
+            return Number(this.property('property-max').integer());
+        }
         properties() {
             const kinds = [...this.meta_kind()];
             const props = new Set();
@@ -7092,12 +7098,16 @@ var $;
         enabled() {
             return true;
         }
+        length_max() {
+            return Infinity;
+        }
         Edit() {
             const obj = new this.$.$mol_string();
             obj.dom_name = () => "textarea";
             obj.value = (val) => this.value(val);
             obj.hint = () => this.hint();
             obj.enabled = () => this.enabled();
+            obj.length_max = () => this.length_max();
             return obj;
         }
         View() {
@@ -7396,10 +7406,16 @@ var $;
         attr() {
             return Object.assign(Object.assign({}, super.attr()), { title: this.hint() });
         }
+        style() {
+            return Object.assign(Object.assign({}, super.style()), { maxWidth: this.max_width() });
+        }
         highlight() {
             return "";
         }
         hint() {
+            return "";
+        }
+        max_width() {
             return "";
         }
     }
@@ -7419,6 +7435,9 @@ var $;
         $.$mol_style_define($$.$hyoo_case_property_snippet, {
             padding: [0, rem(.25)],
             whiteSpace: 'pre-line',
+            flex: {
+                grow: 1,
+            },
         });
     })($$ = $.$$ || ($.$$ = {}));
 })($ || ($ = {}));
@@ -7446,6 +7465,9 @@ var $;
             }
             hint() {
                 return this.property().kind().title(this.$.$mol_locale.lang());
+            }
+            max_width() {
+                return this.property().kind().property_max() + 'rem';
             }
         }
         __decorate([
@@ -7510,8 +7532,9 @@ var $;
             padding: rem(.5),
             flex: {
                 grow: 1,
+                wrap: 'wrap',
             },
-            justifyContent: 'space-between',
+            justifyContent: 'flex-end',
             textAlign: 'left',
         });
     })($$ = $.$$ || ($.$$ = {}));
@@ -8706,6 +8729,7 @@ var $;
         Text() {
             const obj = new this.$.$mol_textarea();
             obj.value = (val) => this.text(val);
+            obj.length_max = () => this.length_max();
             return obj;
         }
         Bool() {
@@ -8827,6 +8851,9 @@ var $;
             if (val !== undefined)
                 return val;
             return "";
+        }
+        length_max() {
+            return Infinity;
         }
         bool(val) {
             if (val !== undefined)
@@ -9175,6 +9202,9 @@ var $;
                     ...this.editable() ? [this.Drop(id)] : [],
                 ];
             }
+            length_max() {
+                return this.property().kind().property_max();
+            }
             text(next) {
                 return this.property().text($.$mol_locale.lang(), next);
             }
@@ -9471,6 +9501,9 @@ var $;
         $.$mol_style_define($$.$hyoo_case_entity_page, {
             Config: {
                 padding: 0,
+                flex: {
+                    grow: 1,
+                },
             },
             Snippet: {
                 textShadow: '0 0',
@@ -9689,7 +9722,7 @@ var $;
             const obj = new this.$.$hyoo_case_entity_page();
             obj.entity = () => this.entity(id);
             obj.editable = (val) => this.editable(id, val);
-            obj.Snippet_kind = () => null;
+            obj.Config = () => null;
             obj.tools = () => [
                 this.Root_edit(id),
                 this.Sources(),
@@ -9724,8 +9757,8 @@ var $;
                     },
                     "meta-properties": [
                         "meta-kind",
-                        "meta-name",
                         "meta-icon",
+                        "meta-name",
                         "meta-description",
                         "meta-properties",
                         "meta-members"
@@ -9748,8 +9781,8 @@ var $;
                         ru: "Базовый тип для прикладных сущностей"
                     },
                     "meta-properties": [
-                        "meta-name",
                         "meta-icon",
+                        "meta-name",
                         "meta-description",
                         "meta-properties",
                         "meta-members"
@@ -9768,7 +9801,6 @@ var $;
                     "meta-icon": "✨",
                     "meta-properties": [
                         "meta-name",
-                        "meta-icon",
                         "property-kind",
                         "property-owners",
                         "property-main",
@@ -9797,6 +9829,7 @@ var $;
                     ]
                 },
                 property_type: {
+                    "meta-icon": "🔱",
                     "meta-kind": [
                         "meta"
                     ],
@@ -9804,8 +9837,8 @@ var $;
                         ru: "Тип свойства"
                     },
                     "meta-properties": [
-                        "meta-name",
                         "meta-icon",
+                        "meta-name",
                         "property-kind",
                         "property-owners",
                         "property-main",
@@ -9953,7 +9986,8 @@ var $;
                     "property-owners": [
                         "entity"
                     ],
-                    "property-main": true
+                    "property-main": true,
+                    "property-max": 2
                 },
                 "meta-name": {
                     "meta-kind": [
@@ -9969,7 +10003,8 @@ var $;
                     "property-owners": [
                         "entity"
                     ],
-                    "property-main": true
+                    "property-main": true,
+                    "property-max": 100
                 },
                 "meta-description": {
                     "meta-kind": [
@@ -10053,7 +10088,8 @@ var $;
                     },
                     "property-owners": [
                         "property"
-                    ]
+                    ],
+                    "property_integer-default": Infinity
                 },
                 "property-locale": {
                     "meta-kind": [
@@ -10231,10 +10267,12 @@ var $;
                     "meta-kind": [
                         "case"
                     ],
+                    "meta-icon": "💼",
                     "meta-name": {
                         ru: "Бизнес Кейс"
                     },
                     "meta-properties": [
+                        "meta-icon",
                         "meta-name",
                         "meta-properties"
                     ]

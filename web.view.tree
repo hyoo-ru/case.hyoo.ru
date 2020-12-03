@@ -354,6 +354,7 @@ $mol_textarea $mol_view
 			value?val <=> value?val \
 			hint <= hint \
 			enabled <= enabled true
+			length_max <= length_max Infinity
 		<= View $mol_text_code
 			text <= value
 
@@ -392,6 +393,9 @@ $hyoo_case_property_snippet $mol_dimmer
 	attr *
 		^
 		title <= hint \
+	style *
+		^
+		maxWidth <= max_width \
 
 $hyoo_case_entity_snippet $mol_view
 	entity $hyoo_case_entity
@@ -550,6 +554,7 @@ $hyoo_case_property_row $mol_view
 		<= Content $mol_view sub <= content /
 	Text $mol_textarea
 		value?val <=> text?val \
+		length_max <= length_max Infinity
 	Bool $mol_check_box
 		checked?val <=> bool?val false
 	String $mol_string
@@ -638,7 +643,7 @@ $hyoo_case $mol_book2
 	Root_page!id $hyoo_case_entity_page
 		entity <= entity!id $hyoo_case_entity
 		editable?val <=> editable!id?val false
-		Snippet_kind null
+		Config null
 		Edit => Root_edit!id
 		tools /
 			<= Root_edit!id
@@ -661,8 +666,8 @@ $hyoo_case $mol_book2
 			meta-description * ru \Тип представителями которого являются другие типы
 			meta-properties /
 				\meta-kind
-				\meta-name
 				\meta-icon
+				\meta-name
 				\meta-description
 				\meta-properties
 				\meta-members
@@ -676,8 +681,8 @@ $hyoo_case $mol_book2
 			meta-icon \🌟
 			meta-description * ru \Базовый тип для прикладных сущностей
 			meta-properties /
-				\meta-name
 				\meta-icon
+				\meta-name
 				\meta-description
 				\meta-properties
 				\meta-members
@@ -689,7 +694,6 @@ $hyoo_case $mol_book2
 			meta-icon \✨
 			meta-properties /
 				\meta-name
-				\meta-icon
 				\property-kind
 				\property-owners
 				\property-main
@@ -715,11 +719,12 @@ $hyoo_case $mol_book2
 				\property_integer-default
 				\property_boolean-default
 		property_type *
+			meta-icon \🔱
 			meta-kind / \meta
 			meta-name * ru \Тип свойства
 			meta-properties /
-				\meta-name
 				\meta-icon
+				\meta-name
 				\property-kind
 				\property-owners
 				\property-main
@@ -793,6 +798,7 @@ $hyoo_case $mol_book2
 			meta-name * ru \Иконка
 			property-owners / \entity
 			property-main true
+			property-max 2
 		meta-name *
 			meta-kind / \property
 			property-kind / \property_text
@@ -800,6 +806,7 @@ $hyoo_case $mol_book2
 			property-locale true
 			property-owners / \entity
 			property-main true
+			property-max 100
 		meta-description *
 			meta-kind / \property
 			property-kind / \property_text
@@ -833,6 +840,7 @@ $hyoo_case $mol_book2
 			property-kind / \property_integer
 			meta-name * ru \Максимальное число
 			property-owners / \property
+			property_integer-default Infinity
 		property-locale *
 			meta-kind / \property
 			property-kind / \property_boolean
@@ -901,8 +909,10 @@ $hyoo_case $mol_book2
 			property-populate true
 		case *
 			meta-kind / \case
+			meta-icon \💼
 			meta-name * ru \Бизнес Кейс
 			meta-properties /
+				\meta-icon
 				\meta-name
 				\meta-properties
 

@@ -1167,6 +1167,8 @@ declare namespace $ {
         property_inherit(): boolean;
         property_unit(): string;
         property_back(): $hyoo_case_entity[];
+        property_min(): number;
+        property_max(): number;
         properties(): $hyoo_case_property[];
         properties_main(): $hyoo_case_property[];
         properties_least(): $hyoo_case_property[];
@@ -2274,6 +2276,7 @@ declare namespace $ {
         value(val?: any): any;
         hint(): string;
         enabled(): boolean;
+        length_max(): number;
         Edit(): $$.$mol_string;
         View(): $$.$mol_text_code;
     }
@@ -2359,8 +2362,12 @@ declare namespace $ {
         attr(): {
             title: string;
         };
+        style(): {
+            maxWidth: string;
+        };
         highlight(): string;
         hint(): string;
+        max_width(): string;
     }
 }
 
@@ -2372,6 +2379,7 @@ declare namespace $.$$ {
         type(): "property_text" | "property_integer" | "property_boolean" | "property_link" | null;
         title(): string;
         hint(): string;
+        max_width(): string;
     }
 }
 
@@ -2701,6 +2709,7 @@ declare namespace $ {
         content(): readonly any[];
         Content(): $mol_view;
         text(val?: any): any;
+        length_max(): number;
         bool(val?: any): any;
         numb(val?: any): any;
         link_arg(id: any): {};
@@ -2742,6 +2751,7 @@ declare namespace $.$$ {
         add_allowed(): boolean;
         content(): ($mol_view | $mol_textarea)[];
         link_content(id: number): ($mol_button_minor | $mol_drag)[];
+        length_max(): number;
         text(next?: string): string;
         numb(next?: number): number;
         bool(next?: boolean): boolean;
