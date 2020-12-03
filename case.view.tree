@@ -18,6 +18,8 @@ $hyoo_case $mol_book2
 	Entity_page!id $hyoo_case_entity_page
 		entity <= entity!id $hyoo_case_entity
 		editable?val <=> editable!id?val false
+	Placeholder $mol_frame
+		uri \https://www.youtube.com/embed/q6w4OK0zQrY
 	-
 	domain $hyoo_case_domain / *
 		meta *

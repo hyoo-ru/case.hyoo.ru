@@ -19,6 +19,10 @@ namespace $.$$ {
 			return this.domain().entity( 'case' ).property( 'case-language' ).links()[0]?.id() ?? 'en'
 		}
 
+		Placeholder() {
+			return /#/.test( this.$.$mol_state_arg.href() ) ? null! : super.Placeholder()
+		}
+
 		pages() {
 			const params = this.$.$mol_state_arg.dict()
 			return [

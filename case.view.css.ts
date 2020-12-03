@@ -8,6 +8,13 @@ namespace $.$$ {
 			margin: $mol_gap.block,
 		},
 
+		Placeholder: {
+			flex: {
+				basis: rem(40),
+				shrink: 0,
+			},
+		},
+
 	} )
 
 }
