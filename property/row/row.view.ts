@@ -44,9 +44,11 @@ namespace $.$$ {
 
 		@ $mol_mem
 		pick_allowed() {
-			if( !this.editable() ) return false
+			if( !this.editable() && !this.single_value() ) return false
 			if( this.type() !== 'property_link' ) return false
-			if( this.property().links().length >= this.property().kind().property_max() ) return false
+			if( !this.single_value() ) {
+				if( this.property().links().length >= this.property().kind().property_max() ) return false
+			}
 			if( !this.suggest() ) return false
 			if( this.pick_options().length === 0 ) return false
 			return true
@@ -63,8 +65,14 @@ namespace $.$$ {
 		@ $mol_mem
 		content() {
 			switch( this.type() ) {
-				case "property_text": return [ this.editable() ? this.Text() : this.Text_view() ]
-				case "property_link": return this.property().links().map( ( _, i )=> this.Link_view( i ) )
+				
+				case "property_text":
+					return [ this.editable() ? this.Text() : this.Text_view() ]
+				
+				case "property_link":
+					if( this.single_value() ) return []
+					return this.property().links().map( ( _, i )=> this.Link_view( i ) )
+				
 				default: return []
 			}
 		}
@@ -122,9 +130,9 @@ namespace $.$$ {
 			const exists = new Set( this.property().links() )
 			const options = [] as string[]
 			
-			for( const scheme of this.property().kind().property_target() ) {
+			for( const kind of this.property().kind().property_target() ) {
 
-				for( const inst of scheme.members() ) {
+				for( const inst of kind.members() ) {
 					if( exists.has( inst ) ) continue
 					options.push( inst.id() )
 				}
@@ -141,11 +149,27 @@ namespace $.$$ {
 			return this.property().domain().entity( id )
 		}
 
+		@ $mol_mem
+		single_value() {
+			const kind = this.property().kind()
+			return kind.property_min() === 1 && kind.property_max() === 1
+		}
+
 		pick( id: string ) {
+
+			const single = this.single_value()
+			
 			if( id ) {
+				if( single ) this.property().target_tear_all()
 				this.property().target_join( this.entity( id ) )
 			}
-			return ''
+			
+			if( single ) {
+				return this.property().links()[0]?.id() ?? ''
+			} else {
+				return ''
+			}
+
 		}
 
 		link_title( index: string ) {

@@ -109,6 +109,12 @@ namespace $ {
 
 		}
 
+		target_tear_all() {
+			while( this.links().length ) {
+				this.target_tear(0)
+			}
+		}
+
 		target_tear( index: number ) {
 			
 			if( index < 0 ) return
