@@ -3858,7 +3858,7 @@ var $;
             }
         }
         text(lang, next) {
-            var _a;
+            var _a, _b;
             if (next !== undefined) {
                 if (this.kind().property_locale()) {
                     this.data(Object.assign(Object.assign({}, this.data()), { [lang]: next }));
@@ -3869,7 +3869,7 @@ var $;
             }
             let value = (_a = this.data()) !== null && _a !== void 0 ? _a : this.value_default();
             if (value && (typeof value === 'object')) {
-                value = value[lang];
+                value = (_b = value[lang]) !== null && _b !== void 0 ? _b : value['en'];
             }
             return String(value !== null && value !== void 0 ? value : '');
         }
@@ -9562,10 +9562,12 @@ var $;
                         "meta"
                     ],
                     "meta-name": {
+                        en: "Meta",
                         ru: "Мета"
                     },
                     "meta-icon": "🌌",
                     "meta-description": {
+                        en: "Kind that has other kinds as members",
                         ru: "Тип представителями которого являются другие типы"
                     },
                     "meta-properties": [
@@ -9587,11 +9589,13 @@ var $;
                         "meta"
                     ],
                     "meta-name": {
+                        en: "Entiry",
                         ru: "Сущность"
                     },
                     "meta-icon": "🌟",
                     "meta-description": {
-                        ru: "Базовый тип для прикладных сущностей"
+                        en: "Base kind for all entity kinds",
+                        ru: "Базовый тип для типо прикладных сущностей"
                     },
                     "meta-properties": [
                         "meta-icon",
@@ -9609,6 +9613,7 @@ var $;
                         "meta"
                     ],
                     "meta-name": {
+                        en: "Property",
                         ru: "Свойство"
                     },
                     "meta-icon": "✨",
@@ -9647,6 +9652,7 @@ var $;
                         "meta"
                     ],
                     "meta-name": {
+                        en: "Type of property",
                         ru: "Тип свойства"
                     },
                     "meta-properties": [
@@ -9670,6 +9676,7 @@ var $;
                         "property_type"
                     ],
                     "meta-name": {
+                        en: "Reference to entity",
                         ru: "Ссылка на сущность"
                     },
                     "meta-icon": "💫",
@@ -9687,6 +9694,7 @@ var $;
                         "property_type"
                     ],
                     "meta-name": {
+                        en: "Text",
                         ru: "Текст"
                     },
                     "meta-icon": "📃",
@@ -9702,6 +9710,7 @@ var $;
                         "property_type"
                     ],
                     "meta-name": {
+                        en: "Integer",
                         ru: "Целое число"
                     },
                     "meta-icon": "🎱",
@@ -9716,6 +9725,7 @@ var $;
                         "property_type"
                     ],
                     "meta-name": {
+                        en: "Boolean",
                         ru: "Флаг"
                     },
                     "meta-icon": "🚩",
@@ -9731,7 +9741,8 @@ var $;
                         "property_text"
                     ],
                     "meta-name": {
-                        ru: "Значение по умолчанию"
+                        en: "Default value: Text",
+                        ru: "Значение по умолчанию: Текст"
                     },
                     "property-owners": [
                         "property"
@@ -9745,7 +9756,8 @@ var $;
                         "property_integer"
                     ],
                     "meta-name": {
-                        ru: "Значение по умолчанию"
+                        en: "Default value: Integer",
+                        ru: "Значение по умолчанию: Целое число"
                     },
                     "property-owners": [
                         "property"
@@ -9759,7 +9771,8 @@ var $;
                         "property_boolean"
                     ],
                     "meta-name": {
-                        ru: "Значение по умолчанию"
+                        en: "Default value: Boolean",
+                        ru: "Значение по умолчанию: Флаг"
                     },
                     "property-owners": [
                         "property"
@@ -9773,6 +9786,7 @@ var $;
                         "property_link"
                     ],
                     "meta-name": {
+                        en: "Kind",
                         ru: "Тип"
                     },
                     "property-target": [
@@ -9784,7 +9798,8 @@ var $;
                     "property-back": [
                         "meta-members"
                     ],
-                    "property-min": 1
+                    "property-min": 1,
+                    "property-max": 1
                 },
                 "meta-icon": {
                     "meta-kind": [
@@ -9794,6 +9809,7 @@ var $;
                         "property_text"
                     ],
                     "meta-name": {
+                        en: "Icon",
                         ru: "Иконка"
                     },
                     "property-owners": [
@@ -9810,6 +9826,7 @@ var $;
                         "property_text"
                     ],
                     "meta-name": {
+                        en: "Name",
                         ru: "Название"
                     },
                     "property-locale": true,
@@ -9827,6 +9844,7 @@ var $;
                         "property_text"
                     ],
                     "meta-name": {
+                        en: "Description",
                         ru: "Описание"
                     },
                     "property-locale": true,
@@ -9842,6 +9860,7 @@ var $;
                         "property_link"
                     ],
                     "meta-name": {
+                        en: "Instances",
                         ru: "Экземпляры"
                     },
                     "property-populate": true,
@@ -9861,6 +9880,7 @@ var $;
                         "property_link"
                     ],
                     "meta-name": {
+                        en: "Properties",
                         ru: "Свойства"
                     },
                     "property-target": [
@@ -9883,6 +9903,7 @@ var $;
                         "property_integer"
                     ],
                     "meta-name": {
+                        en: "Min value",
                         ru: "Минимальное число"
                     },
                     "property-owners": [
@@ -9897,6 +9918,7 @@ var $;
                         "property_integer"
                     ],
                     "meta-name": {
+                        en: "Max value",
                         ru: "Максимальное число"
                     },
                     "property-owners": [
@@ -9912,6 +9934,7 @@ var $;
                         "property_boolean"
                     ],
                     "meta-name": {
+                        en: "Localizable",
                         ru: "Переводимое"
                     },
                     "meta-description": {
@@ -9929,6 +9952,7 @@ var $;
                         "property_boolean"
                     ],
                     "meta-name": {
+                        en: "Main",
                         ru: "Основное"
                     },
                     "meta-description": {
@@ -9946,6 +9970,7 @@ var $;
                         "property_boolean"
                     ],
                     "meta-name": {
+                        en: "Hidden",
                         ru: "Скрытое"
                     },
                     "meta-description": {
@@ -9963,6 +9988,7 @@ var $;
                         "property_boolean"
                     ],
                     "meta-name": {
+                        en: "Suggest from existen",
                         ru: "Подсказывать из существующих"
                     },
                     "property-owners": [
@@ -9977,6 +10003,7 @@ var $;
                         "property_boolean"
                     ],
                     "meta-name": {
+                        en: "Taget creation allowed",
                         ru: "Разрешено ли создавать новые цели"
                     },
                     "property-owners": [
@@ -9991,7 +10018,8 @@ var $;
                         "property_boolean"
                     ],
                     "meta-name": {
-                        ru: "Добавляет свойства"
+                        en: "Inherits properties from target",
+                        ru: "Наследует свойства у цели"
                     },
                     "property-owners": [
                         "property"
@@ -10005,6 +10033,7 @@ var $;
                         "property_link"
                     ],
                     "meta-name": {
+                        en: "Property type",
                         ru: "Тип свойства"
                     },
                     "property-inherit": true,
@@ -10025,7 +10054,8 @@ var $;
                         "property_link"
                     ],
                     "meta-name": {
-                        ru: "Указывает на тип"
+                        en: "References to entity",
+                        ru: "Указывает на сущность"
                     },
                     "property-target": [
                         "entity"
@@ -10044,7 +10074,8 @@ var $;
                         "property_link"
                     ],
                     "meta-name": {
-                        ru: "Обратное свойство в целевом типе"
+                        en: "Mutual property from target",
+                        ru: "Взаимное свойство в целевом типе"
                     },
                     "property-target": [
                         "property"
@@ -10063,6 +10094,7 @@ var $;
                         "property_link"
                     ],
                     "meta-name": {
+                        en: "Property owners",
                         ru: "Владельцы свойства"
                     },
                     "property-target": [
@@ -10083,6 +10115,7 @@ var $;
                     ],
                     "meta-icon": "💼",
                     "meta-name": {
+                        en: "Business case",
                         ru: "Бизнес Кейс"
                     },
                     "meta-properties": [
