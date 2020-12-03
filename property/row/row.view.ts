@@ -6,7 +6,7 @@ namespace $.$$ {
 		}
 
 		title() {
-			return this.property().kind().title( $mol_locale.lang() )
+			return this.property().kind().title()
 		}
 
 		@ $mol_mem
@@ -81,7 +81,7 @@ namespace $.$$ {
 		}
 
 		text( next? : string ) {
-			return this.property().text( $mol_locale.lang() , next )
+			return this.property().text( next )
 		}
 
 		numb( next? : number ) {
@@ -134,7 +134,7 @@ namespace $.$$ {
 		}
 
 		pick_option_title( id: string ) {
-			return this.property().domain().entity( id ).title( $mol_locale.lang() )
+			return this.property().domain().entity( id ).title()
 		}
 
 		entity( id: string ) {

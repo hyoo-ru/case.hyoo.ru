@@ -14,12 +14,12 @@ namespace $.$$ {
 					if( links.length === 0 ) return ''
 					return links.length.toString()
 				}
-				default: return this.property().text( $mol_locale.lang() )
+				default: return this.property().text()
 			}
 		}
 
 		hint() {
-			return this.property().kind().title( this.$.$mol_locale.lang() )
+			return this.property().kind().title()
 		}
 
 		max_width() {

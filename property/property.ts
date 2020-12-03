@@ -18,14 +18,16 @@ namespace $ {
 		filled() {
 			switch( this.kind().property_kind_id() ) {
 				case 'property_link': return this.links().length > 0
-				case 'property_text': return this.text( $mol_locale.lang() ).length > 0
+				case 'property_text': return this.text().length > 0
 				case 'property_integer': return ( this.data() ?? this.value_default() ) != null
 				case 'property_boolean': return ( this.data() ?? this.value_default() ) != null
 			}
 		}
 
-		@ $mol_mem_key
-		text( lang: string, next? : string ) {
+		@ $mol_mem
+		text( next? : string ) {
+
+			const lang = this.$.$mol_locale.lang()
 
 			if( next !== undefined ) {
 				if( this.kind().property_locale() ) {

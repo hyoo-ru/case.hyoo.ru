@@ -1,6 +1,24 @@
 namespace $.$$ {
 	export class $hyoo_case extends $.$hyoo_case {
 
+		@ $mol_memo.field
+		get $() {
+
+			const $$ = super.$
+			const lang = ()=> this.lang()
+			
+			return $$.$mol_ambient({
+				$mol_locale: class extends $$.$mol_locale {
+					static lang() { return lang() }
+				}
+			})
+			
+		}
+
+		lang() {
+			return this.domain().entity( 'case' ).property( 'case-language' ).links()[0]?.id() ?? 'en'
+		}
+
 		pages() {
 			const params = this.$.$mol_state_arg.dict()
 			return [
@@ -14,7 +32,7 @@ namespace $.$$ {
 		}
 
 		@ $mol_mem
-		domain() {
+		domain(): $hyoo_case_domain {
 			return this.$.$mol_store_local.sub( '$hyoo_case' , super.domain() )
 		}
 

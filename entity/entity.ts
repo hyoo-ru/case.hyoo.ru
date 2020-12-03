@@ -149,8 +149,8 @@ namespace $ {
 			return this.properties().filter( prop => prop.kind().property_least() )
 		}
 
-		@ $mol_mem_key
-		title( lang: string ) {
+		@ $mol_mem
+		title() {
 
 			const chunks = [] as string[]
 
@@ -163,7 +163,7 @@ namespace $ {
 						continue
 					
 					case 'property_text':
-						chunks.push( prop.text( lang ).trim() )
+						chunks.push( prop.text().trim() )
 
 				}
 

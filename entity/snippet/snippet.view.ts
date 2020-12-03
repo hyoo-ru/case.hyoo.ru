@@ -2,7 +2,7 @@ namespace $.$$ {
 	export class $hyoo_case_entity_snippet extends $.$hyoo_case_entity_snippet {
 
 		title() {
-			return this.entity().title( $mol_locale.lang() )
+			return this.entity().title()
 		}
 
 		property_list(): $mol_view_content[] {
