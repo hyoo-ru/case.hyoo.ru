@@ -41,7 +41,7 @@ namespace $ {
 			let value = this.data() ?? this.value_default()
 
 			if( value && ( typeof value === 'object' ) ) {
-				value = value[ lang ]
+				value = value[ lang ] ?? value[ 'en' ]
 			}
 			
 			return String( value ?? '' )
