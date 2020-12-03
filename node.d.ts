@@ -1002,6 +1002,58 @@ declare namespace $.$$ {
 }
 
 declare namespace $ {
+    class $mol_store<Data> extends $mol_object2 {
+        data_default?: Data | undefined;
+        constructor(data_default?: Data | undefined);
+        data(next?: Data): Data;
+        snapshot(next?: string): string;
+        value<Key extends keyof Data>(key: Key, next?: Data[Key]): NonNullable<Data[Key]>;
+        sub<Key extends keyof Data, Lens extends $mol_store<Data[Key]> = $mol_store<Data[Key]>>(key: Key, lens?: Lens): NonNullable<Lens>;
+        reset(): void;
+    }
+}
+
+declare namespace $ {
+    function $mol_guid(exists?: (id: string) => boolean): string;
+}
+
+declare namespace $ {
+    class $hyoo_case_domain extends $mol_store<Record<string, ReturnType<$hyoo_case_entity['data']>>> {
+        entity(id: string): $hyoo_case_entity;
+        entity_list(): string[];
+        entity_new(...kind: $hyoo_case_entity[]): $hyoo_case_entity;
+    }
+}
+
+declare namespace $ {
+    class $hyoo_case_entity extends $mol_store<Record<string, ReturnType<$hyoo_case_property['data']>>> {
+        id(): string;
+        domain(): $hyoo_case_domain;
+        property(id: string): $hyoo_case_property;
+        property_target(): $hyoo_case_entity[];
+        meta_kind(): $hyoo_case_entity[];
+        property_kind(): $hyoo_case_entity[];
+        property_kind_id(): "property_text" | "property_integer" | "property_boolean" | "property_link" | null;
+        property_locale(): boolean;
+        property_suggest(): boolean;
+        property_populate(): boolean;
+        property_main(): boolean;
+        property_least(): boolean;
+        property_hidden(): boolean;
+        property_inherit(): boolean;
+        property_unit(): string;
+        property_back(): $hyoo_case_entity[];
+        property_min(): number;
+        property_max(): number;
+        properties(): $hyoo_case_property[];
+        properties_main(): $hyoo_case_property[];
+        properties_least(): $hyoo_case_property[];
+        title(): string;
+        members(): $hyoo_case_entity[];
+    }
+}
+
+declare namespace $ {
     class $mol_page extends $mol_view {
         sub(): readonly any[];
         Title(): $mol_view;
@@ -1122,58 +1174,6 @@ declare namespace $ {
         static texts(lang: string, next?: $mol_locale_dict): $mol_locale_dict;
         static text(key: string): string;
         static warn(key: string): null;
-    }
-}
-
-declare namespace $ {
-    class $mol_store<Data> extends $mol_object2 {
-        data_default?: Data | undefined;
-        constructor(data_default?: Data | undefined);
-        data(next?: Data): Data;
-        snapshot(next?: string): string;
-        value<Key extends keyof Data>(key: Key, next?: Data[Key]): NonNullable<Data[Key]>;
-        sub<Key extends keyof Data, Lens extends $mol_store<Data[Key]> = $mol_store<Data[Key]>>(key: Key, lens?: Lens): NonNullable<Lens>;
-        reset(): void;
-    }
-}
-
-declare namespace $ {
-    function $mol_guid(exists?: (id: string) => boolean): string;
-}
-
-declare namespace $ {
-    class $hyoo_case_domain extends $mol_store<Record<string, ReturnType<$hyoo_case_entity['data']>>> {
-        entity(id: string): $hyoo_case_entity;
-        entity_list(): string[];
-        entity_new(...kind: $hyoo_case_entity[]): $hyoo_case_entity;
-    }
-}
-
-declare namespace $ {
-    class $hyoo_case_entity extends $mol_store<Record<string, ReturnType<$hyoo_case_property['data']>>> {
-        id(): string;
-        domain(): $hyoo_case_domain;
-        property(id: string): $hyoo_case_property;
-        property_target(): $hyoo_case_entity[];
-        meta_kind(): $hyoo_case_entity[];
-        property_kind(): $hyoo_case_entity[];
-        property_kind_id(): "property_text" | "property_integer" | "property_boolean" | "property_link" | null;
-        property_locale(): boolean;
-        property_suggest(): boolean;
-        property_populate(): boolean;
-        property_main(): boolean;
-        property_least(): boolean;
-        property_hidden(): boolean;
-        property_inherit(): boolean;
-        property_unit(): string;
-        property_back(): $hyoo_case_entity[];
-        property_min(): number;
-        property_max(): number;
-        properties(): $hyoo_case_property[];
-        properties_main(): $hyoo_case_property[];
-        properties_least(): $hyoo_case_property[];
-        title(): string;
-        members(): $hyoo_case_entity[];
     }
 }
 
@@ -2890,7 +2890,6 @@ declare namespace $.$$ {
 declare namespace $ {
     class $hyoo_case extends $mol_book2 {
         plugins(): readonly any[];
-        Menu(): $$.$mol_page;
         Root_page(id: any): $$.$hyoo_case_entity_page;
         Root_edit(id: any): $mol_check_icon;
         Entity_page(id: any): $$.$hyoo_case_entity_page;

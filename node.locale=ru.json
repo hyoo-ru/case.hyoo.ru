@@ -1,4 +1,9 @@
 {
+	"$hyoo_case_Reset_title": "Сбросить все данные",
+	"$hyoo_case_entity_page_Close_hint": "������� ������",
+	"$hyoo_case_entity_page_Edit_hint": "����� ��������������",
+	"$hyoo_case_property_row_Add_hint": "�������� �����",
+	"$hyoo_case_property_row_Drop_hint": "������� �����",
 	"$mol_lights_toggle_hint": "Переключатель света",
 	"$mol_link_source_hint": "Исходные коды",
 	"$mol_select_hint": "Поиск..",

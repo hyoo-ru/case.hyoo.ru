@@ -3209,6 +3209,223 @@ var $;
 "use strict";
 var $;
 (function ($) {
+    class $mol_store extends $.$mol_object2 {
+        constructor(data_default) {
+            super();
+            this.data_default = data_default;
+        }
+        data(next) {
+            return next === undefined ? this.data_default : next;
+        }
+        snapshot(next) {
+            return JSON.stringify(this.data(next === undefined ? next : JSON.parse(next)));
+        }
+        value(key, next) {
+            const data = this.data();
+            if (next === undefined)
+                return data && data[key];
+            const Constr = Reflect.getPrototypeOf(data).constructor;
+            this.data(Object.assign(new Constr, data, { [key]: next }));
+            return next;
+        }
+        sub(key, lens) {
+            if (!lens)
+                lens = new $mol_store();
+            const data = lens.data;
+            lens.data = next => {
+                var _a;
+                if (next == undefined) {
+                    return (_a = this.value(key)) !== null && _a !== void 0 ? _a : lens.data_default;
+                }
+                return this.value(key, next);
+            };
+            return lens;
+        }
+        reset() {
+            this.data(this.data_default);
+        }
+    }
+    __decorate([
+        $.$mol_mem
+    ], $mol_store.prototype, "data", null);
+    $.$mol_store = $mol_store;
+})($ || ($ = {}));
+//store.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    function $mol_guid(exists = () => false) {
+        for (;;) {
+            let id = Math.random().toString(36).substring(2, 10).toUpperCase();
+            if (exists(id))
+                continue;
+            return id;
+        }
+    }
+    $.$mol_guid = $mol_guid;
+})($ || ($ = {}));
+//guid.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    class $hyoo_case_domain extends $.$mol_store {
+        entity(id) {
+            const store = new $.$hyoo_case_entity({ 'meta-kind': [] });
+            store.id = $.$mol_const(id);
+            store.domain = $.$mol_const(this);
+            return this.sub(id, store);
+        }
+        entity_list() {
+            return Object.keys(this.data());
+        }
+        entity_new(...kind) {
+            const id = $.$mol_guid(id => id in this.data());
+            const entity = this.entity(id);
+            entity.property('meta-kind').target_join(...kind);
+            return entity;
+        }
+    }
+    __decorate([
+        $.$mol_mem_key
+    ], $hyoo_case_domain.prototype, "entity", null);
+    __decorate([
+        $.$mol_mem
+    ], $hyoo_case_domain.prototype, "entity_list", null);
+    $.$hyoo_case_domain = $hyoo_case_domain;
+})($ || ($ = {}));
+//domain.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    class $hyoo_case_entity extends $.$mol_store {
+        id() { return ''; }
+        domain() { return undefined; }
+        property(id) {
+            const store = new $.$hyoo_case_property;
+            store.id = $.$mol_const(id);
+            store.entity = $.$mol_const(this);
+            return this.sub(id, store);
+        }
+        property_target() {
+            return this.property('property-target').links();
+        }
+        meta_kind() {
+            return this.property('meta-kind').links();
+        }
+        property_kind() {
+            return this.property('property-kind').links();
+        }
+        property_kind_id() {
+            var _a, _b;
+            return ((_b = (_a = this.property_kind()[0]) === null || _a === void 0 ? void 0 : _a.id()) !== null && _b !== void 0 ? _b : null);
+        }
+        property_locale() {
+            return Boolean(this.value('property-locale'));
+        }
+        property_suggest() {
+            return Boolean(this.value('property-suggest'));
+        }
+        property_populate() {
+            return Boolean(this.value('property-populate'));
+        }
+        property_main() {
+            return Boolean(this.value('property-main'));
+        }
+        property_least() {
+            return this.property_kind_id() === 'property_link' || !this.property_main();
+        }
+        property_hidden() {
+            return Boolean(this.value('property-hidden'));
+        }
+        property_inherit() {
+            return Boolean(this.value('property-inherit'));
+        }
+        property_unit() {
+            return String(this.value('property-unit'));
+        }
+        property_back() {
+            return this.property('property-back').links();
+        }
+        property_min() {
+            return this.property('property-min').integer();
+        }
+        property_max() {
+            return this.property('property-max').integer();
+        }
+        properties() {
+            const kinds = [...this.meta_kind()];
+            const props = new Set();
+            while (kinds.length) {
+                const kind = kinds.pop();
+                for (const Prop of kind.property('meta-properties').links()) {
+                    const prop = this.property(Prop.id());
+                    if (props.has(prop))
+                        continue;
+                    props.add(prop);
+                    if (Prop.property_inherit()) {
+                        for (const target of this.property(Prop.id()).links()) {
+                            if (kinds.includes(target))
+                                continue;
+                            kinds.push(target);
+                        }
+                    }
+                }
+            }
+            return [...props];
+        }
+        properties_main() {
+            return this.properties().filter(prop => prop.kind().property_main());
+        }
+        properties_least() {
+            return this.properties().filter(prop => prop.kind().property_least());
+        }
+        title() {
+            const chunks = [];
+            for (const prop of this.properties_main()) {
+                switch (prop.kind().property_kind_id()) {
+                    case 'property_link':
+                    case 'property_boolean':
+                        continue;
+                    case 'property_text':
+                        chunks.push(prop.text().trim());
+                }
+            }
+            return chunks.filter(Boolean).join(' ') || this.id();
+        }
+        members() {
+            const kinds = [];
+            kinds.push(this);
+            const members = [];
+            for (const kind of kinds) {
+                for (const member of kind.property('meta-members').links()) {
+                    members.push(member);
+                }
+            }
+            return members;
+        }
+    }
+    __decorate([
+        $.$mol_mem_key
+    ], $hyoo_case_entity.prototype, "property", null);
+    __decorate([
+        $.$mol_mem
+    ], $hyoo_case_entity.prototype, "properties", null);
+    __decorate([
+        $.$mol_mem
+    ], $hyoo_case_entity.prototype, "title", null);
+    __decorate([
+        $.$mol_mem
+    ], $hyoo_case_entity.prototype, "members", null);
+    $.$hyoo_case_entity = $hyoo_case_entity;
+})($ || ($ = {}));
+//entity.js.map
+;
+"use strict";
+var $;
+(function ($) {
     class $mol_page extends $.$mol_view {
         sub() {
             return [
@@ -3858,223 +4075,6 @@ var $;
     $.$mol_locale = $mol_locale;
 })($ || ($ = {}));
 //locale.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    class $mol_store extends $.$mol_object2 {
-        constructor(data_default) {
-            super();
-            this.data_default = data_default;
-        }
-        data(next) {
-            return next === undefined ? this.data_default : next;
-        }
-        snapshot(next) {
-            return JSON.stringify(this.data(next === undefined ? next : JSON.parse(next)));
-        }
-        value(key, next) {
-            const data = this.data();
-            if (next === undefined)
-                return data && data[key];
-            const Constr = Reflect.getPrototypeOf(data).constructor;
-            this.data(Object.assign(new Constr, data, { [key]: next }));
-            return next;
-        }
-        sub(key, lens) {
-            if (!lens)
-                lens = new $mol_store();
-            const data = lens.data;
-            lens.data = next => {
-                var _a;
-                if (next == undefined) {
-                    return (_a = this.value(key)) !== null && _a !== void 0 ? _a : lens.data_default;
-                }
-                return this.value(key, next);
-            };
-            return lens;
-        }
-        reset() {
-            this.data(this.data_default);
-        }
-    }
-    __decorate([
-        $.$mol_mem
-    ], $mol_store.prototype, "data", null);
-    $.$mol_store = $mol_store;
-})($ || ($ = {}));
-//store.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    function $mol_guid(exists = () => false) {
-        for (;;) {
-            let id = Math.random().toString(36).substring(2, 10).toUpperCase();
-            if (exists(id))
-                continue;
-            return id;
-        }
-    }
-    $.$mol_guid = $mol_guid;
-})($ || ($ = {}));
-//guid.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    class $hyoo_case_domain extends $.$mol_store {
-        entity(id) {
-            const store = new $.$hyoo_case_entity({ 'meta-kind': [] });
-            store.id = $.$mol_const(id);
-            store.domain = $.$mol_const(this);
-            return this.sub(id, store);
-        }
-        entity_list() {
-            return Object.keys(this.data());
-        }
-        entity_new(...kind) {
-            const id = $.$mol_guid(id => id in this.data());
-            const entity = this.entity(id);
-            entity.property('meta-kind').target_join(...kind);
-            return entity;
-        }
-    }
-    __decorate([
-        $.$mol_mem_key
-    ], $hyoo_case_domain.prototype, "entity", null);
-    __decorate([
-        $.$mol_mem
-    ], $hyoo_case_domain.prototype, "entity_list", null);
-    $.$hyoo_case_domain = $hyoo_case_domain;
-})($ || ($ = {}));
-//domain.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    class $hyoo_case_entity extends $.$mol_store {
-        id() { return ''; }
-        domain() { return undefined; }
-        property(id) {
-            const store = new $.$hyoo_case_property;
-            store.id = $.$mol_const(id);
-            store.entity = $.$mol_const(this);
-            return this.sub(id, store);
-        }
-        property_target() {
-            return this.property('property-target').links();
-        }
-        meta_kind() {
-            return this.property('meta-kind').links();
-        }
-        property_kind() {
-            return this.property('property-kind').links();
-        }
-        property_kind_id() {
-            var _a, _b;
-            return ((_b = (_a = this.property_kind()[0]) === null || _a === void 0 ? void 0 : _a.id()) !== null && _b !== void 0 ? _b : null);
-        }
-        property_locale() {
-            return Boolean(this.value('property-locale'));
-        }
-        property_suggest() {
-            return Boolean(this.value('property-suggest'));
-        }
-        property_populate() {
-            return Boolean(this.value('property-populate'));
-        }
-        property_main() {
-            return Boolean(this.value('property-main'));
-        }
-        property_least() {
-            return this.property_kind_id() === 'property_link' || !this.property_main();
-        }
-        property_hidden() {
-            return Boolean(this.value('property-hidden'));
-        }
-        property_inherit() {
-            return Boolean(this.value('property-inherit'));
-        }
-        property_unit() {
-            return String(this.value('property-unit'));
-        }
-        property_back() {
-            return this.property('property-back').links();
-        }
-        property_min() {
-            return this.property('property-min').integer();
-        }
-        property_max() {
-            return this.property('property-max').integer();
-        }
-        properties() {
-            const kinds = [...this.meta_kind()];
-            const props = new Set();
-            while (kinds.length) {
-                const kind = kinds.pop();
-                for (const Prop of kind.property('meta-properties').links()) {
-                    const prop = this.property(Prop.id());
-                    if (props.has(prop))
-                        continue;
-                    props.add(prop);
-                    if (Prop.property_inherit()) {
-                        for (const target of this.property(Prop.id()).links()) {
-                            if (kinds.includes(target))
-                                continue;
-                            kinds.push(target);
-                        }
-                    }
-                }
-            }
-            return [...props];
-        }
-        properties_main() {
-            return this.properties().filter(prop => prop.kind().property_main());
-        }
-        properties_least() {
-            return this.properties().filter(prop => prop.kind().property_least());
-        }
-        title() {
-            const chunks = [];
-            for (const prop of this.properties_main()) {
-                switch (prop.kind().property_kind_id()) {
-                    case 'property_link':
-                    case 'property_boolean':
-                        continue;
-                    case 'property_text':
-                        chunks.push(prop.text().trim());
-                }
-            }
-            return chunks.filter(Boolean).join(' ') || this.id();
-        }
-        members() {
-            const kinds = [];
-            kinds.push(this);
-            const members = [];
-            for (const kind of kinds) {
-                for (const member of kind.property('meta-members').links()) {
-                    members.push(member);
-                }
-            }
-            return members;
-        }
-    }
-    __decorate([
-        $.$mol_mem_key
-    ], $hyoo_case_entity.prototype, "property", null);
-    __decorate([
-        $.$mol_mem
-    ], $hyoo_case_entity.prototype, "properties", null);
-    __decorate([
-        $.$mol_mem
-    ], $hyoo_case_entity.prototype, "title", null);
-    __decorate([
-        $.$mol_mem
-    ], $hyoo_case_entity.prototype, "members", null);
-    $.$hyoo_case_entity = $hyoo_case_entity;
-})($ || ($ = {}));
-//entity.js.map
 ;
 "use strict";
 var $;
@@ -9792,12 +9792,6 @@ var $;
                 this.Theme()
             ];
         }
-        Menu() {
-            const obj = new this.$.$mol_page();
-            obj.title = () => this.$.$mol_locale.text('$hyoo_case_Menu_title');
-            obj.tools = () => [];
-            return obj;
-        }
         Root_page(id) {
             const obj = new this.$.$hyoo_case_entity_page();
             obj.entity = () => this.entity(id);
@@ -10498,9 +10492,6 @@ var $;
         }
     }
     __decorate([
-        $.$mol_mem
-    ], $hyoo_case.prototype, "Menu", null);
-    __decorate([
         $.$mol_mem_key
     ], $hyoo_case.prototype, "Root_page", null);
     __decorate([
@@ -10589,11 +10580,6 @@ var $;
     (function ($$) {
         const { rem } = $.$mol_style_unit;
         $.$mol_style_define($$.$hyoo_case, {
-            Menu: {
-                flex: {
-                    basis: rem(20),
-                },
-            },
             Reset: {
                 margin: $.$mol_gap.block,
             },
@@ -13217,89 +13203,6 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    $.$mol_test_mocks.push(context => {
-        class $mol_state_local_mock extends $.$mol_state_local {
-            static value(key, next = this.state[key], force) {
-                return this.state[key] = (next || null);
-            }
-        }
-        $mol_state_local_mock.state = {};
-        __decorate([
-            $.$mol_mem_key
-        ], $mol_state_local_mock, "value", null);
-        context.$mol_state_local = $mol_state_local_mock;
-    });
-})($ || ($ = {}));
-//local.mock.test.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    $.$mol_test({
-        'local get set delete'() {
-            var key = '$mol_state_local_test:' + Math.random();
-            $.$mol_assert_equal($.$mol_state_local.value(key), null);
-            $.$mol_state_local.value(key, 123);
-            $.$mol_assert_equal($.$mol_state_local.value(key), 123);
-            $.$mol_state_local.value(key, null);
-            $.$mol_assert_equal($.$mol_state_local.value(key), null);
-        },
-    });
-})($ || ($ = {}));
-//local.test.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    $.$mol_test({
-        'encode utf8 string'() {
-            const str = 'Hello, ΧΨΩЫ';
-            const encoded = new Uint8Array([72, 101, 108, 108, 111, 44, 32, 206, 167, 206, 168, 206, 169, 208, 171]);
-            $.$mol_assert_like($.$mol_charset_encode(str), encoded);
-        },
-    });
-})($ || ($ = {}));
-//encode.test.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    $.$mol_test({
-        'decode utf8 string'() {
-            const str = 'Hello, ΧΨΩЫ';
-            const encoded = new Uint8Array([72, 101, 108, 108, 111, 44, 32, 206, 167, 206, 168, 206, 169, 208, 171]);
-            $.$mol_assert_equal($.$mol_charset_decode(encoded), str);
-            $.$mol_assert_equal($.$mol_charset_decode(encoded, 'utf8'), str);
-        },
-        'decode empty string'() {
-            const encoded = new Uint8Array([]);
-            $.$mol_assert_equal($.$mol_charset_decode(encoded), '');
-        },
-    });
-})($ || ($ = {}));
-//decode.test.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    class TestClass extends Uint8Array {
-    }
-    $.$mol_test({
-        'Uint8Array vs itself'() {
-            $.$mol_assert_ok($.$mol_compare_array(new Uint8Array, new Uint8Array));
-            $.$mol_assert_ok($.$mol_compare_array(new Uint8Array([0]), new Uint8Array([0])));
-            $.$mol_assert_not($.$mol_compare_array(new Uint8Array([0]), new Uint8Array([1])));
-        },
-        'Uint8Array vs subclassed array'() {
-            $.$mol_assert_not($.$mol_compare_array(new Uint8Array, new TestClass));
-        },
-    });
-})($ || ($ = {}));
-//array.test.js.map
-;
-"use strict";
-var $;
-(function ($) {
     $.$mol_test({
         'default data'() {
             const store = new $.$mol_store({
@@ -13414,6 +13317,89 @@ var $;
     });
 })($ || ($ = {}));
 //store.test.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    $.$mol_test_mocks.push(context => {
+        class $mol_state_local_mock extends $.$mol_state_local {
+            static value(key, next = this.state[key], force) {
+                return this.state[key] = (next || null);
+            }
+        }
+        $mol_state_local_mock.state = {};
+        __decorate([
+            $.$mol_mem_key
+        ], $mol_state_local_mock, "value", null);
+        context.$mol_state_local = $mol_state_local_mock;
+    });
+})($ || ($ = {}));
+//local.mock.test.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    $.$mol_test({
+        'local get set delete'() {
+            var key = '$mol_state_local_test:' + Math.random();
+            $.$mol_assert_equal($.$mol_state_local.value(key), null);
+            $.$mol_state_local.value(key, 123);
+            $.$mol_assert_equal($.$mol_state_local.value(key), 123);
+            $.$mol_state_local.value(key, null);
+            $.$mol_assert_equal($.$mol_state_local.value(key), null);
+        },
+    });
+})($ || ($ = {}));
+//local.test.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    $.$mol_test({
+        'encode utf8 string'() {
+            const str = 'Hello, ΧΨΩЫ';
+            const encoded = new Uint8Array([72, 101, 108, 108, 111, 44, 32, 206, 167, 206, 168, 206, 169, 208, 171]);
+            $.$mol_assert_like($.$mol_charset_encode(str), encoded);
+        },
+    });
+})($ || ($ = {}));
+//encode.test.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    $.$mol_test({
+        'decode utf8 string'() {
+            const str = 'Hello, ΧΨΩЫ';
+            const encoded = new Uint8Array([72, 101, 108, 108, 111, 44, 32, 206, 167, 206, 168, 206, 169, 208, 171]);
+            $.$mol_assert_equal($.$mol_charset_decode(encoded), str);
+            $.$mol_assert_equal($.$mol_charset_decode(encoded, 'utf8'), str);
+        },
+        'decode empty string'() {
+            const encoded = new Uint8Array([]);
+            $.$mol_assert_equal($.$mol_charset_decode(encoded), '');
+        },
+    });
+})($ || ($ = {}));
+//decode.test.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    class TestClass extends Uint8Array {
+    }
+    $.$mol_test({
+        'Uint8Array vs itself'() {
+            $.$mol_assert_ok($.$mol_compare_array(new Uint8Array, new Uint8Array));
+            $.$mol_assert_ok($.$mol_compare_array(new Uint8Array([0]), new Uint8Array([0])));
+            $.$mol_assert_not($.$mol_compare_array(new Uint8Array([0]), new Uint8Array([1])));
+        },
+        'Uint8Array vs subclassed array'() {
+            $.$mol_assert_not($.$mol_compare_array(new Uint8Array, new TestClass));
+        },
+    });
+})($ || ($ = {}));
+//array.test.js.map
 ;
 "use strict";
 var $;

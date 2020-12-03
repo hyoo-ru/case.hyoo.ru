@@ -639,9 +639,6 @@ $mol_lights_toggle $mol_check_icon
 $hyoo_case $mol_book2
 	plugins /
 		<= Theme $mol_theme_auto
-	Menu $mol_page
-		title @ \Business case
-		tools /
 	Root_page!id $hyoo_case_entity_page
 		entity <= entity!id $hyoo_case_entity
 		editable?val <=> editable!id?val false
