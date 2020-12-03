@@ -2847,6 +2847,36 @@ declare namespace $.$$ {
 }
 
 declare namespace $ {
+    class $mol_frame extends $mol_view {
+        dom_name(): string;
+        attr(): {
+            src: string;
+            allow: string;
+        };
+        fullscreen(): boolean;
+        accelerometer(): boolean;
+        autoplay(): boolean;
+        encription(): boolean;
+        gyroscope(): boolean;
+        pip(): boolean;
+        uri(): string;
+        allow(): string;
+    }
+}
+
+declare namespace $ {
+}
+
+declare namespace $.$$ {
+    class $mol_frame extends $.$mol_frame {
+        dom_node: (next?: HTMLIFrameElement) => HTMLIFrameElement;
+        window(): unknown;
+        render(): void;
+        allow(): string;
+    }
+}
+
+declare namespace $ {
     class $mol_theme_auto extends $mol_plugin {
         attr(): {
             mol_theme: string;
@@ -2910,6 +2940,7 @@ declare namespace $ {
         Root_page(id: any): $$.$hyoo_case_entity_page;
         Root_edit(id: any): $mol_check_icon;
         Entity_page(id: any): $$.$hyoo_case_entity_page;
+        Placeholder(): $$.$mol_frame;
         domain(): $hyoo_case_domain;
         Theme(): $$.$mol_theme_auto;
         entity(id: any): $hyoo_case_entity;
@@ -2945,6 +2976,7 @@ declare namespace $.$$ {
     class $hyoo_case extends $.$hyoo_case {
         get $(): $mol_ambient_context;
         lang(): string;
+        Placeholder(): $mol_frame;
         pages(): $hyoo_case_entity_page[];
         domain(): $hyoo_case_domain;
         entity(id: string): $hyoo_case_entity;

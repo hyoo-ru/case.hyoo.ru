@@ -619,6 +619,18 @@ $hyoo_case_entity_page $mol_page
 		property <= property!id $hyoo_case_property
 		editable <= editable
 
+$mol_frame $mol_view
+	dom_name \iframe
+	attr *
+		src <= uri \
+		allow <= allow \
+	fullscreen true
+	accelerometer true
+	autoplay true
+	encription true
+	gyroscope true
+	pip true
+
 $mol_theme_auto $mol_plugin
 	attr * mol_theme <= theme \
 
@@ -656,6 +668,8 @@ $hyoo_case $mol_book2
 	Entity_page!id $hyoo_case_entity_page
 		entity <= entity!id $hyoo_case_entity
 		editable?val <=> editable!id?val false
+	Placeholder $mol_frame
+		uri \https://www.youtube.com/embed/q6w4OK0zQrY
 	-
 	domain $hyoo_case_domain / *
 		meta *

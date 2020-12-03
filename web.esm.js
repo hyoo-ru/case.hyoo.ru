@@ -9445,6 +9445,100 @@ var $;
 "use strict";
 var $;
 (function ($) {
+    class $mol_frame extends $.$mol_view {
+        dom_name() {
+            return "iframe";
+        }
+        attr() {
+            return {
+                src: this.uri(),
+                allow: this.allow()
+            };
+        }
+        fullscreen() {
+            return true;
+        }
+        accelerometer() {
+            return true;
+        }
+        autoplay() {
+            return true;
+        }
+        encription() {
+            return true;
+        }
+        gyroscope() {
+            return true;
+        }
+        pip() {
+            return true;
+        }
+        uri() {
+            return "";
+        }
+        allow() {
+            return "";
+        }
+    }
+    $.$mol_frame = $mol_frame;
+})($ || ($ = {}));
+//frame.view.tree.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    $.$mol_style_define($.$mol_frame, {
+        border: {
+            style: 'none',
+        },
+        flex: 'auto',
+    });
+})($ || ($ = {}));
+//frame.view.css.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        class $mol_frame extends $.$mol_frame {
+            window() {
+                const node = this.dom_node();
+                this.uri();
+                return $.$mol_fiber_sync(() => new Promise((done, fail) => {
+                    node.onload = () => done(node.contentWindow);
+                    node.onerror = (event) => {
+                        fail(typeof event === 'string' ? new Error(event) : event.error || event);
+                    };
+                }))();
+            }
+            render() {
+                const node = super.render();
+                this.window();
+                return node;
+            }
+            allow() {
+                return [
+                    ...this.fullscreen() ? ['fullscreen'] : [],
+                    ...this.accelerometer() ? ['accelerometer'] : [],
+                    ...this.autoplay() ? ['autoplay'] : [],
+                    ...this.encription() ? ['encrypted-media'] : [],
+                    ...this.gyroscope() ? ['gyroscope'] : [],
+                    ...this.pip() ? ['picture-in-picture'] : [],
+                ].join(';');
+            }
+        }
+        __decorate([
+            $.$mol_mem
+        ], $mol_frame.prototype, "window", null);
+        $$.$mol_frame = $mol_frame;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+//frame.view.js.map
+;
+"use strict";
+var $;
+(function ($) {
     class $mol_theme_auto extends $.$mol_plugin {
         attr() {
             return {
@@ -9619,6 +9713,11 @@ var $;
             const obj = new this.$.$hyoo_case_entity_page();
             obj.entity = () => this.entity(id);
             obj.editable = (val) => this.editable(id, val);
+            return obj;
+        }
+        Placeholder() {
+            const obj = new this.$.$mol_frame();
+            obj.uri = () => "https://www.youtube.com/embed/q6w4OK0zQrY";
             return obj;
         }
         domain() {
@@ -10304,6 +10403,9 @@ var $;
     ], $hyoo_case.prototype, "Entity_page", null);
     __decorate([
         $.$mol_mem
+    ], $hyoo_case.prototype, "Placeholder", null);
+    __decorate([
+        $.$mol_mem
     ], $hyoo_case.prototype, "domain", null);
     __decorate([
         $.$mol_mem
@@ -10400,6 +10502,12 @@ var $;
             Reset: {
                 margin: $.$mol_gap.block,
             },
+            Placeholder: {
+                flex: {
+                    basis: rem(40),
+                    shrink: 0,
+                },
+            },
         });
     })($$ = $.$$ || ($.$$ = {}));
 })($ || ($ = {}));
@@ -10423,6 +10531,9 @@ var $;
             lang() {
                 var _a, _b;
                 return (_b = (_a = this.domain().entity('case').property('case-language').links()[0]) === null || _a === void 0 ? void 0 : _a.id()) !== null && _b !== void 0 ? _b : 'en';
+            }
+            Placeholder() {
+                return /#/.test(this.$.$mol_state_arg.href()) ? null : super.Placeholder();
             }
             pages() {
                 const params = this.$.$mol_state_arg.dict();
