@@ -3770,7 +3770,7 @@ var $;
             return this.property('property-min').integer();
         }
         property_max() {
-            return Number(this.property('property-max').integer());
+            return this.property('property-max').integer();
         }
         properties() {
             const kinds = [...this.meta_kind()];
@@ -3876,7 +3876,7 @@ var $;
         integer(next) {
             var _a;
             const data = (_a = this.data(next)) !== null && _a !== void 0 ? _a : this.value_default();
-            return Number(data || 0);
+            return Number(data);
         }
         bool(next) {
             var _a;
@@ -7253,7 +7253,11 @@ var $;
                 return this.property().kind().title(this.$.$mol_locale.lang());
             }
             max_width() {
-                return this.property().kind().property_max() + 'rem';
+                let max = this.property().kind().property_max();
+                if (this.type() === 'property_integer') {
+                    max = Math.ceil(Math.log10(max));
+                }
+                return max + 'rem';
             }
         }
         __decorate([
@@ -8981,6 +8985,8 @@ var $;
                     return false;
                 if (this.type() !== 'property_link')
                     return false;
+                if (this.property().links().length >= this.property().kind().property_max())
+                    return false;
                 if (!this.suggest())
                     return false;
                 if (this.pick_options().length === 0)
@@ -8989,6 +8995,8 @@ var $;
             }
             add_allowed() {
                 if (this.type() !== 'property_link')
+                    return false;
+                if (this.property().links().length >= this.property().kind().property_max())
                     return false;
                 if (!this.populate())
                     return false;
@@ -10001,6 +10009,7 @@ var $;
                     },
                     "property-inherit": true,
                     "property-suggest": true,
+                    "property-max": 1,
                     "property-target": [
                         "property_type"
                     ],
