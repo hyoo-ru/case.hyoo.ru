@@ -19,8 +19,8 @@ namespace $ {
 			switch( this.kind().property_kind_id() ) {
 				case 'property_link': return this.links().length > 0
 				case 'property_text': return this.text( $mol_locale.lang() ).length > 0
-				case 'property_integer': return ( this.data() ?? this.integer_default() ) != null
-				case 'property_boolean': return ( this.data() ?? this.bool_default() ) != null
+				case 'property_integer': return ( this.data() ?? this.value_default() ) != null
+				case 'property_boolean': return ( this.data() ?? this.value_default() ) != null
 			}
 		}
 
@@ -38,7 +38,7 @@ namespace $ {
 				}
 			}
 
-			let value = this.data() ?? this.text_default()
+			let value = this.data() ?? this.value_default()
 
 			if( value && ( typeof value === 'object' ) ) {
 				value = value[ lang ]
@@ -49,13 +49,13 @@ namespace $ {
 
 		@ $mol_mem
 		integer( next? : number ) {
-			const data = this.data( next ) ?? this.integer_default()
+			const data = this.data( next ) ?? this.value_default()
 			return Number( data || 0 )
 		}
 		
 		@ $mol_mem
 		bool( next? : boolean ) {
-			const data = this.data( next ) ?? this.bool_default()
+			const data = this.data( next ) ?? this.value_default()
 			return Boolean( data || false )
 		}
 
@@ -71,16 +71,9 @@ namespace $ {
 			return ( val as string[] ).map( id => domain.entity( id ) )
 		}
 
-		text_default() {
-			return this.kind().property( 'property_text-default' ).data()
-		}
-
-		integer_default() {
-			return this.kind().property( 'property_integer-default' ).data()
-		}
-
-		bool_default() {
-			return this.kind().property( 'property_boolean-default' ).data()
+		value_default() {
+			const kind = this.kind()
+			return kind.property( `${ kind.property_kind_id() }-default` ).data()
 		}
 
 		back( index: number ) {
