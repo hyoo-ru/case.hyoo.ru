@@ -37,6 +37,11 @@ namespace $.$$ {
 			padding: [ 0, rem(.75) ],
 		},
 
+		Expand: {
+			margin: [ 0, rem(-1.25) ],
+			zIndex: 1,
+		},
+
 		Title: {
 			padding: 0,
 			opacity: .75,

@@ -46,7 +46,7 @@ $hyoo_case $mol_book2
 		entity *
 			meta-kind / \meta
 			meta-name *
-				en \Entiry
+				en \Entity
 				ru \Сущность
 			meta-icon \🌟
 			meta-description *

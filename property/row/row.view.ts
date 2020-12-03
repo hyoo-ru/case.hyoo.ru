@@ -25,6 +25,7 @@ namespace $.$$ {
 		@ $mol_mem
 		sub() {
 			return [
+				... this.expand_allowed() ? [ this.Expand() ] : [],
 				this.Title(),
 				... this.add_allowed() ? [ this.Add() ] : [],
 				... this.pick_allowed() ? [ this.Pick() ] : [],
@@ -40,6 +41,19 @@ namespace $.$$ {
 
 		populate() {
 			return this.property().kind().property_populate()
+		}
+
+		@ $mol_mem
+		expand_allowed() {
+			if( this.type() !== 'property_link' ) return false
+			if( this.property().links().length === 0 ) return false
+			return true
+		}
+
+		@ $mol_mem
+		expanded( next?: boolean ) {
+			const key = `$hyoo_case_property_row:expanded:${ this.property().id() }`
+			return this.$.$mol_state_session.value( key, next ) ?? true
 		}
 
 		@ $mol_mem
@@ -82,6 +96,7 @@ namespace $.$$ {
 					return [ this.editable() ? this.Text() : this.Text_view() ]
 				
 				case "property_link":
+					if( !this.expanded() ) return []
 					return this.property().links().map( ( _, i )=> this.Link_view( i ) )
 				
 				default: return []
