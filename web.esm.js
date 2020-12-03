@@ -10155,7 +10155,7 @@ var $;
                         "property_boolean"
                     ],
                     "meta-name": {
-                        en: "Suggest from existen",
+                        en: "Suggest from existing",
                         ru: "Подсказывать из существующих"
                     },
                     "property-owners": [

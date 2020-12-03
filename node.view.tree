@@ -927,7 +927,7 @@ $hyoo_case $mol_book2
 			meta-kind / \property
 			property-kind / \property_boolean
 			meta-name *
-				en \Suggest from existen
+				en \Suggest from existing
 				ru \Подсказывать из существующих
 			property-owners / \property
 		property-populate *
