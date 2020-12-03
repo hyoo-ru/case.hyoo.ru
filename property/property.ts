@@ -50,7 +50,7 @@ namespace $ {
 		@ $mol_mem
 		integer( next? : number ) {
 			const data = this.data( next ) ?? this.value_default()
-			return Number( data || 0 )
+			return Number( data )
 		}
 		
 		@ $mol_mem

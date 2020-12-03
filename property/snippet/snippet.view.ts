@@ -23,7 +23,11 @@ namespace $.$$ {
 		}
 
 		max_width() {
-			return  this.property().kind().property_max() + 'rem'
+			let max = this.property().kind().property_max()
+			if( this.type() === 'property_integer' ) {
+				max = Math.ceil( Math.log10( max ) )
+			}
+			return max + 'rem'
 		}
 
 	}

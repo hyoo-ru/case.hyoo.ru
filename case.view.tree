@@ -244,6 +244,7 @@ $hyoo_case $mol_book2
 			meta-name * ru \Тип свойства
 			property-inherit true
 			property-suggest true
+			property-max 1
 			property-target / \property_type
 			property-owners / \property
 		property-target *

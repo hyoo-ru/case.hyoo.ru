@@ -46,6 +46,7 @@ namespace $.$$ {
 		pick_allowed() {
 			if( !this.editable() ) return false
 			if( this.type() !== 'property_link' ) return false
+			if( this.property().links().length >= this.property().kind().property_max() ) return false
 			if( !this.suggest() ) return false
 			if( this.pick_options().length === 0 ) return false
 			return true
@@ -54,6 +55,7 @@ namespace $.$$ {
 		@ $mol_mem
 		add_allowed() {
 			if( this.type() !== 'property_link' ) return false
+			if( this.property().links().length >= this.property().kind().property_max() ) return false
 			if( !this.populate() ) return false
 			return true
 		}

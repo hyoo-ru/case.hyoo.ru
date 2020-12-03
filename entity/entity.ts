@@ -82,7 +82,7 @@ namespace $ {
 		}
 
 		property_max() {
-			return Number( this.property( 'property-max' ).integer() )
+			return this.property( 'property-max' ).integer()
 		}
 
 		// entity_parents() {
