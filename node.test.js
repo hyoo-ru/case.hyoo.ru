@@ -10484,8 +10484,7 @@ var $;
                     ],
                     "meta-icon": "💼",
                     "meta-name": {
-                        en: "Business case",
-                        ru: "Бизнес Кейс"
+                        en: "Business case"
                     },
                     "meta-properties": [
                         "meta-icon",
