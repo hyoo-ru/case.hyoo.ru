@@ -2750,6 +2750,7 @@ declare namespace $.$$ {
         populate(): boolean;
         pick_allowed(): boolean;
         add_allowed(): boolean;
+        drop_allowed(): boolean;
         content(): ($mol_view | $mol_textarea)[];
         link_content(id: number): ($mol_button_minor | $mol_drag)[];
         length_max(): number;
@@ -2763,7 +2764,6 @@ declare namespace $.$$ {
         pick_options(): string[];
         pick_option_title(id: string): string;
         entity(id: string): $hyoo_case_entity;
-        single_value(): boolean;
         pick(id: string): string;
         link_title(index: string): string;
         link_html(index: string): string;

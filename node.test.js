@@ -9182,12 +9182,13 @@ var $;
                 return this.property().kind().property_populate();
             }
             pick_allowed() {
-                if (!this.editable() && !this.single_value())
+                if (!this.editable())
                     return false;
                 if (this.type() !== 'property_link')
                     return false;
-                if (!this.single_value()) {
-                    if (this.property().links().length >= this.property().kind().property_max())
+                const max = this.property().kind().property_max();
+                if (max > 1) {
+                    if (this.property().links().length >= max)
                         return false;
                 }
                 if (!this.suggest())
@@ -9205,13 +9206,20 @@ var $;
                     return false;
                 return true;
             }
+            drop_allowed() {
+                if (!this.editable())
+                    return false;
+                if (this.type() !== 'property_link')
+                    return false;
+                if (this.property().links().length <= this.property().kind().property_min())
+                    return false;
+                return true;
+            }
             content() {
                 switch (this.type()) {
                     case "property_text":
                         return [this.editable() ? this.Text() : this.Text_view()];
                     case "property_link":
-                        if (this.single_value())
-                            return [];
                         return this.property().links().map((_, i) => this.Link_view(i));
                     default: return [];
                 }
@@ -9219,7 +9227,7 @@ var $;
             link_content(id) {
                 return [
                     this.Link_drag(id),
-                    ...this.editable() ? [this.Drop(id)] : [],
+                    ...this.drop_allowed() ? [this.Drop(id)] : [],
                 ];
             }
             length_max() {
@@ -9267,24 +9275,14 @@ var $;
             entity(id) {
                 return this.property().domain().entity(id);
             }
-            single_value() {
-                const kind = this.property().kind();
-                return kind.property_min() === 1 && kind.property_max() === 1;
-            }
             pick(id) {
-                var _a, _b;
-                const single = this.single_value();
                 if (id) {
-                    if (single)
+                    if (this.property().kind().property_max() === 1) {
                         this.property().target_tear_all();
+                    }
                     this.property().target_join(this.entity(id));
                 }
-                if (single) {
-                    return (_b = (_a = this.property().links()[0]) === null || _a === void 0 ? void 0 : _a.id()) !== null && _b !== void 0 ? _b : '';
-                }
-                else {
-                    return '';
-                }
+                return '';
             }
             link_title(index) {
                 const target = this.property().links()[index];
@@ -9340,13 +9338,13 @@ var $;
         ], $hyoo_case_property_row.prototype, "add_allowed", null);
         __decorate([
             $.$mol_mem
+        ], $hyoo_case_property_row.prototype, "drop_allowed", null);
+        __decorate([
+            $.$mol_mem
         ], $hyoo_case_property_row.prototype, "content", null);
         __decorate([
             $.$mol_mem_key
         ], $hyoo_case_property_row.prototype, "link_arg", null);
-        __decorate([
-            $.$mol_mem
-        ], $hyoo_case_property_row.prototype, "single_value", null);
         $$.$hyoo_case_property_row = $hyoo_case_property_row;
     })($$ = $.$$ || ($.$$ = {}));
 })($ || ($ = {}));
