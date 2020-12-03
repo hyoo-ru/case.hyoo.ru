@@ -1194,6 +1194,7 @@ declare namespace $ {
         back(index: number): $hyoo_case_property;
         target_new(): $hyoo_case_entity;
         target_join(...entities: $hyoo_case_entity[]): void;
+        target_tear_all(): void;
         target_tear(index: number): void;
     }
 }
@@ -2779,6 +2780,7 @@ declare namespace $.$$ {
         pick_options(): string[];
         pick_option_title(id: string): string;
         entity(id: string): $hyoo_case_entity;
+        single_value(): boolean;
         pick(id: string): string;
         link_title(index: string): string;
         link_html(index: string): string;

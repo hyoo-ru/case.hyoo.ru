@@ -4154,6 +4154,11 @@ var $;
                 }
             }
         }
+        target_tear_all() {
+            while (this.links().length) {
+                this.target_tear(0);
+            }
+        }
         target_tear(index) {
             if (index < 0)
                 return;
@@ -9177,12 +9182,14 @@ var $;
                 return this.property().kind().property_populate();
             }
             pick_allowed() {
-                if (!this.editable())
+                if (!this.editable() && !this.single_value())
                     return false;
                 if (this.type() !== 'property_link')
                     return false;
-                if (this.property().links().length >= this.property().kind().property_max())
-                    return false;
+                if (!this.single_value()) {
+                    if (this.property().links().length >= this.property().kind().property_max())
+                        return false;
+                }
                 if (!this.suggest())
                     return false;
                 if (this.pick_options().length === 0)
@@ -9200,8 +9207,12 @@ var $;
             }
             content() {
                 switch (this.type()) {
-                    case "property_text": return [this.editable() ? this.Text() : this.Text_view()];
-                    case "property_link": return this.property().links().map((_, i) => this.Link_view(i));
+                    case "property_text":
+                        return [this.editable() ? this.Text() : this.Text_view()];
+                    case "property_link":
+                        if (this.single_value())
+                            return [];
+                        return this.property().links().map((_, i) => this.Link_view(i));
                     default: return [];
                 }
             }
@@ -9241,8 +9252,8 @@ var $;
             pick_options() {
                 const exists = new Set(this.property().links());
                 const options = [];
-                for (const scheme of this.property().kind().property_target()) {
-                    for (const inst of scheme.members()) {
+                for (const kind of this.property().kind().property_target()) {
+                    for (const inst of kind.members()) {
                         if (exists.has(inst))
                             continue;
                         options.push(inst.id());
@@ -9256,11 +9267,24 @@ var $;
             entity(id) {
                 return this.property().domain().entity(id);
             }
+            single_value() {
+                const kind = this.property().kind();
+                return kind.property_min() === 1 && kind.property_max() === 1;
+            }
             pick(id) {
+                var _a, _b;
+                const single = this.single_value();
                 if (id) {
+                    if (single)
+                        this.property().target_tear_all();
                     this.property().target_join(this.entity(id));
                 }
-                return '';
+                if (single) {
+                    return (_b = (_a = this.property().links()[0]) === null || _a === void 0 ? void 0 : _a.id()) !== null && _b !== void 0 ? _b : '';
+                }
+                else {
+                    return '';
+                }
             }
             link_title(index) {
                 const target = this.property().links()[index];
@@ -9320,6 +9344,9 @@ var $;
         __decorate([
             $.$mol_mem_key
         ], $hyoo_case_property_row.prototype, "link_arg", null);
+        __decorate([
+            $.$mol_mem
+        ], $hyoo_case_property_row.prototype, "single_value", null);
         $$.$hyoo_case_property_row = $hyoo_case_property_row;
     })($$ = $.$$ || ($.$$ = {}));
 })($ || ($ = {}));
@@ -10216,7 +10243,7 @@ var $;
                         "property_boolean"
                     ],
                     "meta-name": {
-                        en: "Inherits properties from target",
+                        en: "Inherits properties in target",
                         ru: "Наследует свойства у цели"
                     },
                     "property-owners": [
@@ -10236,6 +10263,7 @@ var $;
                     },
                     "property-inherit": true,
                     "property-suggest": true,
+                    "property-min": 1,
                     "property-max": 1,
                     "property-target": [
                         "property_type"
@@ -10262,7 +10290,9 @@ var $;
                         "property"
                     ],
                     "property-suggest": true,
-                    "property-populate": true
+                    "property-populate": true,
+                    "property-min": 1,
+                    "property-max": 1
                 },
                 "property-back": {
                     "meta-kind": [
@@ -10282,7 +10312,9 @@ var $;
                         "property"
                     ],
                     "property-suggest": true,
-                    "property-populate": true
+                    "property-populate": true,
+                    "property-min": 1,
+                    "property-max": 1
                 },
                 "property-owners": {
                     "meta-kind": [
@@ -10305,7 +10337,9 @@ var $;
                         "entity"
                     ],
                     "property-suggest": true,
-                    "property-populate": true
+                    "property-populate": true,
+                    "property-min": 1,
+                    "property-max": 1
                 },
                 case: {
                     "meta-kind": [
@@ -10344,15 +10378,14 @@ var $;
                         "case"
                     ],
                     "property-suggest": true,
+                    "property-min": 1,
                     "property-max": 1
                 },
                 language: {
                     "meta-kind": [
                         "entity"
                     ],
-                    "meta-icon": [
-                        "🏳‍🌈"
-                    ],
+                    "meta-icon": "🏳‍🌈",
                     "meta-name": {
                         en: "Language",
                         ru: "Язык"
@@ -10380,7 +10413,7 @@ var $;
                     ],
                     "meta-name": {
                         en: "Russian",
-                        ru: "Расский"
+                        ru: "Русский"
                     }
                 }
             });

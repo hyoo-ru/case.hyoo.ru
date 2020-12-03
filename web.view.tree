@@ -928,7 +928,7 @@ $hyoo_case $mol_book2
 			meta-kind / \property
 			property-kind / \property_boolean
 			meta-name *
-				en \Inherits properties from target
+				en \Inherits properties in target
 				ru \Наследует свойства у цели
 			property-owners / \property
 		property-kind *
@@ -939,6 +939,7 @@ $hyoo_case $mol_book2
 				ru \Тип свойства
 			property-inherit true
 			property-suggest true
+			property-min 1
 			property-max 1
 			property-target / \property_type
 			property-owners / \property
@@ -952,6 +953,8 @@ $hyoo_case $mol_book2
 			property-owners / \property
 			property-suggest true
 			property-populate true
+			property-min 1
+			property-max 1
 		property-back *
 			meta-kind / \property
 			property-kind / \property_link
@@ -962,6 +965,8 @@ $hyoo_case $mol_book2
 			property-owners / \property
 			property-suggest true
 			property-populate true
+			property-min 1
+			property-max 1
 		property-owners *
 			meta-kind / \property
 			property-kind / \property_link
@@ -973,6 +978,8 @@ $hyoo_case $mol_book2
 			property-owners / \entity
 			property-suggest true
 			property-populate true
+			property-min 1
+			property-max 1
 		case *
 			meta-kind / \case
 			meta-icon \💼
@@ -994,10 +1001,11 @@ $hyoo_case $mol_book2
 			property-target / \language
 			property-owners / \case
 			property-suggest true
+			property-min 1
 			property-max 1
 		language *
 			meta-kind / \entity
-			meta-icon / \🏳‍🌈
+			meta-icon \🏳‍🌈
 			meta-name *
 				en \Language
 				ru \Язык
@@ -1015,7 +1023,7 @@ $hyoo_case $mol_book2
 			meta-kind / \language
 			meta-name *
 				en \Russian
-				ru \Расский
+				ru \Русский
 
 $mol_view_tree_test_attributes_super $mol_view
 	some *
