@@ -4083,8 +4083,8 @@ var $;
             switch (this.kind().property_kind_id()) {
                 case 'property_link': return this.links().length > 0;
                 case 'property_text': return this.text($.$mol_locale.lang()).length > 0;
-                case 'property_integer': return ((_a = this.data()) !== null && _a !== void 0 ? _a : this.integer_default()) != null;
-                case 'property_boolean': return ((_b = this.data()) !== null && _b !== void 0 ? _b : this.bool_default()) != null;
+                case 'property_integer': return ((_a = this.data()) !== null && _a !== void 0 ? _a : this.value_default()) != null;
+                case 'property_boolean': return ((_b = this.data()) !== null && _b !== void 0 ? _b : this.value_default()) != null;
             }
         }
         text(lang, next) {
@@ -4097,7 +4097,7 @@ var $;
                     this.data(next);
                 }
             }
-            let value = (_a = this.data()) !== null && _a !== void 0 ? _a : this.text_default();
+            let value = (_a = this.data()) !== null && _a !== void 0 ? _a : this.value_default();
             if (value && (typeof value === 'object')) {
                 value = value[lang];
             }
@@ -4105,12 +4105,12 @@ var $;
         }
         integer(next) {
             var _a;
-            const data = (_a = this.data(next)) !== null && _a !== void 0 ? _a : this.integer_default();
+            const data = (_a = this.data(next)) !== null && _a !== void 0 ? _a : this.value_default();
             return Number(data || 0);
         }
         bool(next) {
             var _a;
-            const data = (_a = this.data(next)) !== null && _a !== void 0 ? _a : this.bool_default();
+            const data = (_a = this.data(next)) !== null && _a !== void 0 ? _a : this.value_default();
             return Boolean(data || false);
         }
         links(next) {
@@ -4121,14 +4121,9 @@ var $;
                 val = [];
             return val.map(id => domain.entity(id));
         }
-        text_default() {
-            return this.kind().property('property_text-default').data();
-        }
-        integer_default() {
-            return this.kind().property('property_integer-default').data();
-        }
-        bool_default() {
-            return this.kind().property('property_boolean-default').data();
+        value_default() {
+            const kind = this.kind();
+            return kind.property(`${kind.property_kind_id()}-default`).data();
         }
         back(index) {
             var _a, _b, _c;

@@ -1188,9 +1188,7 @@ declare namespace $ {
         integer(next?: number): number;
         bool(next?: boolean): boolean;
         links(next?: $hyoo_case_entity[]): $hyoo_case_entity[];
-        text_default(): string | number | boolean | readonly string[] | Record<string, string>;
-        integer_default(): string | number | boolean | readonly string[] | Record<string, string>;
-        bool_default(): string | number | boolean | readonly string[] | Record<string, string>;
+        value_default(): string | number | boolean | readonly string[] | Record<string, string>;
         back(index: number): $hyoo_case_property;
         target_new(): $hyoo_case_entity;
         target_join(...entities: $hyoo_case_entity[]): void;
