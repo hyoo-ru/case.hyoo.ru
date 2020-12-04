@@ -976,6 +976,7 @@ $hyoo_case $mol_book2
 				ru \Взаимное свойство в целевом типе
 			property-target / \property
 			property-owners / \property
+			property-back / \property-back
 			property-suggest true
 			property-populate true
 			property-min 1
