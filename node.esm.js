@@ -21,9 +21,11 @@ var $node = $node || {}
 void function( module ) { var exports = module.exports = this; function require( id ) { return $node[ id.replace( /^.\// , "../mol/" ) ] }; 
 ;
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 Error.stackTraceLimit = Infinity;
-module.exports;
+var $;
+(function ($) {
+})($ || ($ = {}));
+module.exports = $;
 //mol.js.map
 ;
 
@@ -94,9 +96,6 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    let $$;
-    (function ($$_1) {
-    })($$ = $.$$ || ($.$$ = {}));
     $.$mol_ambient_ref = Symbol('$mol_ambient_ref');
     function $mol_ambient(overrides) {
         return Object.setPrototypeOf(overrides, this || $);
@@ -9075,7 +9074,7 @@ var $;
         if (!target)
             return { [source.id()]: null };
         const domain = source.domain();
-        const arg = Object.assign({}, this.$.$mol_state_arg.dict());
+        const arg = Object.assign({}, this.$mol_state_arg.dict());
         let keys = Object.keys(arg);
         const index_source = keys.indexOf(source.id());
         keys.splice(index_source + 1, 1000);
@@ -9103,7 +9102,7 @@ var $;
     }
     $.$hyoo_case_route_link = $hyoo_case_route_link;
     function $hyoo_case_route_go(source, target, editable = false) {
-        this.$.$mol_dom_context.location.href = this.$hyoo_case_route_link(source, target, editable);
+        this.$mol_dom_context.location.href = this.$hyoo_case_route_link(source, target, editable);
     }
     $.$hyoo_case_route_go = $hyoo_case_route_go;
 })($ || ($ = {}));
@@ -9755,7 +9754,7 @@ var $;
 (function ($) {
     function $mol_lights(next) {
         var _a;
-        return (_a = this.$.$mol_state_local.value('$mol_lights', next)) !== null && _a !== void 0 ? _a : $.$mol_dom_context.matchMedia('(prefers-color-scheme: light)').matches;
+        return (_a = this.$mol_state_local.value('$mol_lights', next)) !== null && _a !== void 0 ? _a : $.$mol_dom_context.matchMedia('(prefers-color-scheme: light)').matches;
     }
     $.$mol_lights = $mol_lights;
 })($ || ($ = {}));
@@ -11168,6 +11167,25 @@ var $;
 "use strict";
 var $;
 (function ($) {
+    function $mol_env() {
+        return {};
+    }
+    $.$mol_env = $mol_env;
+})($ || ($ = {}));
+//env.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    $.$mol_env = function $mol_env() {
+        return this.process.env;
+    };
+})($ || ($ = {}));
+//env.node.js.map
+;
+"use strict";
+var $;
+(function ($) {
     function $mol_exec(dir, command, ...args) {
         let [app, ...args0] = command.split(' ');
         args = [...args0, ...args];
@@ -11180,11 +11198,12 @@ var $;
         var res = $node['child_process'].spawnSync(app, args, {
             cwd: $node.path.resolve(dir),
             shell: true,
+            env: this.$mol_env(),
         });
         if (res.status || res.error)
             return $.$mol_fail(res.error || new Error(res.stderr.toString()));
         if (!res.stdout)
-            res.stdout = new Buffer('');
+            res.stdout = Buffer.from([]);
         return res;
     }
     $.$mol_exec = $mol_exec;
