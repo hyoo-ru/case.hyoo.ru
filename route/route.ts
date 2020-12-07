@@ -1,7 +1,7 @@
 namespace $ {
 
 	export function $hyoo_case_route_arg(
-		this: $mol_ambient_context,
+		this: $,
 		source: $hyoo_case_entity,
 		target: $hyoo_case_entity | null,
 		editable?: boolean,
@@ -11,7 +11,7 @@ namespace $ {
 
 		const domain = source.domain()
 		
-		const arg = { ... this.$.$mol_state_arg.dict() }
+		const arg = { ... this.$mol_state_arg.dict() }
 		let keys = Object.keys( arg )
 		
 		const index_source = keys.indexOf( source.id() )
@@ -43,7 +43,7 @@ namespace $ {
 	}
 
 	export function $hyoo_case_route_link(
-		this: $mol_ambient_context,
+		this: $,
 		source: $hyoo_case_entity,
 		target: $hyoo_case_entity,
 		editable = false,
@@ -54,12 +54,12 @@ namespace $ {
 	}
 
 	export function $hyoo_case_route_go(
-		this: $mol_ambient_context,
+		this: $,
 		source: $hyoo_case_entity,
 		target: $hyoo_case_entity,
 		editable = false,
 	) {
-		this.$.$mol_dom_context.location.href = this.$hyoo_case_route_link( source, target, editable )
+		this.$mol_dom_context.location.href = this.$hyoo_case_route_link( source, target, editable )
 	}
 
 }
