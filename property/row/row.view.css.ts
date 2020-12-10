@@ -40,19 +40,11 @@ namespace $.$$ {
 			},
 		},
 
-		Text_view: {
-			padding: $mol_gap.text,
-		},
-
 		Numb: {
 			margin: [ 0, rem(.75) ],
 			flex: {
 				grow: 1,
 			},
-		},
-
-		Numb_view: {
-			padding: $mol_gap.text,
 		},
 
 		Link_view: {
