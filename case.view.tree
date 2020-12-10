@@ -247,8 +247,6 @@ $hyoo_case $mol_book2
 				\boolean
 			property-suggest true
 			property-populate true
-			property-min 1
-			property-max 1
 		property-min *
 			meta-kind / \integer
 			meta-name *
