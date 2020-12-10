@@ -145,10 +145,29 @@ namespace $.$$ {
 			return this.property().target_tear( index )
 		}
 
-		add() {
+		add_one( event: Event ) {
+			const options = this.property().kind().property_target()
+			if( options.length !== 1 ) return
+			this.add( options[0].id() )
+			this.add_show( false )
+			event.preventDefault()
+		}
+
+		add( kind: string ) {
 			const prop = this.property()
-			const target = prop.target_new()
+			const target = prop.domain().entity_new( prop.domain().entity( kind ) )
+			prop.target_join( target )
 			this.$.$hyoo_case_route_go( prop.entity(), target, true )
+			this.add_show( false )
+		}
+
+		add_hint() {
+			return super.add_hint().replace( '{entity}', this.property().kind().property_target()[0].title() )
+		}
+
+		@ $mol_mem
+		add_options() {
+			return this.property().kind().property_target().map( kind => this.Add_option( kind.id() ) )
 		}
 
 		pick_options() {
@@ -212,9 +231,9 @@ namespace $.$$ {
 
 			const target = this.property().domain().entity( id )
 			
-			const kind = target.meta_kind()	
+			const kind = target.meta_kind()
 			if( kind.length === 0 ) return
-			if( kind[0] !== this.property().kind().property_target()[0] ) return
+			if( !this.property().kind().property_target().includes( kind[0] ) ) return
 
 			return target
 

@@ -9,11 +9,16 @@ $hyoo_case_property_row $mol_view
 			sub /
 				<= Title_snippet $hyoo_case_entity_snippet
 					entity <= kind $hyoo_case_entity
-		<= Add $mol_button_minor
-			hint @ \Add new
-			click?event <=> add?event null
-			sub /
-				<= Add_icon $mol_icon_plus
+		<= Add $mol_pop
+			focused?val => add_show?val
+			Anchor <= Add_switch $mol_button_minor
+				hint <= add_hint @ \Add new
+				click?event <=> add_one?event null
+				sub /
+					<= Add_icon $mol_icon_plus
+			showed <= add_show
+			bubble_content / <= Add_options $mol_list
+				rows <= add_options /
 		<= Pick $mol_select
 			value?val <=> pick?val \
 			options <= pick_options /string
@@ -24,6 +29,11 @@ $hyoo_case_property_row $mol_view
 					highlight <= pick_query
 			option_label!id <= pick_option_title!id \
 		<= Content $mol_list rows <= content /
+	Add_option!id $mol_button_minor
+		click?event <=> add!id?event null
+		sub /
+			<= Add_option_snippet!id $hyoo_case_entity_snippet
+				entity <= entity!id $hyoo_case_entity
 	Text $mol_textarea
 		value?val <=> text?val \
 		length_max <= length_max Infinity

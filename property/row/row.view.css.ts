@@ -50,6 +50,16 @@ namespace $.$$ {
 			},
 		},
 
+		Add_option: {
+			padding: 0,
+		},
+
+		Add_option_snippet: {
+			flex: {
+				wrap: 'nowrap',
+			},
+		},
+
 		Pick: {
 			flex: {
 				grow: 1000,

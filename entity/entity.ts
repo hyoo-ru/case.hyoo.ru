@@ -20,21 +20,20 @@ namespace $ {
 			return this.sub( id , store )
 		}
 
+		property_owner() {
+			return this.property( 'property-owners' ).links()
+		}
+
 		property_target() {
-			return this.property( 'property-target' ).links()
+			return this.property( 'property-back' ).links()[0].property_owner() ?? []
 		}
 
 		meta_kind() {
 			return this.property( 'meta-kind' ).links()
 		}
 
-		property_kind() {
-			return this.property( 'property-kind' ).links()
-		}
-
 		property_kind_id() {
-			return ( this.property_kind()[0]?.id() ?? null ) as
-			| null
+			return this.meta_kind()[0]!.id() as
 			| 'property_text'
 			| 'property_integer'
 			| 'property_boolean'

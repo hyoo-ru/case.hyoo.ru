@@ -14,7 +14,7 @@ namespace $.$$ {
 					if( links.length === 0 ) return ''
 					return links.length.toString()
 				}
-				default: return this.property().text()
+				default: return this.property().text() || '…'
 			}
 		}
 
