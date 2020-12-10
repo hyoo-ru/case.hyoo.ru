@@ -9,7 +9,7 @@ namespace $.$$ {
 		@ $mol_mem
 		title() {
 			switch( this.type() ) {
-				case 'property_link': {
+				case 'link': {
 					const links = this.property().links()
 					if( links.length === 0 ) return ''
 					return links.length.toString()
@@ -24,7 +24,7 @@ namespace $.$$ {
 
 		max_width() {
 			let max = this.property().kind().property_max()
-			if( this.type() === 'property_integer' ) {
+			if( this.type() === 'integer' ) {
 				max = Math.ceil( Math.log10( max ) )
 			}
 			return max + 'rem'

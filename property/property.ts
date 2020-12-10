@@ -17,10 +17,10 @@ namespace $ {
 		@ $mol_mem
 		filled() {
 			switch( this.kind().property_kind_id() ) {
-				case 'property_link': return this.links().length > 0
-				case 'property_text': return this.text().length > 0
-				case 'property_integer': return ( this.data() ?? this.value_default() ) != null
-				case 'property_boolean': return ( this.data() ?? this.value_default() ) != null
+				case 'link': return this.links().length > 0
+				case 'text': return this.text().length > 0
+				case 'integer': return ( this.data() ?? this.value_default() ) != null
+				case 'boolean': return ( this.data() ?? this.value_default() ) != null
 			}
 		}
 

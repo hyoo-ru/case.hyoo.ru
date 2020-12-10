@@ -34,10 +34,10 @@ namespace $ {
 
 		property_kind_id() {
 			return this.meta_kind()[0]!.id() as
-			| 'property_text'
-			| 'property_integer'
-			| 'property_boolean'
-			| 'property_link'
+			| 'text'
+			| 'integer'
+			| 'boolean'
+			| 'link'
 		}
 
 		property_locale() {
@@ -57,7 +57,7 @@ namespace $ {
 		}
 
 		property_least() {
-			return this.property_kind_id() === 'property_link' || !this.property_main() 
+			return this.property_kind_id() === 'link' || !this.property_main() 
 		}
 
 		property_hidden() {
@@ -157,11 +157,11 @@ namespace $ {
 				
 				switch( prop.kind().property_kind_id() ) {
 					
-					case 'property_link':
-					case 'property_boolean':
+					case 'link':
+					case 'boolean':
 						continue
 					
-					case 'property_text':
+					case 'text':
 						chunks.push( prop.text().trim() )
 
 				}

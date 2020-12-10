@@ -30,8 +30,8 @@ namespace $.$$ {
 				this.Title(),
 				... this.add_allowed() ? [ this.Add() ] : [],
 				... this.pick_allowed() ? [ this.Pick() ] : [],
-				... this.type() === 'property_boolean' ? [ this.Bool() ] : [],
-				... this.type() === 'property_integer' ? [ this.editable() ? this.Numb() : this.Numb_view() ] : [],
+				... this.type() === 'boolean' ? [ this.Bool() ] : [],
+				... this.type() === 'integer' ? [ this.editable() ? this.Numb() : this.Numb_view() ] : [],
 				... this.content().length ? [ this.Content() ] : [],
 			]
 		}
@@ -46,7 +46,7 @@ namespace $.$$ {
 
 		@ $mol_mem
 		expand_allowed() {
-			if( this.type() !== 'property_link' ) return false
+			if( this.type() !== 'link' ) return false
 			if( this.property().links().length === 0 ) return false
 			return true
 		}
@@ -60,7 +60,7 @@ namespace $.$$ {
 		@ $mol_mem
 		pick_allowed() {
 			if( !this.editable() ) return false
-			if( this.type() !== 'property_link' ) return false
+			if( this.type() !== 'link' ) return false
 
 			const max = this.property().kind().property_max()
 			if( max > 1 ) {
@@ -74,7 +74,7 @@ namespace $.$$ {
 		
 		@ $mol_mem
 		add_allowed() {
-			if( this.type() !== 'property_link' ) return false
+			if( this.type() !== 'link' ) return false
 			if( this.property().links().length >= this.property().kind().property_max() ) return false
 			if( !this.populate() ) return false
 			return true
@@ -84,7 +84,7 @@ namespace $.$$ {
 		@ $mol_mem
 		drop_allowed() {
 			if( !this.editable() ) return false
-			if( this.type() !== 'property_link' ) return false
+			if( this.type() !== 'link' ) return false
 			if( this.property().links().length <= this.property().kind().property_min() ) return false
 			return true
 		}
@@ -93,10 +93,10 @@ namespace $.$$ {
 		content() {
 			switch( this.type() ) {
 				
-				case "property_text":
+				case "text":
 					return [ this.editable() ? this.Text() : this.Text_view() ]
 				
-				case "property_link":
+				case "link":
 					if( !this.expanded() ) return []
 					return this.property().links().map( ( _, i )=> this.Link_view( i ) )
 				
@@ -156,7 +156,8 @@ namespace $.$$ {
 
 		add( kind: string ) {
 			const prop = this.property()
-			const target = prop.domain().entity_new( prop.domain().entity( kind ) )
+			const kinds = prop.id() === 'meta-kind' ? [] : [ prop.domain().entity( kind ) ]
+			const target = prop.domain().entity_new( ... kinds )
 			prop.target_join( target )
 			this.$.$hyoo_case_route_go( prop.entity(), target, true )
 			this.add_show( false )

@@ -74,11 +74,11 @@ $hyoo_case $mol_book2
 				\property-hidden
 				\property-suggest
 			meta-members /
-				\property_link
-				\property_text
-				\property_integer
-				\property_boolean
-		property_link *
+				\link
+				\text
+				\integer
+				\boolean
+		link *
 			meta-kind / \property_type
 			meta-name *
 				en \Link
@@ -105,7 +105,7 @@ $hyoo_case $mol_book2
 				\property-mutual
 				\property-owners
 				\case-language
-		property_text *
+		text *
 			meta-kind / \property_type
 			meta-name *
 				en \Text
@@ -118,14 +118,14 @@ $hyoo_case $mol_book2
 				\property-hidden
 				\property-suggest
 				\property-locale
-				\property_text-default
+				\text-default
 				\property-min
 				\property-max
 			meta-members /
 				\meta-name
 				\meta-description
-				\property_text-default
-		property_integer *
+				\text-default
+		integer *
 			meta-kind / \property_type
 			meta-name *
 				en \Integer
@@ -137,14 +137,14 @@ $hyoo_case $mol_book2
 				\property-main
 				\property-hidden
 				\property-suggest
-				\property_integer-default
+				\integer-default
 				\property-min
 				\property-max
 			meta-members /
 				\property-min
 				\property-max
-				\property_integer-default
-		property_boolean *
+				\integer-default
+		boolean *
 			meta-kind / \property_type
 			meta-name *
 				en \Boolean
@@ -155,34 +155,34 @@ $hyoo_case $mol_book2
 				\property-owners
 				\property-main
 				\property-hidden
-				\property_boolean-default
+				\boolean-default
 			meta-members /
 				\property-main
 				\property-hidden
 				\property-suggest
 				\property-inherit
 				\property-populate
-				\property_boolean-default
-		property_text-default *
-			meta-kind / \property_text
+				\boolean-default
+		text-default *
+			meta-kind / \text
 			meta-name *
 				en \Default value: Text
 				ru \Значение по умолчанию: Текст
-			property-owners / \property_text
-		property_integer-default *
-			meta-kind / \property_integer
+			property-owners / \text
+		integer-default *
+			meta-kind / \integer
 			meta-name *
 				en \Default value: Integer
 				ru \Значение по умолчанию: Целое число
-			property-owners / \property_integer
-		property_boolean-default *
-			meta-kind / \property_boolean
+			property-owners / \integer
+		boolean-default *
+			meta-kind / \boolean
 			meta-name *
 				en \Default value: Boolean
 				ru \Значение по умолчанию: Флаг
-			property-owners / \property_boolean
+			property-owners / \boolean
 		meta-kind *
-			meta-kind / \property_link
+			meta-kind / \link
 			meta-name *
 				en \Kind
 				ru \Тип
@@ -191,7 +191,7 @@ $hyoo_case $mol_book2
 			property-min 1
 			property-max 1
 		meta-members *
-			meta-kind / \property_link
+			meta-kind / \link
 			meta-name *
 				en \Instances
 				ru \Экземпляры
@@ -199,7 +199,7 @@ $hyoo_case $mol_book2
 			property-mutual / \meta-kind
 			property-owners / \entity
 		meta-icon *
-			meta-kind / \property_text
+			meta-kind / \text
 			meta-name *
 				en \Icon
 				ru \Иконка
@@ -207,7 +207,7 @@ $hyoo_case $mol_book2
 			property-main true
 			property-max 2
 		meta-name *
-			meta-kind / \property_text
+			meta-kind / \text
 			meta-name *
 				en \Name
 				ru \Название
@@ -216,14 +216,14 @@ $hyoo_case $mol_book2
 			property-main true
 			property-max 100
 		meta-description *
-			meta-kind / \property_text
+			meta-kind / \text
 			meta-name *
 				en \Description
 				ru \Описание
 			property-locale true
 			property-owners / \entity
 		meta-properties *
-			meta-kind / \property_link
+			meta-kind / \link
 			meta-name *
 				en \Properties
 				ru \Свойства
@@ -232,95 +232,95 @@ $hyoo_case $mol_book2
 			property-hidden true
 			property-populate true
 		property-owners *
-			meta-kind / \property_link
+			meta-kind / \link
 			meta-name *
 				en \Property owners
 				ru \Владельцы свойства
 			property-mutual / \meta-properties
 			property-owners /
-				\property_link
-				\property_text
-				\property_integer
-				\property_boolean
+				\link
+				\text
+				\integer
+				\boolean
 			property-suggest true
 			property-populate true
 			property-min 1
 			property-max 1
 		property-min *
-			meta-kind / \property_integer
+			meta-kind / \integer
 			meta-name *
 				en \Min value
 				ru \Минимальное число
 			property-owners /
-				\property_link
-				\property_text
-				\property_integer
+				\link
+				\text
+				\integer
 		property-max *
-			meta-kind / \property_integer
+			meta-kind / \integer
 			meta-name *
 				en \Max value
 				ru \Максимальное число
 			property-owners /
-				\property_link
-				\property_text
-				\property_integer
-			property_integer-default Infinity
+				\link
+				\text
+				\integer
+			integer-default Infinity
 		property-locale *
-			meta-kind / \property_boolean
+			meta-kind / \boolean
 			meta-name *
 				en \Localizable
 				ru \Переводимое
 			meta-description * ru \Значение свойства зависит от языка
-			property-owners / \property_text
+			property-owners / \text
 		property-main *
-			meta-kind / \property_boolean
+			meta-kind / \boolean
 			meta-name *
 				en \Main
 				ru \Основное
 			meta-description * ru \Свойство отображается во всех местах упоминания сущности
 			property-owners /
-				\property_link
-				\property_text
-				\property_integer
-				\property_boolean
+				\link
+				\text
+				\integer
+				\boolean
 		property-hidden *
-			meta-kind / \property_boolean
+			meta-kind / \boolean
 			meta-name *
 				en \Hidden
 				ru \Скрытое
 			meta-description * ru \Свойство отображается лишь в режиме редактирования сущности
 			property-owners /
-				\property_link
-				\property_text
-				\property_integer
-				\property_boolean
+				\link
+				\text
+				\integer
+				\boolean
 		property-suggest *
-			meta-kind / \property_boolean
+			meta-kind / \boolean
 			meta-name *
 				en \Suggest from existing
 				ru \Подсказывать из существующих
 			property-owners /
-				\property_link
-				\property_text
-				\property_integer
+				\link
+				\text
+				\integer
 		property-populate *
-			meta-kind / \property_boolean
+			meta-kind / \boolean
 			meta-name *
 				en \Taget creation allowed
 				ru \Разрешено ли создавать новые цели
-			property-owners / \property_link
+			property-owners / \link
 		property-inherit *
-			meta-kind / \property_boolean
+			meta-kind / \boolean
 			meta-name *
 				en \Inherits properties in target
 				ru \Наследует свойства у цели
-			property-owners / \property_link
+			property-owners / \link
 		property-mutual *
-			meta-kind / \property_link
+			meta-kind / \link
 			meta-name *
 				en \Mutual property from target
 				ru \Взаимное свойство в целевом типе
-			property-owners / \property_link
+			property-owners / \link
 			property-mutual / \property-mutual
 			property-populate true
 			property-min 1
@@ -337,7 +337,7 @@ $hyoo_case $mol_book2
 				\case-language
 			case-language / \en
 		case-language *
-			meta-kind / \property_link
+			meta-kind / \link
 			meta-name *
 				en \Interface language
 				ru \Язык интерфейса
@@ -347,7 +347,7 @@ $hyoo_case $mol_book2
 			property-min 1
 			property-max 1
 		language-case *
-			meta-kind / \property_link
+			meta-kind / \link
 			meta-name *
 				en \Allowed in case
 				ru \Допустим в кейсе
