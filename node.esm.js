@@ -9383,10 +9383,11 @@ var $;
                 return this.property().target_tear(index);
             }
             add_one(event) {
+                var _a, _b;
                 const options = this.property().kind().property_target();
-                if (options.length !== 1)
+                if (options.length > 1)
                     return;
-                this.add(options[0].id());
+                this.add((_b = (_a = options[0]) === null || _a === void 0 ? void 0 : _a.id()) !== null && _b !== void 0 ? _b : this.property().entity().id());
                 this.add_show(false);
                 event.preventDefault();
             }
@@ -10258,9 +10259,6 @@ var $;
                         en: "Kind",
                         ru: "Тип"
                     },
-                    "property-owners": [
-                        "entity"
-                    ],
                     "property-mutual": [
                         "meta-members"
                     ],

@@ -850,7 +850,6 @@ $hyoo_case $mol_book2
 			meta-name *
 				en \Kind
 				ru \Тип
-			property-owners / \entity
 			property-mutual / \meta-members
 			property-min 1
 			property-max 1
