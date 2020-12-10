@@ -59,7 +59,6 @@ namespace $.$$ {
 
 		@ $mol_mem
 		pick_allowed() {
-			if( !this.editable() ) return false
 			if( this.type() !== 'link' ) return false
 
 			const max = this.property().kind().property_max()
@@ -94,7 +93,7 @@ namespace $.$$ {
 			switch( this.type() ) {
 				
 				case "text":
-					return [ this.editable() ? this.Text() : this.Text_view() ]
+					return [ this.Text() ]
 				
 				case "link":
 					if( !this.expanded() ) return []

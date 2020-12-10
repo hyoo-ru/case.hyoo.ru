@@ -12,7 +12,7 @@ $hyoo_case_property_row $mol_view
 		<= Add $mol_pop
 			focused?val => add_show?val
 			Anchor <= Add_switch $mol_button_minor
-				hint <= add_hint @ \Add new
+				hint <= add_hint @ \Create new..
 				click?event <=> add_one?event null
 				sub /
 					<= Add_icon $mol_icon_plus
@@ -20,6 +20,7 @@ $hyoo_case_property_row $mol_view
 			bubble_content / <= Add_options $mol_list
 				rows <= add_options /
 		<= Pick $mol_select
+			hint @ \Pick..
 			value?val <=> pick?val \
 			options <= pick_options /string
 			filter_pattern => pick_query
@@ -35,13 +36,13 @@ $hyoo_case_property_row $mol_view
 			<= Add_option_snippet!id $hyoo_case_entity_snippet
 				entity <= entity!id $hyoo_case_entity
 	Text $mol_textarea
+		hint \…
 		value?val <=> text?val \
 		length_max <= length_max Infinity
 	Bool $mol_check_box
 		checked?val <=> bool?val false
-	String $mol_string
-		value?val <=> text?val \
 	Numb $mol_number
+		hint \NaN
 		value?val <=> numb?val 0
 	Text_view $mol_view sub / <= text
 	Numb_view $mol_view sub / <= numb

@@ -1,4 +1,5 @@
 {
-	"$hyoo_case_property_row_Add_hint": "Создать ещё",
+	"$hyoo_case_property_row_add_hint": "Создать ещё..",
+	"$hyoo_case_property_row_Pick_hint": "Выбрать..",
 	"$hyoo_case_property_row_Drop_hint": "Разорвать связь"
 }
