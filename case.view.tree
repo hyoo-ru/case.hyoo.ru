@@ -89,7 +89,7 @@ $hyoo_case $mol_book2
 			meta-icon \💫
 			meta-properties /
 				\meta-name
-				\property-back
+				\property-mutual
 				\property-owners
 				\property-main
 				\property-hidden
@@ -102,7 +102,7 @@ $hyoo_case $mol_book2
 				\meta-kind
 				\meta-members
 				\meta-properties
-				\property-back
+				\property-mutual
 				\property-owners
 				\case-language
 		property_text *
@@ -187,7 +187,7 @@ $hyoo_case $mol_book2
 				en \Kind
 				ru \Тип
 			property-owners / \entity
-			property-back / \meta-members
+			property-mutual / \meta-members
 			property-min 1
 			property-max 1
 		meta-members *
@@ -196,7 +196,7 @@ $hyoo_case $mol_book2
 				en \Instances
 				ru \Экземпляры
 			property-populate true
-			property-back / \meta-kind
+			property-mutual / \meta-kind
 			property-owners / \entity
 		meta-icon *
 			meta-kind / \property_text
@@ -227,7 +227,7 @@ $hyoo_case $mol_book2
 			meta-name *
 				en \Properties
 				ru \Свойства
-			property-back / \property-owners
+			property-mutual / \property-owners
 			property-owners / \entity
 			property-hidden true
 			property-populate true
@@ -236,7 +236,7 @@ $hyoo_case $mol_book2
 			meta-name *
 				en \Property owners
 				ru \Владельцы свойства
-			property-back / \meta-properties
+			property-mutual / \meta-properties
 			property-owners /
 				\property_link
 				\property_text
@@ -315,13 +315,13 @@ $hyoo_case $mol_book2
 				en \Inherits properties in target
 				ru \Наследует свойства у цели
 			property-owners / \property_link
-		property-back *
+		property-mutual *
 			meta-kind / \property_link
 			meta-name *
 				en \Mutual property from target
 				ru \Взаимное свойство в целевом типе
 			property-owners / \property_link
-			property-back / \property-back
+			property-mutual / \property-mutual
 			property-populate true
 			property-min 1
 			property-max 1
@@ -342,7 +342,7 @@ $hyoo_case $mol_book2
 				en \Interface language
 				ru \Язык интерфейса
 			property-owners / \case
-			property-back / \language-case
+			property-mutual / \language-case
 			property-suggest true
 			property-min 1
 			property-max 1
@@ -352,7 +352,7 @@ $hyoo_case $mol_book2
 				en \Allowed in case
 				ru \Допустим в кейсе
 			property-owners / \language
-			property-back / \case-language
+			property-mutual / \case-language
 			property-suggest true
 		language *
 			meta-kind / \entity

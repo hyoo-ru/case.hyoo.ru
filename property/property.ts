@@ -86,7 +86,7 @@ namespace $ {
 		}
 
 		back( index: number ) {
-			return this.links()[ index ]?.property( this.kind().property_back()[0]?.id() ) ?? null
+			return this.links()[ index ]?.property( this.kind().property_mutual()[0]?.id() ) ?? null
 		}
 
 		target_new() {
@@ -107,7 +107,7 @@ namespace $ {
 				
 				this.links( links = [ target, ... links ] )
 				
-				for( const Back of this.kind().property_back() ) {
+				for( const Back of this.kind().property_mutual() ) {
 					const back = target.property( Back.id() )
 					back.links([ entity, ... back.links() ])
 				}

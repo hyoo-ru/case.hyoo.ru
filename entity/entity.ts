@@ -25,7 +25,7 @@ namespace $ {
 		}
 
 		property_target() {
-			return this.property( 'property-back' ).links()[0].property_owner() ?? []
+			return this.property_mutual()[0].property_owner() ?? []
 		}
 
 		meta_kind() {
@@ -72,8 +72,8 @@ namespace $ {
 			return String( this.value( 'property-unit' ) )
 		}
 
-		property_back() {
-			return this.property( 'property-back' ).links()
+		property_mutual() {
+			return this.property( 'property-mutual' ).links()
 		}
 
 		property_min() {
