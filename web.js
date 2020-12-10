@@ -3021,8 +3021,8 @@ var $;
             return this.property('property-owners').links();
         }
         property_target() {
-            var _a;
-            return (_a = this.property_mutual()[0].property_owner()) !== null && _a !== void 0 ? _a : [];
+            var _a, _b;
+            return (_b = (_a = this.property_mutual()[0]) === null || _a === void 0 ? void 0 : _a.property_owner()) !== null && _b !== void 0 ? _b : [];
         }
         meta_kind() {
             return this.property('meta-kind').links();
@@ -9044,6 +9044,7 @@ var $;
                 flex: {
                     grow: 1000,
                 },
+                width: rem(8),
                 margin: [0, rem(.75)],
             },
             Link_drop: {
@@ -9193,9 +9194,6 @@ var $;
                 prop.target_join(target);
                 this.$.$hyoo_case_route_go(prop.entity(), target, true);
                 this.add_show(false);
-            }
-            add_hint() {
-                return super.add_hint().replace('{entity}', this.property().kind().property_target()[0].title());
             }
             add_options() {
                 return this.property().kind().property_target().map(kind => this.Add_option(kind.id()));
@@ -9501,7 +9499,7 @@ var $;
                 padding: $.$mol_gap.block,
             },
             Property: {
-                padding: [rem(.75), 0],
+                padding: rem(.25),
             },
         });
     })($$ = $.$$ || ($.$$ = {}));

@@ -2778,7 +2778,6 @@ declare namespace $.$$ {
         drop(index: number, event?: Event): void;
         add_one(event: Event): void;
         add(kind: string): void;
-        add_hint(): string;
         add_options(): $mol_button_minor[];
         pick_options(): string[];
         pick_option_title(id: string): string;
