@@ -89,6 +89,7 @@ $hyoo_case $mol_book2
 			meta-icon \💫
 			meta-properties /
 				\meta-name
+				\meta-description
 				\property-mutual
 				\property-owners
 				\property-main
@@ -113,6 +114,7 @@ $hyoo_case $mol_book2
 			meta-icon \📃
 			meta-properties /
 				\meta-name
+				\meta-description
 				\property-owners
 				\property-main
 				\property-hidden
@@ -133,6 +135,7 @@ $hyoo_case $mol_book2
 			meta-icon \🎱
 			meta-properties /
 				\meta-name
+				\meta-description
 				\property-owners
 				\property-main
 				\property-hidden
@@ -152,6 +155,7 @@ $hyoo_case $mol_book2
 			meta-icon \🚩
 			meta-properties /
 				\meta-name
+				\meta-description
 				\property-owners
 				\property-main
 				\property-hidden
@@ -277,7 +281,9 @@ $hyoo_case $mol_book2
 			meta-name *
 				en \Main
 				ru \Основное
-			meta-description * ru \Свойство отображается во всех местах упоминания сущности
+			meta-description *
+				ru \Shown in every entity views 
+				ru \Отображается во всех местах упоминания сущности
 			property-owners /
 				\link
 				\text
@@ -288,7 +294,9 @@ $hyoo_case $mol_book2
 			meta-name *
 				en \Hidden
 				ru \Скрытое
-			meta-description * ru \Свойство отображается лишь в режиме редактирования сущности
+			meta-description *
+				ru \Shown only in edit mode
+				ru \Отображается лишь в режиме редактирования сущности
 			property-owners /
 				\link
 				\text
@@ -297,8 +305,11 @@ $hyoo_case $mol_book2
 		property-suggest *
 			meta-kind / \boolean
 			meta-name *
-				en \Suggest from existing
-				ru \Подсказывать из существующих
+				en \Suggest
+				ru \Подсказки
+			meta-description *
+				en \Suggest from existing values
+				ru \Подсказывать из существующих значений
 			property-owners /
 				\link
 				\text
@@ -306,12 +317,18 @@ $hyoo_case $mol_book2
 		property-populate *
 			meta-kind / \boolean
 			meta-name *
+				en \Creating
+				ru \Создающее
+			meta-description *
 				en \Taget creation allowed
 				ru \Разрешено ли создавать новые цели
 			property-owners / \link
 		property-inherit *
 			meta-kind / \boolean
 			meta-name *
+				en \Inherits
+				ru \Наследует
+			meta-description *
 				en \Inherits properties in target
 				ru \Наследует свойства у цели
 			property-owners / \link
@@ -349,8 +366,8 @@ $hyoo_case $mol_book2
 		language-case *
 			meta-kind / \link
 			meta-name *
-				en \Allowed in case
-				ru \Допустим в кейсе
+				en \Selected in case
+				ru \Выбран в кейсе
 			property-owners / \language
 			property-mutual / \case-language
 			property-suggest true
