@@ -3,6 +3,8 @@
 	"$hyoo_case_entity_page_Close_hint": "Закрыть панель",
 	"$hyoo_case_entity_page_Edit_hint": "Режим редактирования",
 	"$hyoo_case_property_row_Drop_hint": "Разорвать связь",
+	"$hyoo_case_property_row_Pick_hint": "Выбрать..",
+	"$hyoo_case_property_row_add_hint": "Создать ещё..",
 	"$mol_lights_toggle_hint": "Переключатель света",
 	"$mol_link_source_hint": "Исходные коды",
 	"$mol_select_hint": "Поиск..",

@@ -1207,45 +1207,28 @@ declare namespace $ {
 }
 
 declare namespace $ {
-    class $mol_speck extends $mol_view {
-        attr(): {
-            mol_theme: string;
+    class $mol_plugin extends $mol_view {
+        dom_node(next?: Element): Element;
+        attr_static(): {
+            [key: string]: string | number | boolean;
         };
-        style(): {
-            minHeight: string;
+        event(): {
+            [key: string]: (event: Event) => void;
         };
-        sub(): readonly any[];
-        value(): any;
+        render(): void;
     }
 }
 
 declare namespace $ {
-}
-
-declare namespace $ {
-    class $mol_button extends $mol_view {
-        enabled(): boolean;
-        minimal_height(): number;
-        click(event?: any): any;
-        event_click(event?: any): any;
+    class $mol_hotkey extends $mol_plugin {
         event(): {
-            click: (event?: any) => any;
             keydown: (event?: any) => any;
         };
-        attr(): {
-            disabled: boolean;
-            role: string;
-            tabindex: number;
-            title: string;
-        };
-        sub(): readonly (string | number | boolean | $mol_view | Node)[];
-        Speck(): $mol_speck;
-        event_activate(event?: any): any;
-        event_key_press(event?: any): any;
-        disabled(): boolean;
-        tab_index(): number;
-        hint(): string;
-        hint_or_error(): string;
+        key(): {};
+        mod_ctrl(): boolean;
+        mod_alt(): boolean;
+        mod_shift(): boolean;
+        keydown(event?: any): any;
     }
 }
 
@@ -1351,64 +1334,6 @@ declare namespace $ {
         slashBackLeft = 226,
         bracketClose = 221,
         quoteSingle = 222
-    }
-}
-
-declare namespace $ {
-}
-
-declare namespace $.$$ {
-    class $mol_button extends $.$mol_button {
-        fiber(next?: $mol_fiber<any> | null): $mol_fiber<any> | null;
-        disabled(): boolean;
-        event_activate(next: Event): void;
-        event_key_press(event: KeyboardEvent): void;
-        tab_index(): number;
-        error(): string;
-        hint_or_error(): string;
-        sub_visible(): (string | number | boolean | $mol_view | Node | $mol_speck)[];
-    }
-}
-
-declare namespace $ {
-    class $mol_button_typed extends $mol_button {
-    }
-}
-
-declare namespace $ {
-}
-
-declare namespace $ {
-    class $mol_button_minor extends $mol_button_typed {
-    }
-}
-
-declare namespace $ {
-}
-
-declare namespace $ {
-    class $mol_plugin extends $mol_view {
-        dom_node(next?: Element): Element;
-        attr_static(): {
-            [key: string]: string | number | boolean;
-        };
-        event(): {
-            [key: string]: (event: Event) => void;
-        };
-        render(): void;
-    }
-}
-
-declare namespace $ {
-    class $mol_hotkey extends $mol_plugin {
-        event(): {
-            keydown: (event?: any) => any;
-        };
-        key(): {};
-        mod_ctrl(): boolean;
-        mod_alt(): boolean;
-        mod_shift(): boolean;
-        keydown(event?: any): any;
     }
 }
 
@@ -1567,6 +1492,81 @@ declare namespace $.$$ {
         disabled(): boolean;
         autocomplete_native(): "on" | "off";
     }
+}
+
+declare namespace $ {
+    class $mol_speck extends $mol_view {
+        attr(): {
+            mol_theme: string;
+        };
+        style(): {
+            minHeight: string;
+        };
+        sub(): readonly any[];
+        value(): any;
+    }
+}
+
+declare namespace $ {
+}
+
+declare namespace $ {
+    class $mol_button extends $mol_view {
+        enabled(): boolean;
+        minimal_height(): number;
+        click(event?: any): any;
+        event_click(event?: any): any;
+        event(): {
+            click: (event?: any) => any;
+            keydown: (event?: any) => any;
+        };
+        attr(): {
+            disabled: boolean;
+            role: string;
+            tabindex: number;
+            title: string;
+        };
+        sub(): readonly (string | number | boolean | $mol_view | Node)[];
+        Speck(): $mol_speck;
+        event_activate(event?: any): any;
+        event_key_press(event?: any): any;
+        disabled(): boolean;
+        tab_index(): number;
+        hint(): string;
+        hint_or_error(): string;
+    }
+}
+
+declare namespace $ {
+}
+
+declare namespace $.$$ {
+    class $mol_button extends $.$mol_button {
+        fiber(next?: $mol_fiber<any> | null): $mol_fiber<any> | null;
+        disabled(): boolean;
+        event_activate(next: Event): void;
+        event_key_press(event: KeyboardEvent): void;
+        tab_index(): number;
+        error(): string;
+        hint_or_error(): string;
+        sub_visible(): (string | number | boolean | $mol_view | Node | $mol_speck)[];
+    }
+}
+
+declare namespace $ {
+    class $mol_button_typed extends $mol_button {
+    }
+}
+
+declare namespace $ {
+}
+
+declare namespace $ {
+    class $mol_button_minor extends $mol_button_typed {
+    }
+}
+
+declare namespace $ {
 }
 
 declare namespace $ {
@@ -2694,7 +2694,6 @@ declare namespace $ {
         Add_option(id: any): $mol_button_minor;
         Text(): $$.$mol_textarea;
         Bool(): $mol_check_box;
-        String(): $$.$mol_string;
         Numb(): $$.$mol_number;
         Text_view(): $mol_view;
         Numb_view(): $mol_view;
@@ -2768,7 +2767,7 @@ declare namespace $.$$ {
         pick_allowed(): boolean;
         add_allowed(): boolean;
         drop_allowed(): boolean;
-        content(): ($mol_view | $mol_textarea)[];
+        content(): $mol_textarea[] | $mol_link[];
         link_content(id: number): ($mol_button_minor | $mol_drag)[];
         length_max(): number;
         text(next?: string): string;
