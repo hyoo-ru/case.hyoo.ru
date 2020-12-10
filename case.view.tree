@@ -274,7 +274,9 @@ $hyoo_case $mol_book2
 			meta-name *
 				en \Localizable
 				ru \Переводимое
-			meta-description * ru \Значение свойства зависит от языка
+			meta-description *
+				en \Propery value depends on language
+				ru \Значение свойства зависит от языка
 			property-owners / \text
 		property-main *
 			meta-kind / \boolean
@@ -282,7 +284,7 @@ $hyoo_case $mol_book2
 				en \Main
 				ru \Основное
 			meta-description *
-				ru \Shown in every entity views 
+				en \Shown in every entity views 
 				ru \Отображается во всех местах упоминания сущности
 			property-owners /
 				\link
@@ -295,7 +297,7 @@ $hyoo_case $mol_book2
 				en \Hidden
 				ru \Скрытое
 			meta-description *
-				ru \Shown only in edit mode
+				en \Shown only in edit mode
 				ru \Отображается лишь в режиме редактирования сущности
 			property-owners /
 				\link

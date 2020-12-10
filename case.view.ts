@@ -15,18 +15,34 @@ namespace $.$$ {
 			
 		}
 
+		@ $mol_mem
+		root() {
+			if( this.$.$mol_state_arg.value( 'case' ) === null ) {
+				new this.$.$mol_after_tick( ()=> {
+					this.$.$mol_state_arg.value( 'case', 'edit' )
+				} )
+			}
+			return this.entity( 'case' )
+		}
+
 		lang() {
-			return this.domain().entity( 'case' ).property( 'case-language' ).links()[0]?.id() ?? 'en'
+			return this.root().property( 'case-language' ).links()[0]?.id() ?? 'en'
 		}
 
 		Placeholder() {
-			return /#/.test( this.$.$mol_state_arg.href() ) ? null! : super.Placeholder()
+			
+			const home = this.$.$mol_state_arg.make_link({
+				[ this.root().id() ]: 'edit'
+			})
+			
+			return this.$.$mol_state_arg.href() === home ? super.Placeholder() : null!
+
 		}
 
 		pages() {
 			const params = this.$.$mol_state_arg.dict()
 			return [
-				this.Root_page( 'case' ),
+				this.Root_page( this.root().id() ),
 				... Object.keys( params )
 				.filter( key => key !== 'case' )
 				.map(
