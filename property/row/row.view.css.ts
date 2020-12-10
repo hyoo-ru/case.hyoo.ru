@@ -74,10 +74,10 @@ namespace $.$$ {
 
 		Title: {
 			padding: 0,
-			opacity: .75,
 			flex: {
 				grow: 0,
 			},
+			color: $mol_theme.shade,
 		},
 
 		Add_option: {

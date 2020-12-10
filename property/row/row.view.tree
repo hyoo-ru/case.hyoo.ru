@@ -44,8 +44,6 @@ $hyoo_case_property_row $mol_view
 	Numb $mol_number
 		hint \NaN
 		value?val <=> numb?val 0
-	Text_view $mol_view sub / <= text
-	Numb_view $mol_view sub / <= numb
 	Link_view!id $mol_link
 		arg <= link_arg!id *
 		sub <= link_content!id /

@@ -31,7 +31,7 @@ namespace $.$$ {
 				... this.add_allowed() ? [ this.Add() ] : [],
 				... this.pick_allowed() ? [ this.Pick() ] : [],
 				... this.type() === 'boolean' ? [ this.Bool() ] : [],
-				... this.type() === 'integer' ? [ this.editable() ? this.Numb() : this.Numb_view() ] : [],
+				... this.type() === 'integer' ? [ this.Numb() ] : [],
 				... this.content().length ? [ this.Content() ] : [],
 			]
 		}
