@@ -147,8 +147,8 @@ namespace $.$$ {
 
 		add_one( event: Event ) {
 			const options = this.property().kind().property_target()
-			if( options.length !== 1 ) return
-			this.add( options[0].id() )
+			if( options.length > 1 ) return
+			this.add( options[0]?.id() ?? this.property().entity().id() )
 			this.add_show( false )
 			event.preventDefault()
 		}
