@@ -2758,10 +2758,6 @@ declare namespace $ {
 }
 
 declare namespace $ {
-    function $mol_compare_array<Value extends ArrayLike<unknown>>(a: Value, b: Value): boolean;
-}
-
-declare namespace $ {
     function $hyoo_case_route_arg(this: $, source: $hyoo_case_entity, target: $hyoo_case_entity | null, editable?: boolean): Record<string, string | null>;
     function $hyoo_case_route_link(this: $, source: $hyoo_case_entity, target: $hyoo_case_entity, editable?: boolean): string;
     function $hyoo_case_route_go(this: $, source: $hyoo_case_entity, target: $hyoo_case_entity, editable?: boolean): void;

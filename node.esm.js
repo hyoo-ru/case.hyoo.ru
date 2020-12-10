@@ -9131,9 +9131,17 @@ var $;
         let keys = Object.keys(arg);
         const index_source = keys.indexOf(source.id());
         keys.splice(index_source + 1, 1000);
-        const scheme_target = target.meta_kind();
-        const index_target = keys.findIndex(id => this.$mol_compare_array(domain.entity(id).meta_kind(), scheme_target));
-        keys.splice(0, index_target + 1);
+        const scheme_target = target.meta_kind()[0];
+        if (domain.entity(keys[keys.length - 1]).meta_kind()[0] !== scheme_target) {
+            let index_target = keys.findIndex(id => domain.entity(id).meta_kind()[0] === scheme_target);
+            for (; index_target < keys.length; ++index_target) {
+                if (domain.entity(keys[index_target]).meta_kind()[0] !== scheme_target) {
+                    index_target--;
+                    break;
+                }
+            }
+            keys.splice(1, index_target);
+        }
         keys.push(target.id());
         if (editable !== this.undefined) {
             arg[target.id()] = editable ? 'edit' : '';
@@ -10358,9 +10366,7 @@ var $;
                         "boolean"
                     ],
                     "property-suggest": true,
-                    "property-populate": true,
-                    "property-min": 1,
-                    "property-max": 1
+                    "property-populate": true
                 },
                 "property-min": {
                     "meta-kind": [
