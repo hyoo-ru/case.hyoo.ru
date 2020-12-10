@@ -22,7 +22,8 @@ namespace $.$$ {
 		config_arg() {
 			return this.$.$hyoo_case_route_arg(
 				this.entity(),
-				this.kind()
+				this.kind(),
+				true,
 			)
 		}
 

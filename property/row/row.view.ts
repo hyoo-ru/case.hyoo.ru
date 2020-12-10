@@ -19,6 +19,7 @@ namespace $.$$ {
 			return this.$.$hyoo_case_route_arg(
 				this.property().entity(),
 				this.property().kind(),
+				true,
 			)
 		}
 
