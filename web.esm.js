@@ -3017,18 +3017,18 @@ var $;
             store.entity = $.$mol_const(this);
             return this.sub(id, store);
         }
+        property_owner() {
+            return this.property('property-owners').links();
+        }
         property_target() {
-            return this.property('property-target').links();
+            var _a;
+            return (_a = this.property_mutual()[0].property_owner()) !== null && _a !== void 0 ? _a : [];
         }
         meta_kind() {
             return this.property('meta-kind').links();
         }
-        property_kind() {
-            return this.property('property-kind').links();
-        }
         property_kind_id() {
-            var _a, _b;
-            return ((_b = (_a = this.property_kind()[0]) === null || _a === void 0 ? void 0 : _a.id()) !== null && _b !== void 0 ? _b : null);
+            return this.meta_kind()[0].id();
         }
         property_locale() {
             return Boolean(this.value('property-locale'));
@@ -3043,7 +3043,7 @@ var $;
             return Boolean(this.value('property-main'));
         }
         property_least() {
-            return this.property_kind_id() === 'property_link' || !this.property_main();
+            return this.property_kind_id() === 'link' || !this.property_main();
         }
         property_hidden() {
             return Boolean(this.value('property-hidden'));
@@ -3054,8 +3054,8 @@ var $;
         property_unit() {
             return String(this.value('property-unit'));
         }
-        property_back() {
-            return this.property('property-back').links();
+        property_mutual() {
+            return this.property('property-mutual').links();
         }
         property_min() {
             return this.property('property-min').integer();
@@ -3094,10 +3094,10 @@ var $;
             const chunks = [];
             for (const prop of this.properties_main()) {
                 switch (prop.kind().property_kind_id()) {
-                    case 'property_link':
-                    case 'property_boolean':
+                    case 'link':
+                    case 'boolean':
                         continue;
-                    case 'property_text':
+                    case 'text':
                         chunks.push(prop.text().trim());
                 }
             }
@@ -3850,10 +3850,10 @@ var $;
         filled() {
             var _a, _b;
             switch (this.kind().property_kind_id()) {
-                case 'property_link': return this.links().length > 0;
-                case 'property_text': return this.text().length > 0;
-                case 'property_integer': return ((_a = this.data()) !== null && _a !== void 0 ? _a : this.value_default()) != null;
-                case 'property_boolean': return ((_b = this.data()) !== null && _b !== void 0 ? _b : this.value_default()) != null;
+                case 'link': return this.links().length > 0;
+                case 'text': return this.text().length > 0;
+                case 'integer': return ((_a = this.data()) !== null && _a !== void 0 ? _a : this.value_default()) != null;
+                case 'boolean': return ((_b = this.data()) !== null && _b !== void 0 ? _b : this.value_default()) != null;
             }
         }
         text(next) {
@@ -3901,7 +3901,7 @@ var $;
         }
         back(index) {
             var _a, _b, _c;
-            return (_c = (_a = this.links()[index]) === null || _a === void 0 ? void 0 : _a.property((_b = this.kind().property_back()[0]) === null || _b === void 0 ? void 0 : _b.id())) !== null && _c !== void 0 ? _c : null;
+            return (_c = (_a = this.links()[index]) === null || _a === void 0 ? void 0 : _a.property((_b = this.kind().property_mutual()[0]) === null || _b === void 0 ? void 0 : _b.id())) !== null && _c !== void 0 ? _c : null;
         }
         target_new() {
             const target = this.domain().entity_new(...this.kind().property_target());
@@ -3915,7 +3915,7 @@ var $;
                 if (links.includes(target))
                     continue;
                 this.links(links = [target, ...links]);
-                for (const Back of this.kind().property_back()) {
+                for (const Back of this.kind().property_mutual()) {
                     const back = target.property(Back.id());
                     back.links([entity, ...back.links()]);
                 }
@@ -3958,64 +3958,109 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    class $mol_plugin extends $.$mol_view {
-        dom_node(next) {
-            const node = next || $.$mol_owning_get(this, $.$mol_view).dom_node();
-            $.$mol_dom_render_attributes(node, this.attr_static());
-            const events = this.event();
-            for (let event_name in events) {
-                node.addEventListener(event_name, $.$mol_fiber_root(events[event_name]), { passive: false });
-            }
-            return node;
+    class $mol_speck extends $.$mol_view {
+        attr() {
+            return Object.assign(Object.assign({}, super.attr()), { mol_theme: "$mol_theme_accent" });
         }
-        attr_static() {
-            return {};
+        style() {
+            return Object.assign(Object.assign({}, super.style()), { minHeight: "1em" });
         }
-        event() {
-            return {};
+        sub() {
+            return [
+                this.value()
+            ];
         }
-        render() {
-            this.dom_node_actual();
+        value() {
+            return null;
         }
     }
-    __decorate([
-        $.$mol_mem
-    ], $mol_plugin.prototype, "dom_node", null);
-    $.$mol_plugin = $mol_plugin;
+    $.$mol_speck = $mol_speck;
 })($ || ($ = {}));
-//plugin.js.map
+//speck.view.tree.js.map
 ;
 "use strict";
 var $;
 (function ($) {
-    class $mol_hotkey extends $.$mol_plugin {
-        event() {
-            return Object.assign(Object.assign({}, super.event()), { keydown: (event) => this.keydown(event) });
+    $.$mol_style_attach("mol/speck/speck.view.css", "[mol_speck] {\n\tfont-size: .75rem;\n\tborder-radius: 1rem;\n\tmargin: -.75em;\n\talign-self: flex-start;\n\tmin-height: 1em;\n\tmin-width: .5em;\n\tvertical-align: sub;\n\tpadding: .25em .5em;\n\tposition: absolute;\n\tz-index: 2;\n    text-align: center;\n    line-height: 1;\n    display: inline-block;\n\ttext-shadow: 1px 1px 0 black;\n}\n");
+})($ || ($ = {}));
+//speck.view.css.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    class $mol_button extends $.$mol_view {
+        enabled() {
+            return true;
         }
-        key() {
-            return {};
+        minimal_height() {
+            return 40;
         }
-        mod_ctrl() {
-            return false;
-        }
-        mod_alt() {
-            return false;
-        }
-        mod_shift() {
-            return false;
-        }
-        keydown(event) {
+        click(event) {
             if (event !== undefined)
                 return event;
             return null;
         }
+        event_click(event) {
+            if (event !== undefined)
+                return event;
+            return null;
+        }
+        event() {
+            return Object.assign(Object.assign({}, super.event()), { click: (event) => this.event_activate(event), keydown: (event) => this.event_key_press(event) });
+        }
+        attr() {
+            return Object.assign(Object.assign({}, super.attr()), { disabled: this.disabled(), role: "button", tabindex: this.tab_index(), title: this.hint_or_error() });
+        }
+        sub() {
+            return [
+                this.title()
+            ];
+        }
+        Speck() {
+            const obj = new this.$.$mol_speck();
+            return obj;
+        }
+        event_activate(event) {
+            if (event !== undefined)
+                return event;
+            return null;
+        }
+        event_key_press(event) {
+            if (event !== undefined)
+                return event;
+            return null;
+        }
+        disabled() {
+            return false;
+        }
+        tab_index() {
+            return 0;
+        }
+        hint() {
+            return "";
+        }
+        hint_or_error() {
+            return this.hint();
+        }
     }
     __decorate([
         $.$mol_mem
-    ], $mol_hotkey.prototype, "keydown", null);
-    $.$mol_hotkey = $mol_hotkey;
+    ], $mol_button.prototype, "click", null);
+    __decorate([
+        $.$mol_mem
+    ], $mol_button.prototype, "event_click", null);
+    __decorate([
+        $.$mol_mem
+    ], $mol_button.prototype, "Speck", null);
+    __decorate([
+        $.$mol_mem
+    ], $mol_button.prototype, "event_activate", null);
+    __decorate([
+        $.$mol_mem
+    ], $mol_button.prototype, "event_key_press", null);
+    $.$mol_button = $mol_button;
 })($ || ($ = {}));
-//hotkey.view.tree.js.map
+//button.view.tree.js.map
 ;
 "use strict";
 var $;
@@ -4125,6 +4170,168 @@ var $;
     })($mol_keyboard_code = $.$mol_keyboard_code || ($.$mol_keyboard_code = {}));
 })($ || ($ = {}));
 //code.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    $.$mol_style_attach("mol/button/button.view.css", "[mol_button] {\n\tborder: none;\n\tfont: inherit;\n\tdisplay: inline-flex;\n\tflex-shrink: 0;\n\ttext-decoration: inherit;\n\tcursor: inherit;\n\tposition: relative;\n\tbox-sizing: border-box;\n\tword-break: normal;\n\tcursor: default;\n\tuser-select: none;\n\tmin-width: 2.5rem;\n}\n[mol_button]:focus {\n\toutline: none;\n}\n");
+})($ || ($ = {}));
+//button.view.css.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        class $mol_button extends $.$mol_button {
+            fiber(next = null) { return next; }
+            disabled() {
+                return !this.enabled();
+            }
+            event_activate(next) {
+                if (!next)
+                    return;
+                if (!this.enabled())
+                    return;
+                this.fiber($.$mol_fiber.current);
+                this.event_click(next);
+                this.click(next);
+                if (this.fiber() === $.$mol_fiber.current) {
+                    this.fiber(null);
+                }
+            }
+            event_key_press(event) {
+                if (event.keyCode === $.$mol_keyboard_code.enter) {
+                    return this.event_activate(event);
+                }
+            }
+            tab_index() {
+                return this.enabled() ? super.tab_index() : -1;
+            }
+            error() {
+                var _a, _b;
+                try {
+                    (_a = this.fiber()) === null || _a === void 0 ? void 0 : _a.get();
+                    return '';
+                }
+                catch (error) {
+                    if (error instanceof Promise) {
+                        return $.$mol_fail_hidden(error);
+                    }
+                    return String((_b = error.message) !== null && _b !== void 0 ? _b : error);
+                }
+            }
+            hint_or_error() {
+                return this.error() || super.hint_or_error();
+            }
+            sub_visible() {
+                return [
+                    ...this.error() ? [this.Speck()] : [],
+                    ...this.sub(),
+                ];
+            }
+        }
+        __decorate([
+            $.$mol_mem
+        ], $mol_button.prototype, "fiber", null);
+        $$.$mol_button = $mol_button;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+//button.view.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    class $mol_button_typed extends $.$mol_button {
+    }
+    $.$mol_button_typed = $mol_button_typed;
+})($ || ($ = {}));
+//typed.view.tree.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    $.$mol_style_attach("mol/button/typed/typed.view.css", "[mol_button_typed] {\n\tdisplay: inline-block;\n\talign-content: center;\n\talign-items: center;\n\tvertical-align: middle;\n\ttext-align: center;\n\tpadding: var(--mol_gap_text);\n\tborder-radius: var(--mol_skin_round);\n}\n\n[mol_button_typed][disabled] {\n\tcolor: var(--mol_theme_text);\n\tpointer-events: none;\n}\n\n[mol_button_typed]:hover ,\n[mol_button_typed]:focus {\n\tcursor: pointer;\n\tbackground-color: var(--mol_theme_hover);\n}\n");
+})($ || ($ = {}));
+//typed.view.css.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    class $mol_button_minor extends $.$mol_button_typed {
+    }
+    $.$mol_button_minor = $mol_button_minor;
+})($ || ($ = {}));
+//minor.view.tree.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    $.$mol_style_attach("mol/button/minor/minor.view.css", "[mol_button_minor] {\n\tcolor: var(--mol_theme_control);\n}\n");
+})($ || ($ = {}));
+//minor.view.css.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    class $mol_plugin extends $.$mol_view {
+        dom_node(next) {
+            const node = next || $.$mol_owning_get(this, $.$mol_view).dom_node();
+            $.$mol_dom_render_attributes(node, this.attr_static());
+            const events = this.event();
+            for (let event_name in events) {
+                node.addEventListener(event_name, $.$mol_fiber_root(events[event_name]), { passive: false });
+            }
+            return node;
+        }
+        attr_static() {
+            return {};
+        }
+        event() {
+            return {};
+        }
+        render() {
+            this.dom_node_actual();
+        }
+    }
+    __decorate([
+        $.$mol_mem
+    ], $mol_plugin.prototype, "dom_node", null);
+    $.$mol_plugin = $mol_plugin;
+})($ || ($ = {}));
+//plugin.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    class $mol_hotkey extends $.$mol_plugin {
+        event() {
+            return Object.assign(Object.assign({}, super.event()), { keydown: (event) => this.keydown(event) });
+        }
+        key() {
+            return {};
+        }
+        mod_ctrl() {
+            return false;
+        }
+        mod_alt() {
+            return false;
+        }
+        mod_shift() {
+            return false;
+        }
+        keydown(event) {
+            if (event !== undefined)
+                return event;
+            return null;
+        }
+    }
+    __decorate([
+        $.$mol_mem
+    ], $mol_hotkey.prototype, "keydown", null);
+    $.$mol_hotkey = $mol_hotkey;
+})($ || ($ = {}));
+//hotkey.view.tree.js.map
 ;
 "use strict";
 var $;
@@ -4578,213 +4785,6 @@ var $;
     $.$mol_style_attach("mol/float/float.view.css", "[mol_float] {\n\tposition: sticky;\n\ttop: 0;\n\tleft: 0;\n\tz-index: 1;\n\topacity: 1;\n\ttransition: opacity .25s ease-in;\n\tdisplay: block;\n\tbackground: var(--mol_theme_back);\n\tbox-shadow: 0 0 .5rem hsla(0,0%,0%,.25);\n}\n\n");
 })($ || ($ = {}));
 //float.view.css.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    class $mol_speck extends $.$mol_view {
-        attr() {
-            return Object.assign(Object.assign({}, super.attr()), { mol_theme: "$mol_theme_accent" });
-        }
-        style() {
-            return Object.assign(Object.assign({}, super.style()), { minHeight: "1em" });
-        }
-        sub() {
-            return [
-                this.value()
-            ];
-        }
-        value() {
-            return null;
-        }
-    }
-    $.$mol_speck = $mol_speck;
-})($ || ($ = {}));
-//speck.view.tree.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    $.$mol_style_attach("mol/speck/speck.view.css", "[mol_speck] {\n\tfont-size: .75rem;\n\tborder-radius: 1rem;\n\tmargin: -.75em;\n\talign-self: flex-start;\n\tmin-height: 1em;\n\tmin-width: .5em;\n\tvertical-align: sub;\n\tpadding: .25em .5em;\n\tposition: absolute;\n\tz-index: 2;\n    text-align: center;\n    line-height: 1;\n    display: inline-block;\n\ttext-shadow: 1px 1px 0 black;\n}\n");
-})($ || ($ = {}));
-//speck.view.css.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    class $mol_button extends $.$mol_view {
-        enabled() {
-            return true;
-        }
-        minimal_height() {
-            return 40;
-        }
-        click(event) {
-            if (event !== undefined)
-                return event;
-            return null;
-        }
-        event_click(event) {
-            if (event !== undefined)
-                return event;
-            return null;
-        }
-        event() {
-            return Object.assign(Object.assign({}, super.event()), { click: (event) => this.event_activate(event), keydown: (event) => this.event_key_press(event) });
-        }
-        attr() {
-            return Object.assign(Object.assign({}, super.attr()), { disabled: this.disabled(), role: "button", tabindex: this.tab_index(), title: this.hint_or_error() });
-        }
-        sub() {
-            return [
-                this.title()
-            ];
-        }
-        Speck() {
-            const obj = new this.$.$mol_speck();
-            return obj;
-        }
-        event_activate(event) {
-            if (event !== undefined)
-                return event;
-            return null;
-        }
-        event_key_press(event) {
-            if (event !== undefined)
-                return event;
-            return null;
-        }
-        disabled() {
-            return false;
-        }
-        tab_index() {
-            return 0;
-        }
-        hint() {
-            return "";
-        }
-        hint_or_error() {
-            return this.hint();
-        }
-    }
-    __decorate([
-        $.$mol_mem
-    ], $mol_button.prototype, "click", null);
-    __decorate([
-        $.$mol_mem
-    ], $mol_button.prototype, "event_click", null);
-    __decorate([
-        $.$mol_mem
-    ], $mol_button.prototype, "Speck", null);
-    __decorate([
-        $.$mol_mem
-    ], $mol_button.prototype, "event_activate", null);
-    __decorate([
-        $.$mol_mem
-    ], $mol_button.prototype, "event_key_press", null);
-    $.$mol_button = $mol_button;
-})($ || ($ = {}));
-//button.view.tree.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    $.$mol_style_attach("mol/button/button.view.css", "[mol_button] {\n\tborder: none;\n\tfont: inherit;\n\tdisplay: inline-flex;\n\tflex-shrink: 0;\n\ttext-decoration: inherit;\n\tcursor: inherit;\n\tposition: relative;\n\tbox-sizing: border-box;\n\tword-break: normal;\n\tcursor: default;\n\tuser-select: none;\n}\n[mol_button]:focus {\n\toutline: none;\n}\n");
-})($ || ($ = {}));
-//button.view.css.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        class $mol_button extends $.$mol_button {
-            fiber(next = null) { return next; }
-            disabled() {
-                return !this.enabled();
-            }
-            event_activate(next) {
-                if (!next)
-                    return;
-                if (!this.enabled())
-                    return;
-                this.fiber($.$mol_fiber.current);
-                this.event_click(next);
-                this.click(next);
-                if (this.fiber() === $.$mol_fiber.current) {
-                    this.fiber(null);
-                }
-            }
-            event_key_press(event) {
-                if (event.keyCode === $.$mol_keyboard_code.enter) {
-                    return this.event_activate(event);
-                }
-            }
-            tab_index() {
-                return this.enabled() ? super.tab_index() : -1;
-            }
-            error() {
-                var _a, _b;
-                try {
-                    (_a = this.fiber()) === null || _a === void 0 ? void 0 : _a.get();
-                    return '';
-                }
-                catch (error) {
-                    if (error instanceof Promise) {
-                        return $.$mol_fail_hidden(error);
-                    }
-                    return String((_b = error.message) !== null && _b !== void 0 ? _b : error);
-                }
-            }
-            hint_or_error() {
-                return this.error() || super.hint_or_error();
-            }
-            sub_visible() {
-                return [
-                    ...this.error() ? [this.Speck()] : [],
-                    ...this.sub(),
-                ];
-            }
-        }
-        __decorate([
-            $.$mol_mem
-        ], $mol_button.prototype, "fiber", null);
-        $$.$mol_button = $mol_button;
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-//button.view.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    class $mol_button_typed extends $.$mol_button {
-    }
-    $.$mol_button_typed = $mol_button_typed;
-})($ || ($ = {}));
-//typed.view.tree.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    $.$mol_style_attach("mol/button/typed/typed.view.css", "[mol_button_typed] {\n\tdisplay: inline-block;\n\talign-content: center;\n\talign-items: center;\n\tvertical-align: middle;\n\ttext-align: center;\n\tpadding: var(--mol_gap_text);\n\tborder-radius: var(--mol_skin_round);\n}\n\n[mol_button_typed][disabled] {\n\tcolor: var(--mol_theme_text);\n\tpointer-events: none;\n}\n\n[mol_button_typed]:hover ,\n[mol_button_typed]:focus {\n\tcursor: pointer;\n\tbackground-color: var(--mol_theme_hover);\n}\n");
-})($ || ($ = {}));
-//typed.view.css.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    class $mol_button_minor extends $.$mol_button_typed {
-    }
-    $.$mol_button_minor = $mol_button_minor;
-})($ || ($ = {}));
-//minor.view.tree.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    $.$mol_style_attach("mol/button/minor/minor.view.css", "[mol_button_minor] {\n\tcolor: var(--mol_theme_control);\n}\n");
-})($ || ($ = {}));
-//minor.view.css.js.map
 ;
 "use strict";
 var $;
@@ -5886,6 +5886,7 @@ var $;
 "use strict";
 var $;
 (function ($) {
+    const { rem } = $.$mol_style_unit;
     $.$mol_style_define($.$mol_link, {
         textDecoration: 'none',
         color: $.$mol_theme.control,
@@ -5894,6 +5895,7 @@ var $;
         padding: $.$mol_gap.text,
         boxSizing: 'border-box',
         position: 'relative',
+        minWidth: rem(2.5),
         ':hover': {
             background: {
                 color: $.$mol_theme.hover,
@@ -7244,13 +7246,13 @@ var $;
             }
             title() {
                 switch (this.type()) {
-                    case 'property_link': {
+                    case 'link': {
                         const links = this.property().links();
                         if (links.length === 0)
                             return '';
                         return links.length.toString();
                     }
-                    default: return this.property().text();
+                    default: return this.property().text() || '…';
                 }
             }
             hint() {
@@ -7258,7 +7260,7 @@ var $;
             }
             max_width() {
                 let max = this.property().kind().property_max();
-                if (this.type() === 'property_integer') {
+                if (this.type() === 'integer') {
                     max = Math.ceil(Math.log10(max));
                 }
                 return max + 'rem';
@@ -8521,6 +8523,14 @@ var $;
                 this.Content()
             ];
         }
+        Add_option(id) {
+            const obj = new this.$.$mol_button_minor();
+            obj.click = (event) => this.add(id, event);
+            obj.sub = () => [
+                this.Add_option_snippet(id)
+            ];
+            return obj;
+        }
         Text() {
             const obj = new this.$.$mol_textarea();
             obj.value = (val) => this.text(val);
@@ -8592,7 +8602,10 @@ var $;
             ];
             return obj;
         }
-        add(event) {
+        add_hint() {
+            return this.$.$mol_locale.text('$hyoo_case_property_row_add_hint');
+        }
+        add_one(event) {
             if (event !== undefined)
                 return event;
             return null;
@@ -8601,14 +8614,34 @@ var $;
             const obj = new this.$.$mol_icon_plus();
             return obj;
         }
-        Add() {
+        Add_switch() {
             const obj = new this.$.$mol_button_minor();
-            obj.hint = () => this.$.$mol_locale.text('$hyoo_case_property_row_Add_hint');
-            obj.click = (event) => this.add(event);
+            obj.hint = () => this.add_hint();
+            obj.click = (event) => this.add_one(event);
             obj.sub = () => [
                 this.Add_icon()
             ];
             return obj;
+        }
+        add_options() {
+            return [];
+        }
+        Add_options() {
+            const obj = new this.$.$mol_list();
+            obj.rows = () => this.add_options();
+            return obj;
+        }
+        Add() {
+            const obj = new this.$.$mol_pop();
+            obj.Anchor = () => this.Add_switch();
+            obj.showed = () => this.add_show();
+            obj.bubble_content = () => [
+                this.Add_options()
+            ];
+            return obj;
+        }
+        add_show(val) {
+            return this.Add().focused(val);
         }
         pick(val) {
             if (val !== undefined)
@@ -8650,6 +8683,16 @@ var $;
         Content() {
             const obj = new this.$.$mol_list();
             obj.rows = () => this.content();
+            return obj;
+        }
+        add(id, event) {
+            if (event !== undefined)
+                return event;
+            return null;
+        }
+        Add_option_snippet(id) {
+            const obj = new this.$.$hyoo_case_entity_snippet();
+            obj.entity = () => this.entity(id);
             return obj;
         }
         text(val) {
@@ -8747,6 +8790,9 @@ var $;
         $.$mol_mem
     ], $hyoo_case_property_row.prototype, "property", null);
     __decorate([
+        $.$mol_mem_key
+    ], $hyoo_case_property_row.prototype, "Add_option", null);
+    __decorate([
         $.$mol_mem
     ], $hyoo_case_property_row.prototype, "Text", null);
     __decorate([
@@ -8784,10 +8830,16 @@ var $;
     ], $hyoo_case_property_row.prototype, "Title", null);
     __decorate([
         $.$mol_mem
-    ], $hyoo_case_property_row.prototype, "add", null);
+    ], $hyoo_case_property_row.prototype, "add_one", null);
     __decorate([
         $.$mol_mem
     ], $hyoo_case_property_row.prototype, "Add_icon", null);
+    __decorate([
+        $.$mol_mem
+    ], $hyoo_case_property_row.prototype, "Add_switch", null);
+    __decorate([
+        $.$mol_mem
+    ], $hyoo_case_property_row.prototype, "Add_options", null);
     __decorate([
         $.$mol_mem
     ], $hyoo_case_property_row.prototype, "Add", null);
@@ -8806,6 +8858,12 @@ var $;
     __decorate([
         $.$mol_mem
     ], $hyoo_case_property_row.prototype, "Content", null);
+    __decorate([
+        $.$mol_mem_key
+    ], $hyoo_case_property_row.prototype, "add", null);
+    __decorate([
+        $.$mol_mem_key
+    ], $hyoo_case_property_row.prototype, "Add_option_snippet", null);
     __decorate([
         $.$mol_mem
     ], $hyoo_case_property_row.prototype, "text", null);
@@ -8951,6 +9009,14 @@ var $;
                     grow: 0,
                 },
             },
+            Add_option: {
+                padding: 0,
+            },
+            Add_option_snippet: {
+                flex: {
+                    wrap: 'nowrap',
+                },
+            },
             Pick: {
                 flex: {
                     grow: 1000,
@@ -8987,7 +9053,7 @@ var $;
                 return this.property().kind().property_kind_id();
             }
             title_arg() {
-                return this.$.$hyoo_case_route_arg(this.property().entity(), this.property().kind());
+                return this.$.$hyoo_case_route_arg(this.property().entity(), this.property().kind(), true);
             }
             sub() {
                 return [
@@ -8995,8 +9061,8 @@ var $;
                     this.Title(),
                     ...this.add_allowed() ? [this.Add()] : [],
                     ...this.pick_allowed() ? [this.Pick()] : [],
-                    ...this.type() === 'property_boolean' ? [this.Bool()] : [],
-                    ...this.type() === 'property_integer' ? [this.editable() ? this.Numb() : this.Numb_view()] : [],
+                    ...this.type() === 'boolean' ? [this.Bool()] : [],
+                    ...this.type() === 'integer' ? [this.editable() ? this.Numb() : this.Numb_view()] : [],
                     ...this.content().length ? [this.Content()] : [],
                 ];
             }
@@ -9007,7 +9073,7 @@ var $;
                 return this.property().kind().property_populate();
             }
             expand_allowed() {
-                if (this.type() !== 'property_link')
+                if (this.type() !== 'link')
                     return false;
                 if (this.property().links().length === 0)
                     return false;
@@ -9021,7 +9087,7 @@ var $;
             pick_allowed() {
                 if (!this.editable())
                     return false;
-                if (this.type() !== 'property_link')
+                if (this.type() !== 'link')
                     return false;
                 const max = this.property().kind().property_max();
                 if (max > 1) {
@@ -9035,7 +9101,7 @@ var $;
                 return true;
             }
             add_allowed() {
-                if (this.type() !== 'property_link')
+                if (this.type() !== 'link')
                     return false;
                 if (this.property().links().length >= this.property().kind().property_max())
                     return false;
@@ -9046,7 +9112,7 @@ var $;
             drop_allowed() {
                 if (!this.editable())
                     return false;
-                if (this.type() !== 'property_link')
+                if (this.type() !== 'link')
                     return false;
                 if (this.property().links().length <= this.property().kind().property_min())
                     return false;
@@ -9054,9 +9120,9 @@ var $;
             }
             content() {
                 switch (this.type()) {
-                    case "property_text":
+                    case "text":
                         return [this.editable() ? this.Text() : this.Text_view()];
-                    case "property_link":
+                    case "link":
                         if (!this.expanded())
                             return [];
                         return this.property().links().map((_, i) => this.Link_view(i));
@@ -9091,10 +9157,27 @@ var $;
                 event === null || event === void 0 ? void 0 : event.preventDefault();
                 return this.property().target_tear(index);
             }
-            add() {
+            add_one(event) {
+                const options = this.property().kind().property_target();
+                if (options.length !== 1)
+                    return;
+                this.add(options[0].id());
+                this.add_show(false);
+                event.preventDefault();
+            }
+            add(kind) {
                 const prop = this.property();
-                const target = prop.target_new();
+                const kinds = prop.id() === 'meta-kind' ? [] : [prop.domain().entity(kind)];
+                const target = prop.domain().entity_new(...kinds);
+                prop.target_join(target);
                 this.$.$hyoo_case_route_go(prop.entity(), target, true);
+                this.add_show(false);
+            }
+            add_hint() {
+                return super.add_hint().replace('{entity}', this.property().kind().property_target()[0].title());
+            }
+            add_options() {
+                return this.property().kind().property_target().map(kind => this.Add_option(kind.id()));
             }
             pick_options() {
                 const exists = new Set(this.property().links());
@@ -9143,7 +9226,7 @@ var $;
                 const kind = target.meta_kind();
                 if (kind.length === 0)
                     return;
-                if (kind[0] !== this.property().kind().property_target()[0])
+                if (!this.property().kind().property_target().includes(kind[0]))
                     return;
                 return target;
             }
@@ -9190,6 +9273,9 @@ var $;
         __decorate([
             $.$mol_mem_key
         ], $hyoo_case_property_row.prototype, "link_arg", null);
+        __decorate([
+            $.$mol_mem
+        ], $hyoo_case_property_row.prototype, "add_options", null);
         $$.$hyoo_case_property_row = $hyoo_case_property_row;
     })($$ = $.$$ || ($.$$ = {}));
 })($ || ($ = {}));
@@ -9422,7 +9508,7 @@ var $;
                 return this.entity().property(id);
             }
             config_arg() {
-                return this.$.$hyoo_case_route_arg(this.entity(), this.kind());
+                return this.$.$hyoo_case_route_arg(this.entity(), this.kind(), true);
             }
             close_arg() {
                 return this.$.$hyoo_case_route_arg(this.entity(), null);
@@ -9740,7 +9826,7 @@ var $;
                     "meta-members": [
                         "meta",
                         "entity",
-                        "property"
+                        "property_type"
                     ]
                 },
                 entity: {
@@ -9768,47 +9854,8 @@ var $;
                         "language"
                     ]
                 },
-                property: {
-                    "meta-kind": [
-                        "meta"
-                    ],
-                    "meta-name": {
-                        en: "Property",
-                        ru: "Свойство"
-                    },
-                    "meta-icon": "✨",
-                    "meta-properties": [
-                        "meta-name",
-                        "property-kind",
-                        "property-owners",
-                        "property-main",
-                        "property-hidden",
-                        "property-suggest"
-                    ],
-                    "meta-members": [
-                        "meta-kind",
-                        "meta-name",
-                        "meta-description",
-                        "meta-members",
-                        "meta-properties",
-                        "property-target",
-                        "property-back",
-                        "property-owners",
-                        "property-min",
-                        "property-max",
-                        "property-main",
-                        "property-hidden",
-                        "property-suggest",
-                        "property-inherit",
-                        "property-populate",
-                        "property_text-default",
-                        "property_integer-default",
-                        "property_boolean-default",
-                        "case-language"
-                    ]
-                },
                 property_type: {
-                    "meta-icon": "🔱",
+                    "meta-icon": "✨",
                     "meta-kind": [
                         "meta"
                     ],
@@ -9819,38 +9866,54 @@ var $;
                     "meta-properties": [
                         "meta-icon",
                         "meta-name",
-                        "property-kind",
                         "property-owners",
                         "property-main",
                         "property-hidden",
                         "property-suggest"
                     ],
                     "meta-members": [
-                        "property_link",
-                        "property_text",
-                        "property_integer",
-                        "property_boolean"
+                        "link",
+                        "text",
+                        "integer",
+                        "boolean"
                     ]
                 },
-                property_link: {
+                link: {
                     "meta-kind": [
                         "property_type"
                     ],
                     "meta-name": {
-                        en: "Reference to entity",
-                        ru: "Ссылка на сущность"
+                        en: "Link",
+                        ru: "Связь"
+                    },
+                    "meta-description": {
+                        en: "Link to entity",
+                        ru: "Связь с другим объектом"
                     },
                     "meta-icon": "💫",
                     "meta-properties": [
+                        "meta-name",
+                        "meta-description",
+                        "property-mutual",
+                        "property-owners",
+                        "property-main",
+                        "property-hidden",
+                        "property-suggest",
                         "property-inherit",
                         "property-populate",
-                        "property-target",
-                        "property-back",
                         "property-min",
                         "property-max"
+                    ],
+                    "meta-members": [
+                        "meta-kind",
+                        "meta-members",
+                        "meta-properties",
+                        "property-mutual",
+                        "property-owners",
+                        "case-language"
                     ]
                 },
-                property_text: {
+                text: {
                     "meta-kind": [
                         "property_type"
                     ],
@@ -9860,13 +9923,24 @@ var $;
                     },
                     "meta-icon": "📃",
                     "meta-properties": [
+                        "meta-name",
+                        "meta-description",
+                        "property-owners",
+                        "property-main",
+                        "property-hidden",
+                        "property-suggest",
                         "property-locale",
-                        "property_text-default",
+                        "text-default",
                         "property-min",
                         "property-max"
+                    ],
+                    "meta-members": [
+                        "meta-name",
+                        "meta-description",
+                        "text-default"
                     ]
                 },
-                property_integer: {
+                integer: {
                     "meta-kind": [
                         "property_type"
                     ],
@@ -9876,12 +9950,23 @@ var $;
                     },
                     "meta-icon": "🎱",
                     "meta-properties": [
-                        "property_integer-default",
+                        "meta-name",
+                        "meta-description",
+                        "property-owners",
+                        "property-main",
+                        "property-hidden",
+                        "property-suggest",
+                        "integer-default",
                         "property-min",
                         "property-max"
+                    ],
+                    "meta-members": [
+                        "property-min",
+                        "property-max",
+                        "integer-default"
                     ]
                 },
-                property_boolean: {
+                boolean: {
                     "meta-kind": [
                         "property_type"
                     ],
@@ -9891,83 +9976,94 @@ var $;
                     },
                     "meta-icon": "🚩",
                     "meta-properties": [
-                        "property_boolean-default"
+                        "meta-name",
+                        "meta-description",
+                        "property-owners",
+                        "property-main",
+                        "property-hidden",
+                        "boolean-default"
+                    ],
+                    "meta-members": [
+                        "property-main",
+                        "property-hidden",
+                        "property-suggest",
+                        "property-inherit",
+                        "property-populate",
+                        "boolean-default"
                     ]
                 },
-                "property_text-default": {
+                "text-default": {
                     "meta-kind": [
-                        "property"
-                    ],
-                    "property-kind": [
-                        "property_text"
+                        "text"
                     ],
                     "meta-name": {
                         en: "Default value: Text",
                         ru: "Значение по умолчанию: Текст"
                     },
                     "property-owners": [
-                        "property"
+                        "text"
                     ]
                 },
-                "property_integer-default": {
+                "integer-default": {
                     "meta-kind": [
-                        "property"
-                    ],
-                    "property-kind": [
-                        "property_integer"
+                        "integer"
                     ],
                     "meta-name": {
                         en: "Default value: Integer",
                         ru: "Значение по умолчанию: Целое число"
                     },
                     "property-owners": [
-                        "property"
+                        "integer"
                     ]
                 },
-                "property_boolean-default": {
+                "boolean-default": {
                     "meta-kind": [
-                        "property"
-                    ],
-                    "property-kind": [
-                        "property_boolean"
+                        "boolean"
                     ],
                     "meta-name": {
                         en: "Default value: Boolean",
                         ru: "Значение по умолчанию: Флаг"
                     },
                     "property-owners": [
-                        "property"
+                        "boolean"
                     ]
                 },
                 "meta-kind": {
                     "meta-kind": [
-                        "property"
-                    ],
-                    "property-kind": [
-                        "property_link"
+                        "link"
                     ],
                     "meta-name": {
                         en: "Kind",
                         ru: "Тип"
                     },
-                    "property-target": [
-                        "meta"
-                    ],
                     "property-owners": [
                         "entity"
                     ],
-                    "property-back": [
+                    "property-mutual": [
                         "meta-members"
                     ],
                     "property-min": 1,
                     "property-max": 1
                 },
+                "meta-members": {
+                    "meta-kind": [
+                        "link"
+                    ],
+                    "meta-name": {
+                        en: "Instances",
+                        ru: "Экземпляры"
+                    },
+                    "property-populate": true,
+                    "property-mutual": [
+                        "meta-kind"
+                    ],
+                    "property-owners": [
+                        "entity"
+                    ]
+                },
                 "meta-icon": {
                     "meta-kind": [
-                        "property"
-                    ],
-                    "property-kind": [
-                        "property_text"
+                        "text"
                     ],
                     "meta-name": {
                         en: "Icon",
@@ -9981,10 +10077,7 @@ var $;
                 },
                 "meta-name": {
                     "meta-kind": [
-                        "property"
-                    ],
-                    "property-kind": [
-                        "property_text"
+                        "text"
                     ],
                     "meta-name": {
                         en: "Name",
@@ -9999,10 +10092,7 @@ var $;
                 },
                 "meta-description": {
                     "meta-kind": [
-                        "property"
-                    ],
-                    "property-kind": [
-                        "property_text"
+                        "text"
                     ],
                     "meta-name": {
                         en: "Description",
@@ -10013,41 +10103,15 @@ var $;
                         "entity"
                     ]
                 },
-                "meta-members": {
-                    "meta-kind": [
-                        "property"
-                    ],
-                    "property-kind": [
-                        "property_link"
-                    ],
-                    "meta-name": {
-                        en: "Instances",
-                        ru: "Экземпляры"
-                    },
-                    "property-populate": true,
-                    "property-target": [],
-                    "property-back": [
-                        "meta-kind"
-                    ],
-                    "property-owners": [
-                        "entity"
-                    ]
-                },
                 "meta-properties": {
                     "meta-kind": [
-                        "property"
-                    ],
-                    "property-kind": [
-                        "property_link"
+                        "link"
                     ],
                     "meta-name": {
                         en: "Properties",
                         ru: "Свойства"
                     },
-                    "property-target": [
-                        "property"
-                    ],
-                    "property-back": [
+                    "property-mutual": [
                         "property-owners"
                     ],
                     "property-owners": [
@@ -10056,226 +10120,175 @@ var $;
                     "property-hidden": true,
                     "property-populate": true
                 },
+                "property-owners": {
+                    "meta-kind": [
+                        "link"
+                    ],
+                    "meta-name": {
+                        en: "Property owners",
+                        ru: "Владельцы свойства"
+                    },
+                    "property-mutual": [
+                        "meta-properties"
+                    ],
+                    "property-owners": [
+                        "link",
+                        "text",
+                        "integer",
+                        "boolean"
+                    ],
+                    "property-suggest": true,
+                    "property-populate": true,
+                    "property-min": 1,
+                    "property-max": 1
+                },
                 "property-min": {
                     "meta-kind": [
-                        "property"
-                    ],
-                    "property-kind": [
-                        "property_integer"
+                        "integer"
                     ],
                     "meta-name": {
                         en: "Min value",
                         ru: "Минимальное число"
                     },
                     "property-owners": [
-                        "property"
+                        "link",
+                        "text",
+                        "integer"
                     ]
                 },
                 "property-max": {
                     "meta-kind": [
-                        "property"
-                    ],
-                    "property-kind": [
-                        "property_integer"
+                        "integer"
                     ],
                     "meta-name": {
                         en: "Max value",
                         ru: "Максимальное число"
                     },
                     "property-owners": [
-                        "property"
+                        "link",
+                        "text",
+                        "integer"
                     ],
-                    "property_integer-default": Infinity
+                    "integer-default": Infinity
                 },
                 "property-locale": {
                     "meta-kind": [
-                        "property"
-                    ],
-                    "property-kind": [
-                        "property_boolean"
+                        "boolean"
                     ],
                     "meta-name": {
                         en: "Localizable",
                         ru: "Переводимое"
                     },
                     "meta-description": {
+                        en: "Propery value depends on language",
                         ru: "Значение свойства зависит от языка"
                     },
                     "property-owners": [
-                        "property"
+                        "text"
                     ]
                 },
                 "property-main": {
                     "meta-kind": [
-                        "property"
-                    ],
-                    "property-kind": [
-                        "property_boolean"
+                        "boolean"
                     ],
                     "meta-name": {
                         en: "Main",
                         ru: "Основное"
                     },
                     "meta-description": {
-                        ru: "Свойство отображается во всех местах упоминания сущности"
+                        en: "Shown in every entity views ",
+                        ru: "Отображается во всех местах упоминания сущности"
                     },
                     "property-owners": [
-                        "property"
+                        "link",
+                        "text",
+                        "integer",
+                        "boolean"
                     ]
                 },
                 "property-hidden": {
                     "meta-kind": [
-                        "property"
-                    ],
-                    "property-kind": [
-                        "property_boolean"
+                        "boolean"
                     ],
                     "meta-name": {
                         en: "Hidden",
                         ru: "Скрытое"
                     },
                     "meta-description": {
-                        ru: "Свойство отображается лишь в режиме редактирования сущности"
+                        en: "Shown only in edit mode",
+                        ru: "Отображается лишь в режиме редактирования сущности"
                     },
                     "property-owners": [
-                        "property"
+                        "link",
+                        "text",
+                        "integer",
+                        "boolean"
                     ]
                 },
                 "property-suggest": {
                     "meta-kind": [
-                        "property"
-                    ],
-                    "property-kind": [
-                        "property_boolean"
+                        "boolean"
                     ],
                     "meta-name": {
-                        en: "Suggest from existing",
-                        ru: "Подсказывать из существующих"
+                        en: "Suggest",
+                        ru: "Подсказки"
+                    },
+                    "meta-description": {
+                        en: "Suggest from existing values",
+                        ru: "Подсказывать из существующих значений"
                     },
                     "property-owners": [
-                        "property"
+                        "link",
+                        "text",
+                        "integer"
                     ]
                 },
                 "property-populate": {
                     "meta-kind": [
-                        "property"
-                    ],
-                    "property-kind": [
-                        "property_boolean"
+                        "boolean"
                     ],
                     "meta-name": {
+                        en: "Creating",
+                        ru: "Создающее"
+                    },
+                    "meta-description": {
                         en: "Taget creation allowed",
                         ru: "Разрешено ли создавать новые цели"
                     },
                     "property-owners": [
-                        "property"
+                        "link"
                     ]
                 },
                 "property-inherit": {
                     "meta-kind": [
-                        "property"
-                    ],
-                    "property-kind": [
-                        "property_boolean"
+                        "boolean"
                     ],
                     "meta-name": {
+                        en: "Inherits",
+                        ru: "Наследует"
+                    },
+                    "meta-description": {
                         en: "Inherits properties in target",
                         ru: "Наследует свойства у цели"
                     },
                     "property-owners": [
-                        "property"
+                        "link"
                     ]
                 },
-                "property-kind": {
+                "property-mutual": {
                     "meta-kind": [
-                        "property"
-                    ],
-                    "property-kind": [
-                        "property_link"
-                    ],
-                    "meta-name": {
-                        en: "Property type",
-                        ru: "Тип свойства"
-                    },
-                    "property-inherit": true,
-                    "property-suggest": true,
-                    "property-min": 1,
-                    "property-max": 1,
-                    "property-target": [
-                        "property_type"
-                    ],
-                    "property-owners": [
-                        "property"
-                    ]
-                },
-                "property-target": {
-                    "meta-kind": [
-                        "property"
-                    ],
-                    "property-kind": [
-                        "property_link"
-                    ],
-                    "meta-name": {
-                        en: "References to entity",
-                        ru: "Указывает на сущность"
-                    },
-                    "property-target": [
-                        "entity"
-                    ],
-                    "property-owners": [
-                        "property"
-                    ],
-                    "property-suggest": true,
-                    "property-populate": true,
-                    "property-min": 1,
-                    "property-max": 1
-                },
-                "property-back": {
-                    "meta-kind": [
-                        "property"
-                    ],
-                    "property-kind": [
-                        "property_link"
+                        "link"
                     ],
                     "meta-name": {
                         en: "Mutual property from target",
                         ru: "Взаимное свойство в целевом типе"
                     },
-                    "property-target": [
-                        "property"
-                    ],
                     "property-owners": [
-                        "property"
+                        "link"
                     ],
-                    "property-back": [
-                        "property-back"
+                    "property-mutual": [
+                        "property-mutual"
                     ],
-                    "property-suggest": true,
-                    "property-populate": true,
-                    "property-min": 1,
-                    "property-max": 1
-                },
-                "property-owners": {
-                    "meta-kind": [
-                        "property"
-                    ],
-                    "property-kind": [
-                        "property_link"
-                    ],
-                    "meta-name": {
-                        en: "Property owners",
-                        ru: "Владельцы свойства"
-                    },
-                    "property-target": [
-                        "entity"
-                    ],
-                    "property-back": [
-                        "meta-properties"
-                    ],
-                    "property-owners": [
-                        "entity"
-                    ],
-                    "property-suggest": true,
                     "property-populate": true,
                     "property-min": 1,
                     "property-max": 1
@@ -10300,24 +10313,37 @@ var $;
                 },
                 "case-language": {
                     "meta-kind": [
-                        "property"
-                    ],
-                    "property-kind": [
-                        "property_link"
+                        "link"
                     ],
                     "meta-name": {
                         en: "Interface language",
                         ru: "Язык интерфейса"
                     },
-                    "property-target": [
-                        "language"
-                    ],
                     "property-owners": [
                         "case"
+                    ],
+                    "property-mutual": [
+                        "language-case"
                     ],
                     "property-suggest": true,
                     "property-min": 1,
                     "property-max": 1
+                },
+                "language-case": {
+                    "meta-kind": [
+                        "link"
+                    ],
+                    "meta-name": {
+                        en: "Selected in case",
+                        ru: "Выбран в кейсе"
+                    },
+                    "property-owners": [
+                        "language"
+                    ],
+                    "property-mutual": [
+                        "case-language"
+                    ],
+                    "property-suggest": true
                 },
                 language: {
                     "meta-kind": [
@@ -10329,7 +10355,8 @@ var $;
                         ru: "Язык"
                     },
                     "meta-properties": [
-                        "meta-name"
+                        "meta-name",
+                        "language-case"
                     ],
                     "meta-members": [
                         "en",
@@ -10524,17 +10551,28 @@ var $;
                     }
                 });
             }
+            root() {
+                if (this.$.$mol_state_arg.value('case') === null) {
+                    new this.$.$mol_after_tick(() => {
+                        this.$.$mol_state_arg.value('case', 'edit');
+                    });
+                }
+                return this.entity('case');
+            }
             lang() {
                 var _a, _b;
-                return (_b = (_a = this.domain().entity('case').property('case-language').links()[0]) === null || _a === void 0 ? void 0 : _a.id()) !== null && _b !== void 0 ? _b : 'en';
+                return (_b = (_a = this.root().property('case-language').links()[0]) === null || _a === void 0 ? void 0 : _a.id()) !== null && _b !== void 0 ? _b : 'en';
             }
             Placeholder() {
-                return /#/.test(this.$.$mol_state_arg.href()) ? null : super.Placeholder();
+                const home = this.$.$mol_state_arg.make_link({
+                    [this.root().id()]: 'edit'
+                });
+                return this.$.$mol_state_arg.href() === home ? super.Placeholder() : null;
             }
             pages() {
                 const params = this.$.$mol_state_arg.dict();
                 return [
-                    this.Root_page('case'),
+                    this.Root_page(this.root().id()),
                     ...Object.keys(params)
                         .filter(key => key !== 'case')
                         .map(id => this.Entity_page(id))
@@ -10558,6 +10596,9 @@ var $;
         __decorate([
             $.$mol_memo.field
         ], $hyoo_case.prototype, "$", null);
+        __decorate([
+            $.$mol_mem
+        ], $hyoo_case.prototype, "root", null);
         __decorate([
             $.$mol_mem
         ], $hyoo_case.prototype, "domain", null);

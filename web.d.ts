@@ -989,7 +989,7 @@ declare namespace $ {
         data(next?: Data): Data;
         snapshot(next?: string): string;
         value<Key extends keyof Data>(key: Key, next?: Data[Key]): NonNullable<Data[Key]>;
-        sub<Key extends keyof Data, Lens extends $mol_store<Data[Key]> = $mol_store<Data[Key]>>(key: Key, lens?: Lens): NonNullable<Lens>;
+        sub<Key extends keyof Data, Lens extends $mol_store<Data[Key]> = $mol_store<NonNullable<Data[Key]>>>(key: Key, lens?: Lens): NonNullable<Lens>;
         reset(): void;
     }
 }
@@ -1011,10 +1011,10 @@ declare namespace $ {
         id(): string;
         domain(): $hyoo_case_domain;
         property(id: string): $hyoo_case_property;
+        property_owner(): $hyoo_case_entity[];
         property_target(): $hyoo_case_entity[];
         meta_kind(): $hyoo_case_entity[];
-        property_kind(): $hyoo_case_entity[];
-        property_kind_id(): "property_text" | "property_integer" | "property_boolean" | "property_link" | null;
+        property_kind_id(): "boolean" | "text" | "integer" | "link";
         property_locale(): boolean;
         property_suggest(): boolean;
         property_populate(): boolean;
@@ -1023,7 +1023,7 @@ declare namespace $ {
         property_hidden(): boolean;
         property_inherit(): boolean;
         property_unit(): string;
-        property_back(): $hyoo_case_entity[];
+        property_mutual(): $hyoo_case_entity[];
         property_min(): number;
         property_max(): number;
         properties(): $hyoo_case_property[];
@@ -1194,7 +1194,7 @@ declare namespace $ {
         entity(): $hyoo_case_entity;
         domain(): $hyoo_case_domain;
         kind(): $hyoo_case_entity;
-        filled(): boolean | undefined;
+        filled(): boolean;
         text(next?: string): string;
         integer(next?: number): number;
         bool(next?: boolean): boolean;
@@ -1209,28 +1209,45 @@ declare namespace $ {
 }
 
 declare namespace $ {
-    class $mol_plugin extends $mol_view {
-        dom_node(next?: Element): Element;
-        attr_static(): {
-            [key: string]: string | number | boolean;
+    class $mol_speck extends $mol_view {
+        attr(): {
+            mol_theme: string;
         };
-        event(): {
-            [key: string]: (event: Event) => void;
+        style(): {
+            minHeight: string;
         };
-        render(): void;
+        sub(): readonly any[];
+        value(): any;
     }
 }
 
 declare namespace $ {
-    class $mol_hotkey extends $mol_plugin {
+}
+
+declare namespace $ {
+    class $mol_button extends $mol_view {
+        enabled(): boolean;
+        minimal_height(): number;
+        click(event?: any): any;
+        event_click(event?: any): any;
         event(): {
+            click: (event?: any) => any;
             keydown: (event?: any) => any;
         };
-        key(): {};
-        mod_ctrl(): boolean;
-        mod_alt(): boolean;
-        mod_shift(): boolean;
-        keydown(event?: any): any;
+        attr(): {
+            disabled: boolean;
+            role: string;
+            tabindex: number;
+            title: string;
+        };
+        sub(): readonly (string | number | boolean | $mol_view | Node)[];
+        Speck(): $mol_speck;
+        event_activate(event?: any): any;
+        event_key_press(event?: any): any;
+        disabled(): boolean;
+        tab_index(): number;
+        hint(): string;
+        hint_or_error(): string;
     }
 }
 
@@ -1336,6 +1353,64 @@ declare namespace $ {
         slashBackLeft = 226,
         bracketClose = 221,
         quoteSingle = 222
+    }
+}
+
+declare namespace $ {
+}
+
+declare namespace $.$$ {
+    class $mol_button extends $.$mol_button {
+        fiber(next?: $mol_fiber<any> | null): $mol_fiber<any> | null;
+        disabled(): boolean;
+        event_activate(next: Event): void;
+        event_key_press(event: KeyboardEvent): void;
+        tab_index(): number;
+        error(): string;
+        hint_or_error(): string;
+        sub_visible(): (string | number | boolean | $mol_view | Node | $mol_speck)[];
+    }
+}
+
+declare namespace $ {
+    class $mol_button_typed extends $mol_button {
+    }
+}
+
+declare namespace $ {
+}
+
+declare namespace $ {
+    class $mol_button_minor extends $mol_button_typed {
+    }
+}
+
+declare namespace $ {
+}
+
+declare namespace $ {
+    class $mol_plugin extends $mol_view {
+        dom_node(next?: Element): Element;
+        attr_static(): {
+            [key: string]: string | number | boolean;
+        };
+        event(): {
+            [key: string]: (event: Event) => void;
+        };
+        render(): void;
+    }
+}
+
+declare namespace $ {
+    class $mol_hotkey extends $mol_plugin {
+        event(): {
+            keydown: (event?: any) => any;
+        };
+        key(): {};
+        mod_ctrl(): boolean;
+        mod_alt(): boolean;
+        mod_shift(): boolean;
+        keydown(event?: any): any;
     }
 }
 
@@ -1559,81 +1634,6 @@ declare namespace $ {
         style(): {
             minHeight: string;
         };
-    }
-}
-
-declare namespace $ {
-}
-
-declare namespace $ {
-    class $mol_speck extends $mol_view {
-        attr(): {
-            mol_theme: string;
-        };
-        style(): {
-            minHeight: string;
-        };
-        sub(): readonly any[];
-        value(): any;
-    }
-}
-
-declare namespace $ {
-}
-
-declare namespace $ {
-    class $mol_button extends $mol_view {
-        enabled(): boolean;
-        minimal_height(): number;
-        click(event?: any): any;
-        event_click(event?: any): any;
-        event(): {
-            click: (event?: any) => any;
-            keydown: (event?: any) => any;
-        };
-        attr(): {
-            disabled: boolean;
-            role: string;
-            tabindex: number;
-            title: string;
-        };
-        sub(): readonly (string | number | boolean | $mol_view | Node)[];
-        Speck(): $mol_speck;
-        event_activate(event?: any): any;
-        event_key_press(event?: any): any;
-        disabled(): boolean;
-        tab_index(): number;
-        hint(): string;
-        hint_or_error(): string;
-    }
-}
-
-declare namespace $ {
-}
-
-declare namespace $.$$ {
-    class $mol_button extends $.$mol_button {
-        fiber(next?: $mol_fiber<any> | null): $mol_fiber<any> | null;
-        disabled(): boolean;
-        event_activate(next: Event): void;
-        event_key_press(event: KeyboardEvent): void;
-        tab_index(): number;
-        error(): string;
-        hint_or_error(): string;
-        sub_visible(): (string | number | boolean | $mol_view | Node | $mol_speck)[];
-    }
-}
-
-declare namespace $ {
-    class $mol_button_typed extends $mol_button {
-    }
-}
-
-declare namespace $ {
-}
-
-declare namespace $ {
-    class $mol_button_minor extends $mol_button_typed {
     }
 }
 
@@ -2395,7 +2395,7 @@ declare namespace $.$$ {
 
 declare namespace $.$$ {
     class $hyoo_case_property_snippet extends $.$hyoo_case_property_snippet {
-        type(): "property_text" | "property_integer" | "property_boolean" | "property_link" | null;
+        type(): "boolean" | "text" | "integer" | "link";
         title(): string;
         hint(): string;
         max_width(): string;
@@ -2704,6 +2704,7 @@ declare namespace $ {
         editable(): boolean;
         property(): $hyoo_case_property;
         sub(): readonly any[];
+        Add_option(id: any): $mol_button_minor;
         Text(): $$.$mol_textarea;
         Bool(): $mol_check_box;
         String(): $$.$mol_string;
@@ -2717,9 +2718,14 @@ declare namespace $ {
         kind(): $hyoo_case_entity;
         Title_snippet(): $$.$hyoo_case_entity_snippet;
         Title(): $$.$mol_link;
-        add(event?: any): any;
+        add_hint(): string;
+        add_one(event?: any): any;
         Add_icon(): $mol_icon_plus;
-        Add(): $mol_button_minor;
+        Add_switch(): $mol_button_minor;
+        add_options(): readonly any[];
+        Add_options(): $$.$mol_list;
+        Add(): $$.$mol_pop;
+        add_show(val?: any): boolean;
         pick(val?: any): any;
         pick_options(): readonly string[];
         entity(id: any): $hyoo_case_entity;
@@ -2729,6 +2735,8 @@ declare namespace $ {
         pick_query(): string;
         content(): readonly any[];
         Content(): $$.$mol_list;
+        add(id: any, event?: any): any;
+        Add_option_snippet(id: any): $$.$hyoo_case_entity_snippet;
         text(val?: any): any;
         length_max(): number;
         bool(val?: any): any;
@@ -2767,9 +2775,9 @@ declare namespace $.$$ {
     class $hyoo_case_property_row extends $.$hyoo_case_property_row {
         kind(): $hyoo_case_entity;
         title(): string;
-        type(): "property_text" | "property_integer" | "property_boolean" | "property_link" | null;
+        type(): "boolean" | "text" | "integer" | "link";
         title_arg(): Record<string, string | null>;
-        sub(): ($mol_view | $mol_check_expand | $mol_number | $mol_select | $mol_check_box)[];
+        sub(): ($mol_view | $mol_check_expand | $mol_number | $mol_pop | $mol_select | $mol_check_box)[];
         suggest(): boolean;
         populate(): boolean;
         expand_allowed(): boolean;
@@ -2786,7 +2794,10 @@ declare namespace $.$$ {
         link_arg(index: number): Record<string, string | null>;
         link_entity(index: number): $hyoo_case_entity;
         drop(index: number, event?: Event): void;
-        add(): void;
+        add_one(event: Event): void;
+        add(kind: string): void;
+        add_hint(): string;
+        add_options(): $mol_button_minor[];
         pick_options(): string[];
         pick_option_title(id: string): string;
         entity(id: string): $hyoo_case_entity;
@@ -2980,6 +2991,7 @@ declare namespace $.$$ {
 declare namespace $.$$ {
     class $hyoo_case extends $.$hyoo_case {
         get $(): typeof $.$$;
+        root(): $hyoo_case_entity;
         lang(): string;
         Placeholder(): $mol_frame;
         pages(): $hyoo_case_entity_page[];
