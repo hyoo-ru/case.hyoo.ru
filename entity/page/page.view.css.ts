@@ -24,7 +24,7 @@ namespace $.$$ {
 		},
 
 		Property: {
-			padding: [ rem(.75), 0 ],
+			padding: rem(.25),
 		},
 
 	} )

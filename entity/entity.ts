@@ -25,7 +25,7 @@ namespace $ {
 		}
 
 		property_target() {
-			return this.property_mutual()[0].property_owner() ?? []
+			return this.property_mutual()[0]?.property_owner() ?? []
 		}
 
 		meta_kind() {

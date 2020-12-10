@@ -93,6 +93,7 @@ namespace $.$$ {
 			flex: {
 				grow: 1000,
 			},
+			width: rem(8),
 			margin: [ 0, rem(.75) ],
 		},
 

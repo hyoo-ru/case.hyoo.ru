@@ -162,10 +162,6 @@ namespace $.$$ {
 			this.add_show( false )
 		}
 
-		add_hint() {
-			return super.add_hint().replace( '{entity}', this.property().kind().property_target()[0].title() )
-		}
-
 		@ $mol_mem
 		add_options() {
 			return this.property().kind().property_target().map( kind => this.Add_option( kind.id() ) )
