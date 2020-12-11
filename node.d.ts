@@ -1048,6 +1048,7 @@ declare namespace $ {
         property_populate(): boolean;
         property_main(): boolean;
         property_least(): boolean;
+        property_embed(): boolean;
         property_hidden(): boolean;
         property_inherit(): boolean;
         property_unit(): string;
@@ -2704,12 +2705,18 @@ declare namespace $ {
     class $hyoo_case_property_row extends $mol_view {
         editable(): boolean;
         property(): $hyoo_case_property;
+        attr(): {
+            hyoo_case_property_row_size: string;
+        };
         sub(): readonly any[];
         Add_option(id: any): $mol_button_minor;
         Text(): $$.$mol_textarea;
         Bool(): $mol_check_box;
         Numb(): $$.$mol_number;
-        Link_view(id: any): $$.$mol_link;
+        Link_row(id: any): $mol_view;
+        Link_link(id: any): $$.$mol_link;
+        Link_form(id: any): $$.$hyoo_case_entity_form;
+        size(): string;
         expanded(val?: any): any;
         Expand(): $$.$mol_check_expand;
         title_arg(): {};
@@ -2735,24 +2742,26 @@ declare namespace $ {
         Content(): $$.$mol_list;
         add(id: any, event?: any): any;
         Add_option_snippet(id: any): $$.$hyoo_case_entity_snippet;
+        text_hint(): string;
         text(val?: any): any;
         length_max(): number;
         bool(val?: any): any;
         numb(val?: any): any;
-        link_arg(id: any): {};
         link_title(id: any): string;
         link_html(id: any): string;
         link_uri(id: any): string;
         transfer_adopt(transfer?: any): any;
         receive_before(id: any, obj?: any): any;
-        link_entity(id: any): $hyoo_case_entity;
-        Link_snippet(id: any): $$.$hyoo_case_entity_snippet;
+        Link_view(id: any): $mol_view;
         Link_drop(id: any): $$.$mol_drop;
         Link_drag(id: any): $$.$mol_drag;
         drop(id: any, event?: any): any;
         Drop_icon(id: any): $mol_icon_cross;
         Drop(id: any): $mol_button_minor;
         link_content(id: any): readonly any[];
+        link_arg(id: any): {};
+        link_entity(id: any): $hyoo_case_entity;
+        Link_snippet(id: any): $$.$hyoo_case_entity_snippet;
     }
 }
 
@@ -2774,15 +2783,20 @@ declare namespace $.$$ {
         sub(): ($mol_link | $mol_list | $mol_check_expand | $mol_number | $mol_pop | $mol_select | $mol_check_box)[];
         suggest(): boolean;
         populate(): boolean;
+        title_need(): boolean;
+        size(): "large" | "small";
         expand_allowed(): boolean;
         expanded(next?: boolean): boolean;
         pick_allowed(): boolean;
         add_allowed(): boolean;
         drop_allowed(): boolean;
-        content(): $mol_textarea[] | $mol_link[];
+        content(): $mol_view[] | $mol_textarea[];
+        Link_view(id: number): $mol_link | $hyoo_case_entity_form;
         link_content(id: number): ($mol_button_minor | $mol_drag)[];
+        embed(): boolean;
         length_max(): number;
         text(next?: string): string;
+        text_hint(): string;
         numb(next?: number): number;
         bool(next?: boolean): boolean;
         link_arg(index: number): Record<string, string | null>;

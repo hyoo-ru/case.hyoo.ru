@@ -3336,6 +3336,9 @@ var $;
         property_least() {
             return this.property_kind_id() === 'link' || !this.property_main();
         }
+        property_embed() {
+            return Boolean(this.value('property-embed'));
+        }
         property_hidden() {
             return Boolean(this.value('property-hidden'));
         }
@@ -3435,6 +3438,7 @@ var $;
         }
         Title() {
             const obj = new this.$.$mol_view();
+            obj.dom_name = () => "h1";
             obj.sub = () => [
                 this.title()
             ];
@@ -3548,15 +3552,18 @@ var $;
                 zIndex: 1,
             },
             Title: {
+                minHeight: rem(2),
+                padding: $.$mol_gap.text,
+                wordBreak: 'normal',
+                textShadow: '0 0',
+                font: {
+                    size: 'inherit',
+                },
                 flex: {
                     grow: 1000,
                     shrink: 1,
                     basis: 'auto',
                 },
-                minHeight: rem(2),
-                padding: $.$mol_gap.text,
-                wordBreak: 'normal',
-                textShadow: '0 0',
             },
             Tools: {
                 flex: {
@@ -8756,6 +8763,9 @@ var $;
             const obj = new this.$.$hyoo_case_property();
             return obj;
         }
+        attr() {
+            return Object.assign(Object.assign({}, super.attr()), { hyoo_case_property_row_size: this.size() });
+        }
         sub() {
             return [
                 this.Expand(),
@@ -8775,7 +8785,7 @@ var $;
         }
         Text() {
             const obj = new this.$.$mol_textarea();
-            obj.hint = () => "…";
+            obj.hint = () => this.text_hint();
             obj.value = (val) => this.text(val);
             obj.length_max = () => this.length_max();
             return obj;
@@ -8791,11 +8801,27 @@ var $;
             obj.value = (val) => this.numb(val);
             return obj;
         }
-        Link_view(id) {
-            const obj = new this.$.$mol_link();
-            obj.arg = () => this.link_arg(id);
+        Link_row(id) {
+            const obj = new this.$.$mol_view();
             obj.sub = () => this.link_content(id);
             return obj;
+        }
+        Link_link(id) {
+            const obj = new this.$.$mol_link();
+            obj.arg = () => this.link_arg(id);
+            obj.sub = () => [
+                this.Link_snippet(id)
+            ];
+            return obj;
+        }
+        Link_form(id) {
+            const obj = new this.$.$hyoo_case_entity_form();
+            obj.entity = () => this.link_entity(id);
+            obj.editable = () => this.editable();
+            return obj;
+        }
+        size() {
+            return "large";
         }
         expanded(val) {
             if (val !== undefined)
@@ -8921,6 +8947,9 @@ var $;
             obj.entity = () => this.entity(id);
             return obj;
         }
+        text_hint() {
+            return "…";
+        }
         text(val) {
             if (val !== undefined)
                 return val;
@@ -8938,9 +8967,6 @@ var $;
             if (val !== undefined)
                 return val;
             return 0;
-        }
-        link_arg(id) {
-            return {};
         }
         link_title(id) {
             return "";
@@ -8961,20 +8987,15 @@ var $;
                 return obj;
             return null;
         }
-        link_entity(id) {
-            const obj = new this.$.$hyoo_case_entity();
-            return obj;
-        }
-        Link_snippet(id) {
-            const obj = new this.$.$hyoo_case_entity_snippet();
-            obj.entity = () => this.link_entity(id);
+        Link_view(id) {
+            const obj = new this.$.$mol_view();
             return obj;
         }
         Link_drop(id) {
             const obj = new this.$.$mol_drop();
             obj.adopt = (transfer) => this.transfer_adopt(transfer);
             obj.receive = (obj) => this.receive_before(id, obj);
-            obj.Sub = () => this.Link_snippet(id);
+            obj.Sub = () => this.Link_view(id);
             return obj;
         }
         Link_drag(id) {
@@ -9011,6 +9032,18 @@ var $;
                 this.Drop(id)
             ];
         }
+        link_arg(id) {
+            return {};
+        }
+        link_entity(id) {
+            const obj = new this.$.$hyoo_case_entity();
+            return obj;
+        }
+        Link_snippet(id) {
+            const obj = new this.$.$hyoo_case_entity_snippet();
+            obj.entity = () => this.link_entity(id);
+            return obj;
+        }
     }
     __decorate([
         $.$mol_mem
@@ -9029,7 +9062,13 @@ var $;
     ], $hyoo_case_property_row.prototype, "Numb", null);
     __decorate([
         $.$mol_mem_key
-    ], $hyoo_case_property_row.prototype, "Link_view", null);
+    ], $hyoo_case_property_row.prototype, "Link_row", null);
+    __decorate([
+        $.$mol_mem_key
+    ], $hyoo_case_property_row.prototype, "Link_link", null);
+    __decorate([
+        $.$mol_mem_key
+    ], $hyoo_case_property_row.prototype, "Link_form", null);
     __decorate([
         $.$mol_mem
     ], $hyoo_case_property_row.prototype, "expanded", null);
@@ -9098,10 +9137,7 @@ var $;
     ], $hyoo_case_property_row.prototype, "receive_before", null);
     __decorate([
         $.$mol_mem_key
-    ], $hyoo_case_property_row.prototype, "link_entity", null);
-    __decorate([
-        $.$mol_mem_key
-    ], $hyoo_case_property_row.prototype, "Link_snippet", null);
+    ], $hyoo_case_property_row.prototype, "Link_view", null);
     __decorate([
         $.$mol_mem_key
     ], $hyoo_case_property_row.prototype, "Link_drop", null);
@@ -9117,6 +9153,12 @@ var $;
     __decorate([
         $.$mol_mem_key
     ], $hyoo_case_property_row.prototype, "Drop", null);
+    __decorate([
+        $.$mol_mem_key
+    ], $hyoo_case_property_row.prototype, "link_entity", null);
+    __decorate([
+        $.$mol_mem_key
+    ], $hyoo_case_property_row.prototype, "Link_snippet", null);
     $.$hyoo_case_property_row = $hyoo_case_property_row;
 })($ || ($ = {}));
 //row.view.tree.js.map
@@ -9131,7 +9173,9 @@ var $;
         const arg = Object.assign({}, this.$mol_state_arg.dict());
         let keys = Object.keys(arg);
         const index_source = keys.indexOf(source.id());
-        keys.splice(index_source + 1, 1000);
+        if (index_source >= 0) {
+            keys.splice(index_source + 1, 1000);
+        }
         const scheme_target = target.meta_kind()[0];
         if (domain.entity(keys[keys.length - 1]).meta_kind()[0] !== scheme_target) {
             let index_target = keys.findIndex(id => domain.entity(id).meta_kind()[0] === scheme_target);
@@ -9181,6 +9225,16 @@ var $;
             flex: {
                 wrap: 'wrap',
             },
+            '@': {
+                hyoo_case_property_row_size: {
+                    large: {
+                        padding: rem(.75),
+                    },
+                    small: {
+                        padding: [0, rem(.75)],
+                    },
+                },
+            },
             $mol_string: {
                 background: {
                     color: 'transparent',
@@ -9217,8 +9271,14 @@ var $;
                     grow: 1,
                 },
             },
-            Link_view: {
+            Link_form: {
+                padding: $.$mol_gap.block
+            },
+            Link_link: {
                 padding: 0,
+                flex: {
+                    grow: 1,
+                },
             },
             Content: {
                 flex: {
@@ -9288,7 +9348,7 @@ var $;
             sub() {
                 return [
                     ...this.expand_allowed() ? [this.Expand()] : [],
-                    this.Title(),
+                    ...this.title_need() ? [this.Title()] : [],
                     ...this.add_allowed() ? [this.Add()] : [],
                     ...this.pick_allowed() ? [this.Pick()] : [],
                     ...this.type() === 'boolean' ? [this.Bool()] : [],
@@ -9302,16 +9362,35 @@ var $;
             populate() {
                 return this.property().kind().property_populate();
             }
+            title_need() {
+                if (this.editable())
+                    return true;
+                if (this.type() === 'text')
+                    return false;
+                if (this.type() === 'link') {
+                    if (!this.embed()) {
+                        if (this.property().links().length === 1) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            size() {
+                return this.title_need() ? 'large' : 'small';
+            }
             expand_allowed() {
                 if (this.type() !== 'link')
                     return false;
-                if (this.property().links().length === 0)
+                if (this.property().links().length < 2)
                     return false;
                 return true;
             }
             expanded(next) {
                 var _a;
-                const key = `$hyoo_case_property_row:expanded:${this.property().id()}`;
+                if (!this.expand_allowed())
+                    return true;
+                const key = `$hyoo_case_property_row:expanded:${this.property().entity().id()}:${this.property().id()}`;
                 return (_a = this.$.$mol_state_session.value(key, next)) !== null && _a !== void 0 ? _a : true;
             }
             pick_allowed() {
@@ -9326,6 +9405,9 @@ var $;
                     return false;
                 if (this.pick_options().length === 0)
                     return false;
+                if (!this.title_need()) {
+                    return false;
+                }
                 return true;
             }
             add_allowed() {
@@ -9353,9 +9435,12 @@ var $;
                     case "link":
                         if (!this.expanded())
                             return [];
-                        return this.property().links().map((_, i) => this.Link_view(i));
+                        return this.property().links().map((_, i) => this.Link_row(i));
                     default: return [];
                 }
+            }
+            Link_view(id) {
+                return this.embed() ? this.Link_form(id) : this.Link_link(id);
             }
             link_content(id) {
                 return [
@@ -9363,11 +9448,17 @@ var $;
                     ...this.drop_allowed() ? [this.Drop(id)] : [],
                 ];
             }
+            embed() {
+                return this.property().kind().property_embed();
+            }
             length_max() {
                 return this.property().kind().property_max();
             }
             text(next) {
                 return this.property().text(next);
+            }
+            text_hint() {
+                return this.property().kind().title() + super.text_hint();
             }
             numb(next) {
                 return this.property().integer(next);
@@ -9399,7 +9490,9 @@ var $;
                 const kinds = prop.id() === 'meta-kind' ? [] : [prop.domain().entity(kind)];
                 const target = prop.domain().entity_new(...kinds);
                 prop.target_join(target);
-                this.$.$hyoo_case_route_go(prop.entity(), target, true);
+                if (!this.embed()) {
+                    this.$.$hyoo_case_route_go(prop.entity(), target);
+                }
                 this.add_show(false);
             }
             add_options() {
@@ -9480,6 +9573,9 @@ var $;
         ], $hyoo_case_property_row.prototype, "sub", null);
         __decorate([
             $.$mol_mem
+        ], $hyoo_case_property_row.prototype, "title_need", null);
+        __decorate([
+            $.$mol_mem
         ], $hyoo_case_property_row.prototype, "expand_allowed", null);
         __decorate([
             $.$mol_mem
@@ -9496,6 +9592,9 @@ var $;
         __decorate([
             $.$mol_mem
         ], $hyoo_case_property_row.prototype, "content", null);
+        __decorate([
+            $.$mol_mem_key
+        ], $hyoo_case_property_row.prototype, "Link_view", null);
         __decorate([
             $.$mol_mem_key
         ], $hyoo_case_property_row.prototype, "link_arg", null);
@@ -9546,7 +9645,7 @@ var $;
     ], $hyoo_case_entity_form.prototype, "property", null);
     $.$hyoo_case_entity_form = $hyoo_case_entity_form;
 })($ || ($ = {}));
-//page.view.tree.js.map
+//form.view.tree.js.map
 ;
 "use strict";
 var $;
@@ -9555,14 +9654,14 @@ var $;
     (function ($$) {
         const { rem } = $.$mol_style_unit;
         $.$mol_style_define($$.$hyoo_case_entity_form, {
-            padding: $.$mol_gap.block,
-            Property: {
-                padding: rem(.25),
+            flex: {
+                grow: 1,
             },
+            Property: {},
         });
     })($$ = $.$$ || ($.$$ = {}));
 })($ || ($ = {}));
-//page.view.css.js.map
+//form.view.css.js.map
 ;
 "use strict";
 var $;
@@ -9576,7 +9675,6 @@ var $;
             property_list() {
                 let props = this.entity().properties();
                 if (!this.editable()) {
-                    props = props.filter(prop => prop.kind().property_least());
                     props = props.filter(prop => !prop.kind().property_hidden());
                 }
                 return props.map(property => this.Property(property.id()));
@@ -9591,7 +9689,7 @@ var $;
         $$.$hyoo_case_entity_form = $hyoo_case_entity_form;
     })($$ = $.$$ || ($.$$ = {}));
 })($ || ($ = {}));
-//page.view.js.map
+//form.view.js.map
 ;
 "use strict";
 var $;
@@ -10059,7 +10157,7 @@ var $;
                         en: "Meta",
                         ru: "Мета"
                     },
-                    "meta-icon": "🌌",
+                    "meta-icon": "💥",
                     "meta-description": {
                         en: "Kind that has other kinds as members",
                         ru: "Тип представителями которого являются другие типы"
@@ -10147,6 +10245,7 @@ var $;
                         "property-owners",
                         "property-main",
                         "property-hidden",
+                        "property-embed",
                         "property-suggest",
                         "property-inherit",
                         "property-populate",
@@ -10238,6 +10337,7 @@ var $;
                         "property-suggest",
                         "property-inherit",
                         "property-populate",
+                        "property-embed",
                         "boolean-default"
                     ]
                 },
@@ -10519,6 +10619,22 @@ var $;
                         "link"
                     ]
                 },
+                "property-embed": {
+                    "meta-kind": [
+                        "boolean"
+                    ],
+                    "meta-name": {
+                        en: "Ebedding",
+                        ru: "Встраивает"
+                    },
+                    "meta-description": {
+                        en: "Embeds linked entities to interface of this",
+                        ru: "Встраивает связанные сущности в интерфейс этой"
+                    },
+                    "property-owners": [
+                        "link"
+                    ]
+                },
                 "property-mutual": {
                     "meta-kind": [
                         "link"
@@ -10587,13 +10703,14 @@ var $;
                     "property-mutual": [
                         "case-language"
                     ],
-                    "property-suggest": true
+                    "property-suggest": true,
+                    "property-hidden": true
                 },
                 language: {
                     "meta-kind": [
                         "entity"
                     ],
-                    "meta-icon": "🏳‍🌈",
+                    "meta-icon": "🏁",
                     "meta-name": {
                         en: "Language",
                         ru: "Язык"

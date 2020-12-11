@@ -21,6 +21,7 @@ $mol_page $mol_view
 			minimal_height 64
 			sub <= head /
 				<= Title $mol_view
+					dom_name \h1
 					sub /
 						<= title
 				<= Tools $mol_view
@@ -534,6 +535,9 @@ $mol_drag $mol_ghost
 $hyoo_case_property_row $mol_view
 	editable false
 	property $hyoo_case_property
+	attr *
+		^
+		hyoo_case_property_row_size <= size \large
 	sub /
 		<= Expand $mol_check_expand
 			expanded?val <=> expanded?val true
@@ -569,7 +573,7 @@ $hyoo_case_property_row $mol_view
 			<= Add_option_snippet!id $hyoo_case_entity_snippet
 				entity <= entity!id $hyoo_case_entity
 	Text $mol_textarea
-		hint \…
+		hint <= text_hint \…
 		value?val <=> text?val \
 		length_max <= length_max Infinity
 	Bool $mol_check_box
@@ -577,8 +581,7 @@ $hyoo_case_property_row $mol_view
 	Numb $mol_number
 		hint \NaN
 		value?val <=> numb?val 0
-	Link_view!id $mol_link
-		arg <= link_arg!id *
+	Link_row!id $mol_view
 		sub <= link_content!id /
 			<= Link_drag!id $mol_drag
 				transfer *
@@ -588,14 +591,20 @@ $hyoo_case_property_row $mol_view
 				Sub <= Link_drop!id $mol_drop
 					adopt?transfer <=> transfer_adopt?transfer null
 					receive?obj <=> receive_before!id?obj null
-					Sub <= Link_snippet!id $hyoo_case_entity_snippet
-						entity <= link_entity!id $hyoo_case_entity
+					Sub <= Link_view!id $mol_view
 			<= Drop!id $mol_button_minor
 				hint @ \Drop link
 				click?event <=> drop!id?event null
 				sub /
 					<= Drop_icon!id $mol_icon_cross
-
+	Link_link!id $mol_link
+		arg <= link_arg!id *
+		sub /
+			<= Link_snippet!id $hyoo_case_entity_snippet
+				entity <= link_entity!id $hyoo_case_entity
+	Link_form!id $hyoo_case_entity_form
+		entity <= link_entity!id $hyoo_case_entity
+		editable <= editable
 
 
 $hyoo_case_entity_form $mol_list
@@ -691,7 +700,7 @@ $hyoo_case $mol_book2
 			meta-name *
 				en \Meta
 				ru \Мета
-			meta-icon \🌌
+			meta-icon \💥
 			meta-description *
 				en \Kind that has other kinds as members
 				ru \Тип представителями которого являются другие типы
@@ -758,6 +767,7 @@ $hyoo_case $mol_book2
 				\property-owners
 				\property-main
 				\property-hidden
+				\property-embed
 				\property-suggest
 				\property-inherit
 				\property-populate
@@ -830,6 +840,7 @@ $hyoo_case $mol_book2
 				\property-suggest
 				\property-inherit
 				\property-populate
+				\property-embed
 				\boolean-default
 		text-default *
 			meta-kind / \text
@@ -995,6 +1006,15 @@ $hyoo_case $mol_book2
 				en \Inherits properties in target
 				ru \Наследует свойства у цели
 			property-owners / \link
+		property-embed *
+			meta-kind / \boolean
+			meta-name *
+				en \Ebedding
+				ru \Встраивает
+			meta-description *
+				en \Embeds linked entities to interface of this
+				ru \Встраивает связанные сущности в интерфейс этой
+			property-owners / \link
 		property-mutual *
 			meta-kind / \link
 			meta-name *
@@ -1034,9 +1054,10 @@ $hyoo_case $mol_book2
 			property-owners / \language
 			property-mutual / \case-language
 			property-suggest true
+			property-hidden true
 		language *
 			meta-kind / \entity
-			meta-icon \🏳‍🌈
+			meta-icon \🏁
 			meta-name *
 				en \Language
 				ru \Язык
