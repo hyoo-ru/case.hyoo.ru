@@ -50,7 +50,7 @@ $hyoo_case $mol_book2
 			meta-icon \🌟
 			meta-description *
 				en \Base kind for all entity kinds
-				ru \Базовый тип для типо прикладных сущностей
+				ru \Базовый тип для типов прикладных сущностей
 			meta-properties /
 				\meta-icon
 				\meta-name
@@ -274,7 +274,7 @@ $hyoo_case $mol_book2
 				en \Localizable
 				ru \Переводимое
 			meta-description *
-				en \Propery value depends on language
+				en \Property value depends on language
 				ru \Значение свойства зависит от языка
 			property-owners / \text
 		property-main *
@@ -321,7 +321,7 @@ $hyoo_case $mol_book2
 				en \Creating
 				ru \Создающее
 			meta-description *
-				en \Taget creation allowed
+				en \Target creation allowed
 				ru \Разрешено ли создавать новые цели
 			property-owners / \link
 		property-inherit *
