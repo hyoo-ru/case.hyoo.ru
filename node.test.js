@@ -3243,6 +3243,9 @@ var $;
         reset() {
             this.data(this.data_default);
         }
+        active() {
+            return true;
+        }
     }
     __decorate([
         $.$mol_mem
@@ -4548,7 +4551,8 @@ var $;
             }
             max_width() {
                 let max = this.property().kind().property_max();
-                if (this.type() === 'integer') {
+                const type = this.type();
+                if (type === 'integer' || type === 'link') {
                     max = Math.ceil(Math.log10(max));
                 }
                 return max + 'rem';
