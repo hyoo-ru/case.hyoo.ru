@@ -9369,6 +9369,8 @@ var $;
                     return true;
                 if (this.type() === 'text')
                     return false;
+                if (this.add_allowed())
+                    return true;
                 if (this.type() === 'link') {
                     if (!this.embed()) {
                         if (this.property().links().length === 1) {
@@ -9493,7 +9495,7 @@ var $;
                 const target = prop.domain().entity_new(...kinds);
                 prop.target_join(target);
                 if (!this.embed()) {
-                    this.$.$hyoo_case_route_go(prop.entity(), target);
+                    this.$.$hyoo_case_route_go(prop.entity(), target, true);
                 }
                 this.add_show(false);
             }
@@ -10296,7 +10298,7 @@ var $;
                     ],
                     "meta-name": {
                         en: "Integer",
-                        ru: "Целое число"
+                        ru: "Число"
                     },
                     "meta-icon": "🎱",
                     "meta-properties": [
@@ -10421,6 +10423,7 @@ var $;
                         "entity"
                     ],
                     "property-main": true,
+                    "property-hidden": true,
                     "property-max": 2
                 },
                 "meta-name": {
@@ -10436,6 +10439,7 @@ var $;
                         "entity"
                     ],
                     "property-main": true,
+                    "property-hidden": true,
                     "property-max": 100
                 },
                 "meta-description": {
@@ -10688,6 +10692,7 @@ var $;
                         "language-case"
                     ],
                     "property-suggest": true,
+                    "property-hidden": true,
                     "property-min": 1,
                     "property-max": 1
                 },

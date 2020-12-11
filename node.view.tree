@@ -805,7 +805,7 @@ $hyoo_case $mol_book2
 			meta-kind / \property_type
 			meta-name *
 				en \Integer
-				ru \Целое число
+				ru \Число
 			meta-icon \🎱
 			meta-properties /
 				\meta-name
@@ -883,6 +883,7 @@ $hyoo_case $mol_book2
 				ru \Иконка
 			property-owners / \entity
 			property-main true
+			property-hidden true
 			property-max 2
 		meta-name *
 			meta-kind / \text
@@ -892,6 +893,7 @@ $hyoo_case $mol_book2
 			property-locale true
 			property-owners / \entity
 			property-main true
+			property-hidden true
 			property-max 100
 		meta-description *
 			meta-kind / \text
@@ -1044,6 +1046,7 @@ $hyoo_case $mol_book2
 			property-owners / \case
 			property-mutual / \language-case
 			property-suggest true
+			property-hidden true
 			property-min 1
 			property-max 1
 		language-case *
