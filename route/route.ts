@@ -15,7 +15,9 @@ namespace $ {
 		let keys = Object.keys( arg )
 		
 		const index_source = keys.indexOf( source.id() )
-		keys.splice( index_source + 1, 1000 )
+		if( index_source >= 0 ) {
+			keys.splice( index_source + 1, 1000 )
+		}
 		
 		const scheme_target = target.meta_kind()[0]
 		if( domain.entity( keys[ keys.length - 1 ] ).meta_kind()[0] !== scheme_target ) {

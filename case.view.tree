@@ -27,7 +27,7 @@ $hyoo_case $mol_book2
 			meta-name *
 				en \Meta
 				ru \Мета
-			meta-icon \🌌
+			meta-icon \💥
 			meta-description *
 				en \Kind that has other kinds as members
 				ru \Тип представителями которого являются другие типы
@@ -94,6 +94,7 @@ $hyoo_case $mol_book2
 				\property-owners
 				\property-main
 				\property-hidden
+				\property-embed
 				\property-suggest
 				\property-inherit
 				\property-populate
@@ -166,6 +167,7 @@ $hyoo_case $mol_book2
 				\property-suggest
 				\property-inherit
 				\property-populate
+				\property-embed
 				\boolean-default
 		text-default *
 			meta-kind / \text
@@ -331,6 +333,15 @@ $hyoo_case $mol_book2
 				en \Inherits properties in target
 				ru \Наследует свойства у цели
 			property-owners / \link
+		property-embed *
+			meta-kind / \boolean
+			meta-name *
+				en \Ebedding
+				ru \Встраивает
+			meta-description *
+				en \Embeds linked entities to interface of this
+				ru \Встраивает связанные сущности в интерфейс этой
+			property-owners / \link
 		property-mutual *
 			meta-kind / \link
 			meta-name *
@@ -370,9 +381,10 @@ $hyoo_case $mol_book2
 			property-owners / \language
 			property-mutual / \case-language
 			property-suggest true
+			property-hidden true
 		language *
 			meta-kind / \entity
-			meta-icon \🏳‍🌈
+			meta-icon \🏁
 			meta-name *
 				en \Language
 				ru \Язык

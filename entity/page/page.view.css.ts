@@ -19,10 +19,6 @@ namespace $.$$ {
 			basis: rem(30),
 		},
 
-		// Property_list: {
-		// 	padding: $mol_gap.block,
-		// },
-
 	} )
 
 }

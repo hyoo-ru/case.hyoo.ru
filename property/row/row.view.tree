@@ -1,6 +1,9 @@
 $hyoo_case_property_row $mol_view
 	editable false
 	property $hyoo_case_property
+	attr *
+		^
+		hyoo_case_property_row_size <= size \large
 	sub /
 		<= Expand $mol_check_expand
 			expanded?val <=> expanded?val true
@@ -36,7 +39,7 @@ $hyoo_case_property_row $mol_view
 			<= Add_option_snippet!id $hyoo_case_entity_snippet
 				entity <= entity!id $hyoo_case_entity
 	Text $mol_textarea
-		hint \…
+		hint <= text_hint \…
 		value?val <=> text?val \
 		length_max <= length_max Infinity
 	Bool $mol_check_box
@@ -44,8 +47,7 @@ $hyoo_case_property_row $mol_view
 	Numb $mol_number
 		hint \NaN
 		value?val <=> numb?val 0
-	Link_view!id $mol_link
-		arg <= link_arg!id *
+	Link_row!id $mol_view
 		sub <= link_content!id /
 			<= Link_drag!id $mol_drag
 				transfer *
@@ -55,12 +57,18 @@ $hyoo_case_property_row $mol_view
 				Sub <= Link_drop!id $mol_drop
 					adopt?transfer <=> transfer_adopt?transfer null
 					receive?obj <=> receive_before!id?obj null
-					Sub <= Link_snippet!id $hyoo_case_entity_snippet
-						entity <= link_entity!id $hyoo_case_entity
+					Sub <= Link_view!id $mol_view
 			<= Drop!id $mol_button_minor
 				hint @ \Drop link
 				click?event <=> drop!id?event null
 				sub /
 					<= Drop_icon!id $mol_icon_cross
-
+	Link_link!id $mol_link
+		arg <= link_arg!id *
+		sub /
+			<= Link_snippet!id $hyoo_case_entity_snippet
+				entity <= link_entity!id $hyoo_case_entity
+	Link_form!id $hyoo_case_entity_form
+		entity <= link_entity!id $hyoo_case_entity
+		editable <= editable
 

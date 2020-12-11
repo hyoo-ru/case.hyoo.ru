@@ -9,6 +9,17 @@ namespace $.$$ {
 			wrap: 'wrap',
 		},
 
+		'@': {
+			hyoo_case_property_row_size: {
+				large: {
+					padding: rem(.75),
+				},
+				small: {
+					padding: [ 0, rem(.75) ],
+				},
+			},
+		},
+
 		$mol_string: {
 			background: {
 				color: 'transparent',
@@ -47,8 +58,15 @@ namespace $.$$ {
 			},
 		},
 
-		Link_view: {
+		Link_form: {
+			padding: $mol_gap.block
+		},
+
+		Link_link: {
 			padding: 0,
+			flex: {
+				grow: 1,
+			},
 		},
 
 		Content: {

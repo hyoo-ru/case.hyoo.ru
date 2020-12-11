@@ -27,7 +27,7 @@ namespace $.$$ {
 		sub() {
 			return [
 				... this.expand_allowed() ? [ this.Expand() ] : [],
-				this.Title(),
+				... this.title_need() ? [ this.Title() ] : [],
 				... this.add_allowed() ? [ this.Add() ] : [],
 				... this.pick_allowed() ? [ this.Pick() ] : [],
 				... this.type() === 'boolean' ? [ this.Bool() ] : [],
@@ -45,15 +45,34 @@ namespace $.$$ {
 		}
 
 		@ $mol_mem
+		title_need() {
+			if( this.editable() ) return true
+			if( this.type() === 'text' ) return false
+			if( this.type() === 'link' ) {
+				if( !this.embed() ) {
+					if( this.property().links().length === 1 ) {
+						return false
+					}
+				}
+			}
+			return true
+		}
+
+		size() {
+			return this.title_need() ? 'large' : 'small'
+		}
+
+		@ $mol_mem
 		expand_allowed() {
 			if( this.type() !== 'link' ) return false
-			if( this.property().links().length === 0 ) return false
+			if( this.property().links().length < 2 ) return false
 			return true
 		}
 
 		@ $mol_mem
 		expanded( next?: boolean ) {
-			const key = `$hyoo_case_property_row:expanded:${ this.property().id() }`
+			if( !this.expand_allowed() ) return true
+			const key = `$hyoo_case_property_row:expanded:${ this.property().entity().id() }:${ this.property().id() }`
 			return this.$.$mol_state_session.value( key, next ) ?? true
 		}
 
@@ -68,6 +87,12 @@ namespace $.$$ {
 
 			if( !this.suggest() ) return false
 			if( this.pick_options().length === 0 ) return false
+
+			
+			if( !this.title_need() ) {
+				return false
+			}
+
 			return true
 		}
 		
@@ -97,10 +122,15 @@ namespace $.$$ {
 				
 				case "link":
 					if( !this.expanded() ) return []
-					return this.property().links().map( ( _, i )=> this.Link_view( i ) )
+					return this.property().links().map( ( _, i )=> this.Link_row( i ) )
 				
 				default: return []
 			}
+		}
+
+		@ $mol_mem_key
+		Link_view( id: number ) {
+			return  this.embed() ? this.Link_form( id ) : this.Link_link( id )
 		}
 
 		link_content( id: number ) {
@@ -110,12 +140,20 @@ namespace $.$$ {
 			]
 		}
 
+		embed() {
+			return this.property().kind().property_embed()
+		}
+
 		length_max() {
 			return this.property().kind().property_max()
 		}
 
 		text( next? : string ) {
 			return this.property().text( next )
+		}
+
+		text_hint() {
+			return this.property().kind().title() + super.text_hint()
 		}
 
 		numb( next? : number ) {
@@ -158,7 +196,9 @@ namespace $.$$ {
 			const kinds = prop.id() === 'meta-kind' ? [] : [ prop.domain().entity( kind ) ]
 			const target = prop.domain().entity_new( ... kinds )
 			prop.target_join( target )
-			this.$.$hyoo_case_route_go( prop.entity(), target, true )
+			if( !this.embed() ) {
+				this.$.$hyoo_case_route_go( prop.entity(), target )
+			}
 			this.add_show( false )
 		}
 

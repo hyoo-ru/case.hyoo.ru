@@ -60,6 +60,10 @@ namespace $ {
 			return this.property_kind_id() === 'link' || !this.property_main() 
 		}
 
+		property_embed() {
+			return Boolean( this.value( 'property-embed' ) )
+		}
+
 		property_hidden() {
 			return Boolean( this.value( 'property-hidden' ) )
 		}
