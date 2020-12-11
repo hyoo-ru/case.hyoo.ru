@@ -21,14 +21,20 @@ namespace $ {
 		
 		const scheme_target = target.meta_kind()[0]
 		if( domain.entity( keys[ keys.length - 1 ] ).meta_kind()[0] !== scheme_target ) {
+
 			let index_target = keys.findIndex( id => domain.entity( id ).meta_kind()[0] === scheme_target )
-			for(; index_target < keys.length; ++index_target) {
-				if( domain.entity( keys[ index_target ] ).meta_kind()[0] !== scheme_target ) {
-					index_target--
-					break
+			if( index_target > -1 ) {
+
+				for(; index_target < keys.length; ++index_target) {
+					if( domain.entity( keys[ index_target ] ).meta_kind()[0] !== scheme_target ) {
+						index_target--
+						break
+					}
 				}
+				
+				keys.splice( 1, index_target )
 			}
-			keys.splice( 1, index_target )
+			
 		}
 
 		keys.push( target.id() )
