@@ -54,7 +54,7 @@ namespace $.$$ {
 		@ $mol_mem
 		upstream() {
 			const store = new this.$.$mol_store_socket
-			store.base = ()=> 'ws://graph.hyoo.ru/'
+			store.base = ()=> 'wss://graph.hyoo.ru/'
 			return store
 		}
 
