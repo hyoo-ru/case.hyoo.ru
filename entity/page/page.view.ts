@@ -24,5 +24,9 @@ namespace $.$$ {
 			)
 		}
 
+		theme() {
+			return this.editable() ? '$hyoo_case_scheme' : null
+		}
+
 	}
 }
