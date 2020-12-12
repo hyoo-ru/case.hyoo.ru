@@ -52,8 +52,26 @@ namespace $.$$ {
 		}
 
 		@ $mol_mem
+		upstream() {
+			const store = new this.$.$mol_store_socket
+			store.base = ()=> 'ws://graph.hyoo.ru/'
+			return store
+		}
+
+		@ $mol_mem
 		domain(): $hyoo_case_domain {
-			return this.$.$mol_store_local.sub( '$hyoo_case' , super.domain() )
+			
+			// return this.$.$mol_store_local.sub( '$hyoo_case' , super.domain() )
+
+			this.upstream().active()
+
+			const domain = super.domain()
+			domain.value = ( key, next )=> null
+				?? this.upstream().value( key, next )
+				?? domain.data_default![ key ]
+				?? {}
+
+			return domain
 		}
 
 		entity( id: string ) {
