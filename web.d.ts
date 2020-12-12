@@ -2856,6 +2856,9 @@ declare namespace $.$$ {
 declare namespace $ {
     class $hyoo_case_entity_page extends $mol_page {
         entity(): $hyoo_case_entity;
+        attr(): {
+            hyoo_case_entity_page_editable: any;
+        };
         head(): readonly any[];
         tools(): readonly any[];
         body(): readonly any[];
@@ -2875,6 +2878,9 @@ declare namespace $ {
     }
 }
 
+declare namespace $ {
+}
+
 declare namespace $.$$ {
 }
 
@@ -2884,6 +2890,7 @@ declare namespace $.$$ {
         property(id: string): $hyoo_case_property;
         config_arg(): Record<string, string | null>;
         close_arg(): Record<string, string | null>;
+        theme(): "$hyoo_case_scheme" | null;
     }
 }
 
