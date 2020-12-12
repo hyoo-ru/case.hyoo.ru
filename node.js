@@ -10837,50 +10837,56 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    class $mol_store_local_class extends $.$mol_store {
-        native() {
-            check: try {
-                const native = $.$mol_dom_context.localStorage;
-                if (!native)
-                    break check;
-                native.setItem('', '');
-                native.removeItem('');
-                return native;
-            }
-            catch (error) {
-                console.warn(error);
-            }
-            const dict = new Map();
-            return {
-                map: dict,
-                getItem: (key) => dict.get(key),
-                setItem: (key, value) => dict.set(key, value),
-                removeItem: (key) => dict.delete(key),
-            };
+    class $mol_store_socket extends $.$mol_store {
+        base() {
+            return $.$mol_dom_context.document.location.origin.replace(/^\w+:/, 'ws:');
         }
-        data() {
-            return $.$mol_fail(new Error('Forbidden for local storage'));
+        socket() {
+            const atom = $.$mol_atom2.current;
+            return $.$mol_fiber_sync(() => new Promise(done => {
+                const socket = new $.$mol_dom_context.WebSocket(this.base());
+                socket.onopen = () => done(socket);
+                socket.onmessage = event => {
+                    const message = JSON.parse(event.data);
+                    if (!Array.isArray(message))
+                        return;
+                    if (typeof message[0] !== 'string')
+                        return;
+                    if (typeof message[1] !== 'object')
+                        return;
+                    $.$mol_mem_cached(() => this.value(message[0]), message[1]);
+                };
+                socket.onclose = socket.onerror = () => {
+                    new this.$.$mol_after_timeout(1000, () => {
+                        atom.complete();
+                        atom.obsolete();
+                        atom.schedule();
+                    });
+                };
+                return socket;
+            }))();
         }
-        value(key, next, force) {
-            if (next === undefined)
-                return JSON.parse(this.native().getItem(key) || 'null');
-            if (next === null)
-                this.native().removeItem(key);
-            else
-                this.native().setItem(key, JSON.stringify(next));
-            return next;
+        value(key, next) {
+            this.active();
+            this.socket().send(JSON.stringify([
+                key,
+                ...next === undefined ? [] : [next]
+            ]));
+            return next !== null && next !== void 0 ? next : null;
+        }
+        active() {
+            return Boolean(this.socket());
         }
     }
     __decorate([
         $.$mol_mem
-    ], $mol_store_local_class.prototype, "native", null);
+    ], $mol_store_socket.prototype, "socket", null);
     __decorate([
         $.$mol_mem_key
-    ], $mol_store_local_class.prototype, "value", null);
-    $.$mol_store_local_class = $mol_store_local_class;
-    $.$mol_store_local = new $mol_store_local_class;
+    ], $mol_store_socket.prototype, "value", null);
+    $.$mol_store_socket = $mol_store_socket;
 })($ || ($ = {}));
-//local.js.map
+//socket.js.map
 ;
 "use strict";
 var $;
@@ -10945,8 +10951,16 @@ var $;
                         .map(id => this.Entity_page(id))
                 ];
             }
+            upstream() {
+                const store = new this.$.$mol_store_socket;
+                store.base = () => 'ws://graph.hyoo.ru/';
+                return store;
+            }
             domain() {
-                return this.$.$mol_store_local.sub('$hyoo_case', super.domain());
+                this.upstream().active();
+                const domain = super.domain();
+                domain.value = (key, next) => { var _a, _b; return (_b = (_a = null !== null && null !== void 0 ? null : this.upstream().value(key, next)) !== null && _a !== void 0 ? _a : domain.data_default[key]) !== null && _b !== void 0 ? _b : {}; };
+                return domain;
             }
             entity(id) {
                 return this.domain().entity(id);
@@ -10966,6 +10980,9 @@ var $;
         __decorate([
             $.$mol_mem
         ], $hyoo_case.prototype, "root", null);
+        __decorate([
+            $.$mol_mem
+        ], $hyoo_case.prototype, "upstream", null);
         __decorate([
             $.$mol_mem
         ], $hyoo_case.prototype, "domain", null);

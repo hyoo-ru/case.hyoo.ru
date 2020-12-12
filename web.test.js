@@ -2635,36 +2635,6 @@ var $;
 ;
 "use strict";
 var $;
-(function ($) {
-    $.$mol_test_mocks.push(context => {
-        context.$mol_store_local = new $.$mol_store({});
-    });
-})($ || ($ = {}));
-//local.mock.test.js.map
-;
-"use strict";
-var $;
-(function ($_1) {
-    $_1.$mol_test({
-        'get/set/delete'() {
-            var key = '$mol_store_local_test';
-            $_1.$mol_assert_equal($_1.$mol_store_local.value(key), null);
-            $_1.$mol_store_local.value(key, 123);
-            $_1.$mol_assert_equal($_1.$mol_store_local.value(key), 123);
-            $_1.$mol_store_local.value(key, null);
-            $_1.$mol_assert_equal($_1.$mol_store_local.value(key), null);
-        },
-        'mocked'($) {
-            var key = '$mol_store_local_test';
-            $.$mol_store_local.value(key, 321);
-            $_1.$mol_assert_unique($_1.$mol_store_local.value(key), 321);
-        },
-    });
-})($ || ($ = {}));
-//local.test.js.map
-;
-"use strict";
-var $;
 (function ($_1) {
     var $$;
     (function ($$) {

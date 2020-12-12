@@ -2981,17 +2981,12 @@ declare namespace $ {
 }
 
 declare namespace $ {
-    class $mol_store_local_class extends $mol_store<Record<string, any>> {
-        native(): Storage | {
-            map: Map<string, string>;
-            getItem: (key: string) => string | undefined;
-            setItem: (key: string, value: string) => Map<string, string>;
-            removeItem: (key: string) => boolean;
-        };
-        data(): never;
-        value<Value>(key: string, next?: Value, force?: $mol_mem_force_cache): any;
+    class $mol_store_socket extends $mol_store<Record<string, any>> {
+        base(): string;
+        socket(): WebSocket;
+        value(key: string, next?: any): any;
+        active(): boolean;
     }
-    let $mol_store_local: $mol_store<Record<string, any>>;
 }
 
 declare namespace $.$$ {
@@ -3004,6 +2999,7 @@ declare namespace $.$$ {
         lang(): string;
         Placeholder(): $mol_frame;
         pages(): $hyoo_case_entity_page[];
+        upstream(): $mol_store_socket;
         domain(): $hyoo_case_domain;
         entity(id: string): $hyoo_case_entity;
         editable(id: string, next?: boolean): boolean;
