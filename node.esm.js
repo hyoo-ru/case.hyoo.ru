@@ -10970,9 +10970,8 @@ var $;
                 return store;
             }
             domain() {
-                this.upstream().active();
                 const domain = super.domain();
-                domain.value = (key, next) => { var _a, _b; return (_b = (_a = null !== null && null !== void 0 ? null : this.upstream().value(key, next)) !== null && _a !== void 0 ? _a : domain.data_default[key]) !== null && _b !== void 0 ? _b : {}; };
+                domain.value = (key, next) => { var _a, _b; return (_b = (_a = null !== null && null !== void 0 ? null : this.upstream().value(key, next)) !== null && _a !== void 0 ? _a : domain.data_default[key]) !== null && _b !== void 0 ? _b : { 'meta-kind': ['meta-kind'] }; };
                 return domain;
             }
             entity(id) {
