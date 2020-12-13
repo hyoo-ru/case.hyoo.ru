@@ -8593,6 +8593,7 @@ var $;
         }
         Link_row(id) {
             const obj = new this.$.$mol_view();
+            obj.minimal_height = () => 40;
             obj.sub = () => this.link_content(id);
             return obj;
         }
