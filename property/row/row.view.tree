@@ -48,6 +48,7 @@ $hyoo_case_property_row $mol_view
 		hint \NaN
 		value?val <=> numb?val 0
 	Link_row!id $mol_view
+		minimal_height 40
 		sub <= link_content!id /
 			<= Link_drag!id $mol_drag
 				transfer *
