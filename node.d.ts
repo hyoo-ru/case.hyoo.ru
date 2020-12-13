@@ -2991,6 +2991,7 @@ declare namespace $ {
     class $mol_store_socket extends $mol_store<Record<string, any>> {
         base(): string;
         socket(): WebSocket;
+        _handlers: Map<string, (a: any) => void>;
         value(key: string, next?: any): any;
         active(): boolean;
     }
