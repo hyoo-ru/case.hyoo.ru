@@ -63,13 +63,11 @@ namespace $.$$ {
 			
 			// return this.$.$mol_store_local.sub( '$hyoo_case' , super.domain() )
 
-			this.upstream().active()
-
 			const domain = super.domain()
 			domain.value = ( key, next )=> null
 				?? this.upstream().value( key, next )
 				?? domain.data_default![ key ]
-				?? {}
+				?? { 'meta-kind': [ 'meta-kind' ] }
 
 			return domain
 		}
