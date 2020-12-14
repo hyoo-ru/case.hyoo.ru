@@ -676,6 +676,7 @@ $mol_lights_toggle $mol_check_icon
 	checked?val <=> lights?val false
 
 $hyoo_case $mol_book2
+	Upstream $mol_store_socket
 	plugins /
 		<= Theme $mol_theme_auto
 	Root_page!id $hyoo_case_entity_page

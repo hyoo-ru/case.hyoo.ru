@@ -3269,6 +3269,77 @@ var $;
 "use strict";
 var $;
 (function ($) {
+    class $mol_store_socket extends $.$mol_store {
+        constructor() {
+            super(...arguments);
+            this._handlers = new Map();
+        }
+        base() {
+            return `wss://sync-hyoo-ru.herokuapp.com/`;
+        }
+        socket() {
+            const atom = $.$mol_atom2.current;
+            return $.$mol_fiber_sync(() => new Promise(done => {
+                const socket = new $.$mol_dom_context.WebSocket(this.base());
+                socket.onopen = () => done(socket);
+                socket.onmessage = $.$mol_fiber.func(event => {
+                    var _a;
+                    const message = JSON.parse(event.data);
+                    if (!Array.isArray(message))
+                        return;
+                    if (typeof message[0] !== 'string')
+                        return;
+                    const handler = this._handlers.get(message[0]);
+                    if (handler) {
+                        this._handlers.delete(message[0]);
+                        handler((_a = message[1]) !== null && _a !== void 0 ? _a : null);
+                        return;
+                    }
+                    if (typeof message[1] !== 'object')
+                        return;
+                    $.$mol_mem_cached(() => this.value(message[0]), message[1]);
+                });
+                socket.onclose = socket.onerror = $.$mol_fiber.func(() => {
+                    new this.$.$mol_after_timeout(1000, () => {
+                        atom.complete();
+                        atom.obsolete();
+                        atom.schedule();
+                    });
+                });
+                return socket;
+            }))();
+        }
+        value(key, next) {
+            $.$mol_fiber.run(() => {
+                this.socket().send(JSON.stringify([
+                    key,
+                    ...next === undefined ? [] : [next]
+                ]));
+            });
+            if (!next) {
+                return $.$mol_fiber_sync(() => new Promise(done => {
+                    this._handlers.set(key, done);
+                }))();
+            }
+            return next !== null && next !== void 0 ? next : null;
+        }
+        active() {
+            return Boolean(this.socket());
+        }
+    }
+    __decorate([
+        $.$mol_mem
+    ], $mol_store_socket.prototype, "socket", null);
+    __decorate([
+        $.$mol_mem_key
+    ], $mol_store_socket.prototype, "value", null);
+    $.$mol_store_socket = $mol_store_socket;
+})($ || ($ = {}));
+//socket.js.map
+;
+"use strict";
+var $;
+(function ($) {
     function $mol_guid(exists = () => false) {
         for (;;) {
             let id = Math.random().toString(36).substring(2, 10).toUpperCase();
@@ -10147,6 +10218,10 @@ var $;
 var $;
 (function ($) {
     class $hyoo_case extends $.$mol_book2 {
+        Upstream() {
+            const obj = new this.$.$mol_store_socket();
+            return obj;
+        }
         plugins() {
             return [
                 this.Theme()
@@ -10817,6 +10892,9 @@ var $;
         }
     }
     __decorate([
+        $.$mol_mem
+    ], $hyoo_case.prototype, "Upstream", null);
+    __decorate([
         $.$mol_mem_key
     ], $hyoo_case.prototype, "Root_page", null);
     __decorate([
@@ -10852,77 +10930,6 @@ var $;
     $.$hyoo_case = $hyoo_case;
 })($ || ($ = {}));
 //case.view.tree.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    class $mol_store_socket extends $.$mol_store {
-        constructor() {
-            super(...arguments);
-            this._handlers = new Map();
-        }
-        base() {
-            return $.$mol_dom_context.document.location.origin.replace(/^\w+:/, 'ws:');
-        }
-        socket() {
-            const atom = $.$mol_atom2.current;
-            return $.$mol_fiber_sync(() => new Promise(done => {
-                const socket = new $.$mol_dom_context.WebSocket(this.base());
-                socket.onopen = () => done(socket);
-                socket.onmessage = $.$mol_fiber.func(event => {
-                    var _a;
-                    const message = JSON.parse(event.data);
-                    if (!Array.isArray(message))
-                        return;
-                    if (typeof message[0] !== 'string')
-                        return;
-                    const handler = this._handlers.get(message[0]);
-                    if (handler) {
-                        this._handlers.delete(message[0]);
-                        handler((_a = message[1]) !== null && _a !== void 0 ? _a : null);
-                        return;
-                    }
-                    if (typeof message[1] !== 'object')
-                        return;
-                    $.$mol_mem_cached(() => this.value(message[0]), message[1]);
-                });
-                socket.onclose = socket.onerror = $.$mol_fiber.func(() => {
-                    new this.$.$mol_after_timeout(1000, () => {
-                        atom.complete();
-                        atom.obsolete();
-                        atom.schedule();
-                    });
-                });
-                return socket;
-            }))();
-        }
-        value(key, next) {
-            $.$mol_fiber.run(() => {
-                this.socket().send(JSON.stringify([
-                    key,
-                    ...next === undefined ? [] : [next]
-                ]));
-            });
-            if (!next) {
-                return $.$mol_fiber_sync(() => new Promise(done => {
-                    this._handlers.set(key, done);
-                }))();
-            }
-            return next !== null && next !== void 0 ? next : null;
-        }
-        active() {
-            return Boolean(this.socket());
-        }
-    }
-    __decorate([
-        $.$mol_mem
-    ], $mol_store_socket.prototype, "socket", null);
-    __decorate([
-        $.$mol_mem_key
-    ], $mol_store_socket.prototype, "value", null);
-    $.$mol_store_socket = $mol_store_socket;
-})($ || ($ = {}));
-//socket.js.map
 ;
 "use strict";
 var $;
@@ -10987,14 +10994,9 @@ var $;
                         .map(id => this.Entity_page(id))
                 ];
             }
-            upstream() {
-                const store = new this.$.$mol_store_socket;
-                store.base = () => 'wss://graph.hyoo.ru/';
-                return store;
-            }
             domain() {
                 const domain = super.domain();
-                domain.value = (key, next) => { var _a, _b; return (_b = (_a = null !== null && null !== void 0 ? null : this.upstream().value(key, next)) !== null && _a !== void 0 ? _a : domain.data_default[key]) !== null && _b !== void 0 ? _b : { 'meta-kind': ['meta-kind'] }; };
+                domain.value = (key, next) => { var _a, _b; return (_b = (_a = null !== null && null !== void 0 ? null : this.Upstream().value(key, next)) !== null && _a !== void 0 ? _a : domain.data_default[key]) !== null && _b !== void 0 ? _b : { 'meta-kind': ['meta-kind'] }; };
                 return domain;
             }
             entity(id) {
@@ -11015,9 +11017,6 @@ var $;
         __decorate([
             $.$mol_mem
         ], $hyoo_case.prototype, "root", null);
-        __decorate([
-            $.$mol_mem
-        ], $hyoo_case.prototype, "upstream", null);
         __decorate([
             $.$mol_mem
         ], $hyoo_case.prototype, "domain", null);

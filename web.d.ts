@@ -996,6 +996,16 @@ declare namespace $ {
 }
 
 declare namespace $ {
+    class $mol_store_socket extends $mol_store<Record<string, any>> {
+        base(): string;
+        socket(): WebSocket;
+        _handlers: Map<string, (a: any) => void>;
+        value(key: string, next?: any): any;
+        active(): boolean;
+    }
+}
+
+declare namespace $ {
     function $mol_guid(exists?: (id: string) => boolean): string;
 }
 
@@ -2984,6 +2994,7 @@ declare namespace $.$$ {
 
 declare namespace $ {
     class $hyoo_case extends $mol_book2 {
+        Upstream(): $mol_store_socket;
         plugins(): readonly any[];
         Root_page(id: any): $$.$hyoo_case_entity_page;
         Root_edit(id: any): $mol_check_icon;
@@ -3000,16 +3011,6 @@ declare namespace $ {
     }
 }
 
-declare namespace $ {
-    class $mol_store_socket extends $mol_store<Record<string, any>> {
-        base(): string;
-        socket(): WebSocket;
-        _handlers: Map<string, (a: any) => void>;
-        value(key: string, next?: any): any;
-        active(): boolean;
-    }
-}
-
 declare namespace $.$$ {
 }
 
@@ -3020,7 +3021,6 @@ declare namespace $.$$ {
         lang(): string;
         Placeholder(): $mol_frame;
         pages(): $hyoo_case_entity_page[];
-        upstream(): $mol_store_socket;
         domain(): $hyoo_case_domain;
         entity(id: string): $hyoo_case_entity;
         editable(id: string, next?: boolean): boolean;
