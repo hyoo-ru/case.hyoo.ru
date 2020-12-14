@@ -52,20 +52,13 @@ namespace $.$$ {
 		}
 
 		@ $mol_mem
-		upstream() {
-			const store = new this.$.$mol_store_socket
-			store.base = ()=> 'wss://graph.hyoo.ru/'
-			return store
-		}
-
-		@ $mol_mem
 		domain(): $hyoo_case_domain {
 			
 			// return this.$.$mol_store_local.sub( '$hyoo_case' , super.domain() )
 
 			const domain = super.domain()
 			domain.value = ( key, next )=> null
-				?? this.upstream().value( key, next )
+				?? this.Upstream().value( key, next )
 				?? domain.data_default![ key ]
 				?? { 'meta-kind': [ 'meta-kind' ] }
 
