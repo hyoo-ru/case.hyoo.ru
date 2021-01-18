@@ -35,6 +35,7 @@ $mol_page $mol_view
 $mol_paragraph $mol_view
 	line_height 24
 	letter_width 8
+	width_limit Infinity
 
 $mol_dimmer $mol_paragraph
 	haystack \
@@ -382,6 +383,7 @@ $mol_textarea $mol_view
 			length_max <= length_max Infinity
 		<= View $mol_text_code
 			text <= value
+			render_visible_only false
 
 $mol_icon_tick $mol_icon path \M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z
 
