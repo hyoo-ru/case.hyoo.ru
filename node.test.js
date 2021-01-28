@@ -7923,10 +7923,6 @@ var $;
                 return event;
             return null;
         }
-        Meter() {
-            const obj = new this.$.$mol_meter();
-            return obj;
-        }
         top() {
             return this.Meter().top();
         }
@@ -7938,6 +7934,10 @@ var $;
         }
         right() {
             return this.Meter().right();
+        }
+        Meter() {
+            const obj = new this.$.$mol_meter();
+            return obj;
         }
         Anchor() {
             return null;
@@ -9014,6 +9014,9 @@ var $;
             obj.rows = () => this.add_options();
             return obj;
         }
+        add_show(val) {
+            return this.Add().focused(val);
+        }
         Add() {
             const obj = new this.$.$mol_pop();
             obj.Anchor = () => this.Add_switch();
@@ -9022,9 +9025,6 @@ var $;
                 this.Add_options()
             ];
             return obj;
-        }
-        add_show(val) {
-            return this.Add().focused(val);
         }
         pick(val) {
             if (val !== undefined)
@@ -9047,6 +9047,9 @@ var $;
         pick_option_title(id) {
             return "";
         }
+        pick_query() {
+            return this.Pick().filter_pattern();
+        }
         Pick() {
             const obj = new this.$.$mol_select();
             obj.hint = () => this.$.$mol_locale.text('$hyoo_case_property_row_Pick_hint');
@@ -9057,9 +9060,6 @@ var $;
             ];
             obj.option_label = (id) => this.pick_option_title(id);
             return obj;
-        }
-        pick_query() {
-            return this.Pick().filter_pattern();
         }
         content() {
             return [];
@@ -9876,13 +9876,13 @@ var $;
             ];
             return obj;
         }
+        title() {
+            return this.Snippet().title();
+        }
         Snippet() {
             const obj = new this.$.$hyoo_case_entity_snippet();
             obj.entity = () => this.entity();
             return obj;
-        }
-        title() {
-            return this.Snippet().title();
         }
         Edit_icon() {
             const obj = new this.$.$mol_icon_edit();
@@ -10271,6 +10271,9 @@ var $;
                 this.Theme()
             ];
         }
+        Root_edit(id) {
+            return this.Root_page(id).Edit();
+        }
         Root_page(id) {
             const obj = new this.$.$hyoo_case_entity_page();
             obj.entity = () => this.entity(id);
@@ -10285,9 +10288,6 @@ var $;
                 this.Reset()
             ];
             return obj;
-        }
-        Root_edit(id) {
-            return this.Root_page(id).Edit();
         }
         Entity_page(id) {
             const obj = new this.$.$hyoo_case_entity_page();
@@ -11120,12 +11120,12 @@ var $;
 var $;
 (function ($) {
     class $mol_view_tree_test_binding_right extends $.$mol_view {
+        outer_width(v) {
+            return this.Test().width(v);
+        }
         Test() {
             const obj = new this.$.$mol_view_tree_test_binding_right_test();
             return obj;
-        }
-        outer_width(v) {
-            return this.Test().width(v);
         }
     }
     __decorate([

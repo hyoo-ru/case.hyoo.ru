@@ -2520,11 +2520,11 @@ declare namespace $ {
         plugins(): readonly $mol_plugin[];
         sub(): readonly any[];
         keydown(event?: any): any;
-        Meter(): $$.$mol_meter;
         top(): number;
         bottom(): number;
         left(): number;
         right(): number;
+        Meter(): $$.$mol_meter;
         Anchor(): any;
         align(): string;
         bubble_content(): readonly (string | number | boolean | $mol_view | Node)[];
@@ -2775,15 +2775,15 @@ declare namespace $ {
         Add_switch(): $mol_button_minor;
         add_options(): readonly any[];
         Add_options(): $$.$mol_list;
-        Add(): $$.$mol_pop;
         add_show(val?: any): boolean;
+        Add(): $$.$mol_pop;
         pick(val?: any): any;
         pick_options(): readonly string[];
         entity(id: any): $hyoo_case_entity;
         Pick_option(id: any): $$.$hyoo_case_entity_snippet;
         pick_option_title(id: any): string;
-        Pick(): $$.$mol_select;
         pick_query(): string;
+        Pick(): $$.$mol_select;
         content(): readonly any[];
         Content(): $$.$mol_list;
         add(id: any, event?: any): any;
@@ -2898,8 +2898,8 @@ declare namespace $ {
         kind(): $hyoo_case_entity;
         Snippet_kind(): $$.$hyoo_case_entity_snippet;
         Config(): $$.$mol_link;
-        Snippet(): $$.$hyoo_case_entity_snippet;
         title(): string;
+        Snippet(): $$.$hyoo_case_entity_snippet;
         Edit_icon(): $mol_icon_edit;
         editable(val?: any): any;
         Edit(): $mol_check_icon;
@@ -3018,8 +3018,8 @@ declare namespace $ {
     class $hyoo_case extends $mol_book2 {
         Upstream(): $mol_store_socket;
         plugins(): readonly any[];
-        Root_page(id: any): $$.$hyoo_case_entity_page;
         Root_edit(id: any): $mol_check_icon;
+        Root_page(id: any): $$.$hyoo_case_entity_page;
         Entity_page(id: any): $$.$hyoo_case_entity_page;
         Placeholder(): $$.$mol_frame;
         domain(): $hyoo_case_domain;
@@ -3076,8 +3076,8 @@ declare namespace $ {
 
 declare namespace $ {
     class $mol_view_tree_test_binding_right extends $mol_view {
-        Test(): $mol_view_tree_test_binding_right_test;
         outer_width(v?: any): any;
+        Test(): $mol_view_tree_test_binding_right_test;
     }
     class $mol_view_tree_test_binding_right_test extends $mol_view {
         width(val?: any): any;
