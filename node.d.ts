@@ -2620,7 +2620,7 @@ declare namespace $ {
         Nav(): $$.$mol_nav;
         options_showed(val?: any): any;
         open(event?: any): any;
-        trigger_content(): readonly $mol_view_content[];
+        trigger_content(): readonly any[];
         hint(): string;
         Trigger(): $mol_button_minor;
         menu_content(): readonly $mol_view[];
@@ -2649,7 +2649,7 @@ declare namespace $.$$ {
         option_focused(component?: $mol_view): $mol_view | $mol_string | null;
         event_select(id: string, event?: MouseEvent): void;
         nav_components(): ($mol_view | $mol_string)[];
-        trigger_content(): any[];
+        trigger_content(): readonly $mol_view_content[];
         menu_content(): ($mol_view | $mol_string)[];
     }
 }
