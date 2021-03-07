@@ -42,6 +42,7 @@ $hyoo_case_property_row $mol_view
 		hint <= text_hint \…
 		value?val <=> text?val \
 		length_max <= length_max Infinity
+		sidebar_showed false
 	Bool $mol_check_box
 		checked?val <=> bool?val false
 	Numb $mol_number
