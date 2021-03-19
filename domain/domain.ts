@@ -23,7 +23,7 @@ namespace $ {
 		}
 
 		entity_new( ... kind: $hyoo_case_entity[] ) {
-			const id = $mol_guid( id => id in this.data() )
+			const id = $mol_guid( 8, id => id in this.data() )
 			const entity = this.entity( id )
 			entity.property( 'meta-kind' ).target_join( ... kind )
 			return entity
