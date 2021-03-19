@@ -3392,9 +3392,9 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    function $mol_guid(exists = () => false) {
+    function $mol_guid(length = 8, exists = () => false) {
         for (;;) {
-            let id = Math.random().toString(36).substring(2, 10).toUpperCase();
+            let id = Math.random().toString(36).substring(2, length + 2).toUpperCase();
             if (exists(id))
                 continue;
             return id;
@@ -3418,7 +3418,7 @@ var $;
             return Object.keys(this.data());
         }
         entity_new(...kind) {
-            const id = $.$mol_guid(id => id in this.data());
+            const id = $.$mol_guid(8, id => id in this.data());
             const entity = this.entity(id);
             entity.property('meta-kind').target_join(...kind);
             return entity;
