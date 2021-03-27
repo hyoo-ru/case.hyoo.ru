@@ -1707,7 +1707,7 @@ declare namespace $ {
             tabindex: number;
             title: string;
         };
-        sub(): readonly any[];
+        sub(): readonly $mol_view_content[];
         checked(val?: any): any;
         Icon(): any;
         title(): string;
@@ -1726,7 +1726,7 @@ declare namespace $ {
 declare namespace $.$$ {
     class $mol_check extends $.$mol_check {
         click(next?: Event): void;
-        sub(): any[];
+        sub(): readonly $mol_view_content[];
         label(): readonly any[];
     }
 }
@@ -2524,11 +2524,27 @@ declare namespace $ {
 
 declare namespace $.$$ {
     class $mol_pop extends $.$mol_pop {
+        showed(next?: boolean): boolean;
         sub(): any[];
         height_max(): number;
         align(): string;
+        align_vert(): "suspense" | "top" | "bottom";
+        align_hor(): "suspense" | "left" | "right";
         keydown(event: KeyboardEvent): void;
     }
+}
+
+declare namespace $ {
+    class $mol_pick extends $mol_pop {
+        Anchor(): $$.$mol_check;
+        enabled(): boolean;
+        trigger_content(): readonly $mol_view_content[];
+        hint(): string;
+        Trigger(): $$.$mol_check;
+    }
+}
+
+declare namespace $ {
 }
 
 declare namespace $ {
@@ -2571,15 +2587,14 @@ declare namespace $.$$ {
 }
 
 declare namespace $ {
-    class $mol_select extends $mol_pop {
+    class $mol_select extends $mol_pick {
         dictionary(): {};
         options(): readonly string[];
         value(val?: any): any;
         Option_row(id: any): $mol_button_minor;
         No_options(): $mol_view;
         plugins(): readonly any[];
-        showed(val?: any): any;
-        Anchor(): $mol_button_minor;
+        hint(): string;
         bubble_content(): readonly any[];
         Filter(): $$.$mol_string;
         Trigger_icon(): $mol_icon_dots_vertical;
@@ -2593,11 +2608,6 @@ declare namespace $ {
         option_focused(component?: any): any;
         nav_cycle(val?: any): any;
         Nav(): $$.$mol_nav;
-        options_showed(val?: any): any;
-        open(event?: any): any;
-        trigger_content(): readonly any[];
-        hint(): string;
-        Trigger(): $mol_button_minor;
         menu_content(): readonly $mol_view[];
         Menu(): $$.$mol_list;
         submit(event?: any): any;
@@ -2616,7 +2626,6 @@ declare namespace $.$$ {
     class $mol_select extends $.$mol_select {
         filter_pattern(next?: string): string;
         open(): void;
-        options_showed(next?: boolean): boolean;
         options(): readonly string[];
         options_filtered(): readonly string[];
         option_label(id: string): any;
