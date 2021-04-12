@@ -3161,3 +3161,5 @@ declare namespace $ {
         };
     };
 }
+
+export = $;

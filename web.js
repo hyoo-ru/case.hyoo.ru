@@ -9315,8 +9315,6 @@ var $;
             title_need() {
                 if (this.editable())
                     return true;
-                if (this.type() === 'text')
-                    return false;
                 if (this.add_allowed())
                     return true;
                 if (this.type() === 'link') {
