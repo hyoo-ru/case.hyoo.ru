@@ -1791,7 +1791,7 @@ var $;
 var $;
 (function ($) {
     function $mol_dom_qname(name) {
-        return name.replace(/\W/, '').replace(/^(?=\d+)/, '_');
+        return name.replace(/\W/g, '').replace(/^(?=\d+)/, '_');
     }
     $.$mol_dom_qname = $mol_dom_qname;
 })($ || ($ = {}));
@@ -8108,7 +8108,9 @@ var $;
 var $;
 (function ($) {
     class $mol_select extends $.$mol_pick {
-        dictionary() {
+        dictionary(val) {
+            if (val !== undefined)
+                return val;
             return {};
         }
         options() {
@@ -8223,6 +8225,9 @@ var $;
             return true;
         }
     }
+    __decorate([
+        $.$mol_mem
+    ], $mol_select.prototype, "dictionary", null);
     __decorate([
         $.$mol_mem
     ], $mol_select.prototype, "value", null);

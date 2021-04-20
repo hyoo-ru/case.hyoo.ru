@@ -493,7 +493,7 @@ $mol_nav $mol_plugin
 		keydown?event <=> event_key?event null
 
 $mol_select $mol_pick
-	dictionary *
+	dictionary?val *
 	options /string
 	value?val \
 	Option_row!id $mol_button_minor
