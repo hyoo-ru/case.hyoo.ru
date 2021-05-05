@@ -3383,8 +3383,9 @@ var $;
             }))();
         }
         value(key, next) {
+            const socket = this.socket();
             $.$mol_fiber.run(() => {
-                this.socket().send(JSON.stringify([
+                socket.send(JSON.stringify([
                     key,
                     ...next === undefined ? [] : [next]
                 ]));
