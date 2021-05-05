@@ -3375,19 +3375,23 @@ var $;
             }))();
         }
         value(key, next) {
+            var _a;
             const socket = this.socket();
-            $.$mol_fiber.run(() => {
-                socket.send(JSON.stringify([
-                    key,
-                    ...next === undefined ? [] : [next]
-                ]));
-            });
+            const request = () => socket.send(JSON.stringify([
+                key,
+                ...next === undefined ? [] : [next]
+            ]));
+            const prev = $.$mol_mem_cached(() => this.value(key));
+            if (prev === undefined)
+                $.$mol_fiber.run(request);
+            else
+                request();
             if (!next) {
                 return $.$mol_fiber_sync(() => new Promise(done => {
                     this._handlers.set(key, done);
                 }))();
             }
-            return next !== null && next !== void 0 ? next : null;
+            return (_a = next !== null && next !== void 0 ? next : prev) !== null && _a !== void 0 ? _a : null;
         }
         active() {
             return Boolean(this.socket());
