@@ -53,16 +53,7 @@ namespace $.$$ {
 
 		@ $mol_mem
 		domain(): $hyoo_case_domain {
-			
-			// return this.$.$mol_store_local.sub( '$hyoo_case' , super.domain() )
-
-			const domain = super.domain()
-			domain.value = ( key, next )=> null
-				?? this.Upstream().value( key, next )
-				?? domain.data_default![ key ]
-				?? { 'meta-kind': [ 'meta-kind' ] }
-
-			return domain
+			return this.Upstream().sub( '', super.domain() )
 		}
 
 		entity( id: string ) {

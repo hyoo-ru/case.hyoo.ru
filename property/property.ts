@@ -1,12 +1,6 @@
 namespace $ {
 
-	export class $hyoo_case_property extends $mol_store<
-		| boolean
-		| string
-		| number
-		| readonly string[]
-		| Record< string , string >
-	> {
+	export class $hyoo_case_property extends $mol_store< any > {
 
 		id() { return '' }
 		entity() { return undefined as any as $hyoo_case_entity }
@@ -27,33 +21,21 @@ namespace $ {
 		@ $mol_mem
 		text( next? : string ) {
 
-			const lang = this.$.$mol_locale.lang()
+			const lang = this.kind().property_locale()
+				? this.$.$mol_locale.lang()
+				: 'en'
 
 			if( next !== undefined ) {
-				
-				let value = this.data() as string
-				if( value && ( typeof value === 'object' ) ) {
-					value = value[ 'en' ]
-				}
-	
-				if( this.kind().property_locale() ) {
-					this.data({
-						... this.data() as {},
-						en: value,
-						[ lang ]: next,
-					})
-				} else {
-					this.data( next )
-				}
-			}
-
-			let value = this.data() ?? this.value_default()
-
-			if( value && ( typeof value === 'object' ) ) {
-				value = value[ lang ] ?? value[ 'en' ]
+				return this.value( lang, next )
 			}
 			
-			return String( value ?? '' )
+			return String(
+				this.value( lang )
+				?? this.value( 'en' )
+				?? this.value_default()
+				?? ''
+			)
+
 		}
 
 		@ $mol_mem
