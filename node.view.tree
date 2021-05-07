@@ -698,7 +698,7 @@ $mol_lights_toggle $mol_check_icon
 	checked?val <=> lights?val false
 
 $hyoo_case $mol_book2
-	Upstream $mol_store_socket
+	Upstream $mol_store_shared
 	plugins /
 		<= Theme $mol_theme_auto
 	Root_page!id $hyoo_case_entity_page
@@ -727,7 +727,7 @@ $hyoo_case $mol_book2
 			meta-name *
 				en \Meta
 				ru \Мета
-			meta-icon \💥
+			meta-icon * en \💥
 			meta-description *
 				en \Kind that has other kinds as members
 				ru \Тип представителями которого являются другие типы
@@ -747,7 +747,7 @@ $hyoo_case $mol_book2
 			meta-name *
 				en \Entity
 				ru \Сущность
-			meta-icon \🌟
+			meta-icon * en \🌟
 			meta-description *
 				en \Base kind for all entity kinds
 				ru \Базовый тип для типов прикладных сущностей
@@ -761,7 +761,7 @@ $hyoo_case $mol_book2
 				\case
 				\language
 		property_type *
-			meta-icon \✨
+			meta-icon * en \✨
 			meta-kind / \meta
 			meta-name *
 				en \Type of property
@@ -786,7 +786,7 @@ $hyoo_case $mol_book2
 			meta-description *
 				en \Link to entity
 				ru \Связь с другим объектом
-			meta-icon \💫
+			meta-icon * en \💫
 			meta-properties /
 				\meta-name
 				\meta-description
@@ -812,7 +812,7 @@ $hyoo_case $mol_book2
 			meta-name *
 				en \Text
 				ru \Текст
-			meta-icon \📃
+			meta-icon * en \📃
 			meta-properties /
 				\meta-name
 				\meta-description
@@ -833,7 +833,7 @@ $hyoo_case $mol_book2
 			meta-name *
 				en \Integer
 				ru \Число
-			meta-icon \🎱
+			meta-icon * en \🎱
 			meta-properties /
 				\meta-name
 				\meta-description
@@ -853,7 +853,7 @@ $hyoo_case $mol_book2
 			meta-name *
 				en \Boolean
 				ru \Флаг
-			meta-icon \🚩
+			meta-icon * en \🚩
 			meta-properties /
 				\meta-name
 				\meta-description
@@ -1056,7 +1056,7 @@ $hyoo_case $mol_book2
 			property-max 1
 		case *
 			meta-kind / \case
-			meta-icon \💼
+			meta-icon * en \💼
 			meta-name *
 				en \Business case
 			meta-properties /
@@ -1087,7 +1087,7 @@ $hyoo_case $mol_book2
 			property-hidden true
 		language *
 			meta-kind / \entity
-			meta-icon \🏁
+			meta-icon * en \🏁
 			meta-name *
 				en \Language
 				ru \Язык

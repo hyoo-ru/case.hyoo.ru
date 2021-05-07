@@ -12,12 +12,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var globalThis = globalThis || ( typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : this )
 var $ = ( typeof module === 'object' ) ? Object.setPrototypeOf( module['export'+'s'] , globalThis ) : globalThis
 $.$$ = $
-$.$mol = $  // deprecated
 
 ;
 
 var $node = $node || {}
-void function( module ) { var exports = module.exports = this; function require( id ) { return $node[ id.replace( /^.\// , "../mol/" ) ] }; 
+void function( module ) { var exports = module.exports = this; function require( id ) { return $node[ id.replace( /^.\// , "../" ) ] }; 
 ;
 "use strict";
 Error.stackTraceLimit = Infinity;
@@ -25,10 +24,81 @@ var $;
 (function ($) {
 })($ || ($ = {}));
 module.exports = $;
-//mol.js.map
+//mam.js.map
 ;
 
-$node[ "../mol/mol" ] = $node[ "../mol/mol.js" ] = module.exports }.call( {} , {} )
+$node[ "../mam" ] = $node[ "../mam.js" ] = module.exports }.call( {} , {} )
+;
+"use strict";
+var $;
+(function ($) {
+    function $mol_fail(error) {
+        throw error;
+    }
+    $.$mol_fail = $mol_fail;
+})($ || ($ = {}));
+//fail.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    function $mol_fail_hidden(error) {
+        throw error;
+    }
+    $.$mol_fail_hidden = $mol_fail_hidden;
+})($ || ($ = {}));
+//hidden.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    function $mol_offline(uri = 'web.js') {
+        if (typeof window === 'undefined') {
+            self.addEventListener('install', (event) => {
+                self['skipWaiting']();
+            });
+            self.addEventListener('activate', (event) => {
+                self['clients'].claim();
+                console.info('$mol_offline activated');
+            });
+            self.addEventListener('fetch', (event) => {
+                event.respondWith(fetch(event.request)
+                    .then(response => {
+                    if (event.request.method !== 'GET')
+                        return response;
+                    event.waitUntil(caches.open('v1')
+                        .then(cache => cache.put(event.request, response)));
+                    return response.clone();
+                })
+                    .catch(error => {
+                    return caches.match(event.request)
+                        .catch(error2 => $.$mol_fail_hidden(error));
+                }));
+            });
+            self.addEventListener('beforeinstallprompt', (event) => {
+                console.log(event);
+                event.prompt();
+            });
+        }
+        else {
+            if (navigator.serviceWorker)
+                navigator.serviceWorker.register(uri);
+            else if (location.protocol === 'http:')
+                console.warn('HTTPS is required for service workers.');
+            else
+                console.warn('Service Worker is not supported.');
+        }
+    }
+    $.$mol_offline = $mol_offline;
+})($ || ($ = {}));
+//offline.web.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    $.$mol_offline();
+})($ || ($ = {}));
+//install.js.map
 ;
 "use strict";
 var $;
@@ -195,26 +265,6 @@ var $;
     $.$mol_owning_catch = $mol_owning_catch;
 })($ || ($ = {}));
 //owning.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    function $mol_fail(error) {
-        throw error;
-    }
-    $.$mol_fail = $mol_fail;
-})($ || ($ = {}));
-//fail.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    function $mol_fail_hidden(error) {
-        throw error;
-    }
-    $.$mol_fail_hidden = $mol_fail_hidden;
-})($ || ($ = {}));
-//hidden.js.map
 ;
 "use strict";
 //writable.js.map
@@ -3047,91 +3097,921 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    class $mol_store_socket extends $.$mol_store {
+    function $hyoo_crowd_delta(values, stamps) {
+        return { values, stamps };
+    }
+    $.$hyoo_crowd_delta = $hyoo_crowd_delta;
+})($ || ($ = {}));
+//delta.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    const concurrency = 1000000;
+    class $hyoo_crowd_clock {
+        constructor(peer) {
+            this.version_max = 0;
+            this.saw_versions = new Map();
+            this.peer = peer
+                ? peer % concurrency
+                : Math.floor(concurrency * Math.random());
+        }
+        version_from(stamp) {
+            return Math.abs(stamp);
+        }
+        index_from(stamp) {
+            return Math.floor(Math.abs(stamp) / concurrency);
+        }
+        peer_from(stamp) {
+            return Math.abs(stamp) % concurrency;
+        }
+        make(index, peer = this.peer) {
+            return index * concurrency + peer;
+        }
+        feed(stamp) {
+            var _a;
+            const version = this.version_from(stamp);
+            if (this.version_max < version) {
+                this.version_max = version;
+            }
+            const peer = this.peer_from(stamp);
+            if (((_a = this.saw_versions.get(peer)) !== null && _a !== void 0 ? _a : 0) < version) {
+                this.saw_versions.set(peer, version);
+            }
+            return version;
+        }
+        is_new(stamp) {
+            var _a;
+            const version = this.version_from(stamp);
+            return version > ((_a = this.saw_versions.get(this.peer_from(stamp))) !== null && _a !== void 0 ? _a : 0);
+        }
+        is_ahead(clock) {
+            for (const version of this.saw_versions.values()) {
+                if (clock.is_new(version))
+                    return true;
+            }
+            return false;
+        }
+        generate() {
+            return this.feed((Math.floor(this.version_max / concurrency) + 1) * concurrency + this.peer);
+        }
+        fork(peer) {
+            const clock = new $hyoo_crowd_clock(peer);
+            for (const version of this.saw_versions.values()) {
+                clock.feed(version);
+            }
+            return clock;
+        }
+    }
+    $.$hyoo_crowd_clock = $hyoo_crowd_clock;
+})($ || ($ = {}));
+//clock.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    class $hyoo_crowd_store {
+        constructor(clock = new $.$hyoo_crowd_clock) {
+            this.clock = clock;
+        }
+        static make() {
+            return new this();
+        }
+        delta(clock = new $.$hyoo_crowd_clock) {
+            return $.$hyoo_crowd_delta([], []);
+        }
+        toJSON() {
+            return this.delta();
+        }
+        apply(delta) {
+            return this;
+        }
+        fork(peer) {
+            const Fork = this.constructor;
+            const fork = new Fork(this.clock.fork(peer));
+            fork.apply(this.delta());
+            return fork;
+        }
+    }
+    $.$hyoo_crowd_store = $hyoo_crowd_store;
+})($ || ($ = {}));
+//store.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    class $hyoo_crowd_dict extends $.$hyoo_crowd_store {
         constructor() {
             super(...arguments);
-            this._handlers = new Map();
+            this.stores = new Map();
         }
-        base() {
-            return `wss://sync-hyoo-ru.herokuapp.com/`;
+        static of(Types) {
+            return class Tuple extends this {
+                constructor() {
+                    super(...arguments);
+                    this.Fields = Types;
+                }
+            };
         }
-        socket() {
-            const atom = $.$mol_atom2.current;
-            return $.$mol_fiber_sync(() => new Promise(done => {
-                const socket = new $.$mol_dom_context.WebSocket(this.base());
-                socket.onopen = () => done(socket);
-                socket.onmessage = $.$mol_fiber.func(event => {
-                    var _a;
-                    const message = JSON.parse(event.data);
-                    if (!Array.isArray(message))
-                        return;
-                    if (typeof message[0] !== 'string')
-                        return;
-                    const handler = this._handlers.get(message[0]);
-                    if (handler) {
-                        this._handlers.delete(message[0]);
-                        handler((_a = message[1]) !== null && _a !== void 0 ? _a : null);
-                        return;
-                    }
-                    if (typeof message[1] !== 'object')
-                        return;
-                    $.$mol_mem_cached(() => this.value(message[0]), message[1]);
-                });
-                socket.onclose = socket.onerror = $.$mol_fiber.func(() => {
-                    new this.$.$mol_after_timeout(1000, () => {
-                        atom.complete();
-                        atom.obsolete();
-                        atom.schedule();
-                    });
-                });
-                return socket;
-            }))();
+        has(key) {
+            return this.stores.has(key);
         }
-        value(key, next) {
-            var _a;
-            const prev = $.$mol_mem_cached(() => this.value(key));
-            try {
-                const socket = this.socket();
-                $.$mol_fiber.run(() => {
-                    socket.send(JSON.stringify([
-                        key,
-                        ...next === undefined ? [] : [next]
-                    ]));
-                });
+        for(key) {
+            let store = this.stores.get(key);
+            if (store)
+                return store;
+            const Type = this.Fields[String(key !== null && key !== void 0 ? key : '')] || Object.values(this.Fields)[0];
+            store = new Type(this.clock);
+            this.stores.set(key, store);
+            return store;
+        }
+        delta(clock = new $.$hyoo_crowd_clock) {
+            const delta = $.$hyoo_crowd_delta([], []);
+            for (let [key, value] of this.stores) {
+                const patch = value.delta(clock);
+                if (patch.values.length === 0)
+                    continue;
+                delta.values.push(key);
+                for (const val of patch.values)
+                    delta.values.push(val);
+                delta.stamps.push(-patch.values.length);
+                for (const stamp of patch.stamps)
+                    delta.stamps.push(stamp);
             }
-            catch (error) {
-                if (next)
-                    $.$mol_fail_hidden(error);
-                if (error instanceof Promise) {
-                    if (!prev)
-                        $.$mol_fail_hidden(error);
-                    error.finally($.$mol_atom2.current.fresh);
-                    return prev;
+            return delta;
+        }
+        apply(delta) {
+            let key;
+            let count = 0;
+            let patch = $.$hyoo_crowd_delta([], []);
+            const dump = () => {
+                if (patch.values.length === 0)
+                    return;
+                this.for(key).apply(patch);
+                patch = $.$hyoo_crowd_delta([], []);
+            };
+            for (let i = 0; i < delta.values.length; ++i) {
+                const val = delta.values[i];
+                const stamp = delta.stamps[i];
+                if (count === 0) {
+                    dump();
+                    key = val;
+                    count = -stamp;
+                    continue;
                 }
                 else {
-                    $.$mol_fail_hidden(error);
+                    patch.values.push(val);
+                    patch.stamps.push(stamp);
+                    --count;
                 }
             }
-            if (next === undefined && prev === undefined) {
-                return $.$mol_fiber_sync(() => new Promise(done => {
-                    this._handlers.set(key, done);
-                }))();
-            }
-            return (_a = next !== null && next !== void 0 ? next : prev) !== null && _a !== void 0 ? _a : null;
+            dump();
+            return this;
         }
-        active() {
-            return Boolean(this.socket());
+    }
+    $.$hyoo_crowd_dict = $hyoo_crowd_dict;
+})($ || ($ = {}));
+//dict.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    class $hyoo_crowd_reg extends $.$hyoo_crowd_store {
+        constructor() {
+            super(...arguments);
+            this._value = null;
+            this._stamp = 0;
+            this._mult = 1;
+        }
+        get version() {
+            return this.clock.version_from(this._stamp);
+        }
+        str(next) {
+            var _a;
+            return String((_a = this.value(next)) !== null && _a !== void 0 ? _a : '');
+        }
+        numb(next) {
+            var _a;
+            return Number((_a = this.value(next)) !== null && _a !== void 0 ? _a : 0);
+        }
+        bool(next) {
+            var _a;
+            return Boolean((_a = this.value(next)) !== null && _a !== void 0 ? _a : false);
+        }
+        delta(clock = new $.$hyoo_crowd_clock) {
+            if (!clock.is_new(this._stamp))
+                return $.$hyoo_crowd_delta([], []);
+            return $.$hyoo_crowd_delta([this._value], [this._stamp]);
+        }
+        value(next) {
+            if (next === undefined)
+                return this._value;
+            if (this._value === next)
+                return this._value;
+            this._value = next;
+            this.clock.feed(this._stamp = this._mult * this.clock.generate());
+            return next;
+        }
+        apply(delta) {
+            for (let i = 0; i < delta.values.length; ++i) {
+                const val = delta.values[i];
+                const stamp = delta.stamps[i];
+                this.clock.feed(stamp);
+                if (this._mult * stamp <= this._mult * this._stamp)
+                    continue;
+                this._value = val;
+                this._stamp = stamp;
+            }
+            return this;
+        }
+    }
+    $.$hyoo_crowd_reg = $hyoo_crowd_reg;
+    class $hyoo_crowd_reg_back extends $hyoo_crowd_reg {
+        constructor() {
+            super(...arguments);
+            this._mult = -1;
+        }
+    }
+    $.$hyoo_crowd_reg_back = $hyoo_crowd_reg_back;
+})($ || ($ = {}));
+//reg.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    class $hyoo_crowd_union extends $.$hyoo_crowd_store {
+        constructor() {
+            super(...arguments);
+            this.type_store = new $.$hyoo_crowd_reg_back(this.clock);
+        }
+        static of(Types) {
+            return class Union extends this {
+                constructor() {
+                    super(...arguments);
+                    this.Types = Types;
+                }
+            };
+        }
+        get type() {
+            const type = this.type_store.value();
+            return type;
+        }
+        as(type) {
+            if (this.type !== type)
+                return null;
+            if (this.value_store)
+                return this.value_store;
+            return this.to(type);
+        }
+        to(type, stamp) {
+            if (this.type === type)
+                return this.as(type);
+            this.type_store.apply($.$hyoo_crowd_delta([type], [stamp || -this.clock.generate()]));
+            if (this.type !== type)
+                return this.as(this.type);
+            const store = new this.Types[type](this.clock);
+            if (this.value_store)
+                store.apply(this.value_store.delta());
+            return this.value_store = store;
+        }
+        delta(clock = new $.$hyoo_crowd_clock) {
+            var _a, _b, _c;
+            const val = (_a = this.value_store) === null || _a === void 0 ? void 0 : _a.delta(clock);
+            if ((val === null || val === void 0 ? void 0 : val.values.length) === 0)
+                return $.$hyoo_crowd_delta([], []);
+            const type = this.type_store.delta();
+            return $.$hyoo_crowd_delta([
+                ...type.values,
+                ...(_b = val === null || val === void 0 ? void 0 : val.values) !== null && _b !== void 0 ? _b : [],
+            ], [
+                ...type.stamps,
+                ...(_c = val === null || val === void 0 ? void 0 : val.stamps) !== null && _c !== void 0 ? _c : [],
+            ]);
+        }
+        apply(delta) {
+            if (delta.values.length === 0)
+                return this;
+            let type = delta.values[0];
+            if (!this.Types[type]) {
+                type = Object.keys(this.Types)[0];
+                this.to(type).apply(delta);
+                return this;
+            }
+            const store = this.to(type, delta.stamps[0]);
+            store.apply($.$hyoo_crowd_delta(delta.values.slice(1), delta.stamps.slice(1)));
+            return this;
+        }
+    }
+    $.$hyoo_crowd_union = $hyoo_crowd_union;
+})($ || ($ = {}));
+//union.js.map
+;
+"use strict";
+//intersect.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    class $mol_regexp extends RegExp {
+        constructor(source, flags = '', groups = []) {
+            super(source, flags);
+            this.groups = groups;
+        }
+        get parse() {
+            const self = this;
+            return function* parsing(str, from = 0) {
+                while (from < str.length) {
+                    self.lastIndex = from;
+                    const res = self.exec(str);
+                    if (res === null) {
+                        yield { 0: str.substring(from) };
+                        return null;
+                    }
+                    if (from === self.lastIndex) {
+                        $.$mol_fail(new Error('Captured empty substring'));
+                    }
+                    const found = {};
+                    const skipped = str.slice(from, self.lastIndex - res[0].length);
+                    if (skipped)
+                        yield { 0: skipped };
+                    from = self.lastIndex;
+                    for (let i = 0; i < self.groups.length; ++i) {
+                        const group = self.groups[i];
+                        found[group] = found[group] || res[i + 1] || '';
+                    }
+                    yield found;
+                }
+            };
+        }
+        static repeat(source, min = 0, max = Number.POSITIVE_INFINITY) {
+            const regexp = $mol_regexp.from(source);
+            const upper = Number.isFinite(max) ? max : '';
+            return new $mol_regexp(`(?:${regexp.source}){${min},${upper}}?`, regexp.flags, regexp.groups);
+        }
+        static repeat_greedy(source, min = 0, max = Number.POSITIVE_INFINITY) {
+            const regexp = $mol_regexp.from(source);
+            const upper = Number.isFinite(max) ? max : '';
+            return new $mol_regexp(`(?:${regexp.source}){${min},${upper}}`, regexp.flags, regexp.groups);
+        }
+        static optional(source) {
+            return $mol_regexp.repeat_greedy(source, 0, 1);
+        }
+        static force_after(source) {
+            const regexp = $mol_regexp.from(source);
+            return new $mol_regexp(`(?=${regexp.source})`, regexp.flags, regexp.groups);
+        }
+        static forbid_after(source) {
+            const regexp = $mol_regexp.from(source);
+            return new $mol_regexp(`(?!${regexp.source})`, regexp.flags, regexp.groups);
+        }
+        static from(source, { ignoreCase, multiline } = {
+            ignoreCase: false,
+            multiline: false,
+        }) {
+            let flags = 'gu';
+            if (multiline)
+                flags += 'm';
+            if (ignoreCase)
+                flags += 'i';
+            if (typeof source === 'string') {
+                return new $mol_regexp(source.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), flags);
+            }
+            else if (source instanceof RegExp) {
+                if (source instanceof $mol_regexp)
+                    return source;
+                const test = new $mol_regexp('|' + source.source);
+                const groups = Array.from({ length: test.exec('').length - 1 }, (_, i) => String(i + 1));
+                return new $mol_regexp(source.source, source.flags, groups);
+            }
+            if (Array.isArray(source)) {
+                const sources = [];
+                const groups = [];
+                let index = 0;
+                for (const item of source) {
+                    const regexp = $mol_regexp.from(item);
+                    sources.push(regexp.source);
+                    for (let group of regexp.groups) {
+                        if (Number(group) >= 0) {
+                            groups.push(String(index++));
+                        }
+                        else {
+                            groups.push(group);
+                        }
+                    }
+                }
+                return new $mol_regexp(sources.join(''), flags, groups);
+            }
+            else {
+                const groups = [];
+                const chunks = Object.keys(source).map(name => {
+                    groups.push(name);
+                    const regexp = $mol_regexp.from(source[name]);
+                    groups.push(...regexp.groups);
+                    return `(${regexp.source})`;
+                });
+                return new $mol_regexp(`(?:${chunks.join('|')})`, flags, groups);
+            }
+        }
+        static char_code(code) {
+            return new $mol_regexp(`\\u${code.toString(16).padStart(4, '0')}`);
+        }
+        static byte_except(...forbidden) {
+            const regexp = forbidden.map(f => $mol_regexp.from(f).source).join('');
+            return new $mol_regexp(`[^${regexp}]`);
+        }
+    }
+    $mol_regexp.byte = $mol_regexp.from(/[\s\S]/);
+    $mol_regexp.digit = $mol_regexp.from(/\d/);
+    $mol_regexp.letter = $mol_regexp.from(/\w/);
+    $mol_regexp.space = $mol_regexp.from(/\s/);
+    $mol_regexp.tab = $mol_regexp.from(/\t/);
+    $mol_regexp.slash_back = $mol_regexp.from(/\\/);
+    $mol_regexp.word_break = $mol_regexp.from(/\b/);
+    $mol_regexp.line_end = $mol_regexp.from(/\r?\n/);
+    $mol_regexp.begin = $mol_regexp.from(/^/);
+    $mol_regexp.end = $mol_regexp.from(/$/);
+    $mol_regexp.or = $mol_regexp.from(/|/);
+    $.$mol_regexp = $mol_regexp;
+})($ || ($ = {}));
+//regexp.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    class $hyoo_crowd_list extends $.$hyoo_crowd_store {
+        constructor() {
+            super(...arguments);
+            this.clock_self = new $.$hyoo_crowd_clock;
+            this.array = [];
+            this.stamps = new Map();
+        }
+        get count() {
+            return this.array.length;
+        }
+        items(next) {
+            const prev = this.array;
+            if (!next)
+                return prev.slice();
+            for (let i = 0; i < next.length; ++i) {
+                let n = next[i];
+                let p = prev[i];
+                if (n === p)
+                    continue;
+                if (next.length > prev.length) {
+                    this.insert(n, i);
+                }
+                else {
+                    this.cut(p);
+                    i--;
+                }
+            }
+            return prev.slice();
+        }
+        get items_internal() {
+            return this.array;
+        }
+        has(val) {
+            return this.stamps.get(val) > 0;
+        }
+        version_item(val) {
+            var _a;
+            return this.clock.version_from((_a = this.stamps.get(val)) !== null && _a !== void 0 ? _a : 0);
+        }
+        version_feed(version) {
+            this.clock.feed(version);
+            this.clock_self.feed(version);
+        }
+        delta(clock = new $.$hyoo_crowd_clock) {
+            const delta = $.$hyoo_crowd_delta([], []);
+            if (!this.clock_self.is_ahead(clock))
+                return delta;
+            for (const key of this.array) {
+                delta.values.push(key);
+                delta.stamps.push(this.stamps.get(key));
+            }
+            for (const [key, stamp] of this.stamps) {
+                if (stamp > 0)
+                    continue;
+                delta.values.push(key);
+                delta.stamps.push(stamp);
+            }
+            return delta;
+        }
+        insert(key, pos = this.array.length) {
+            const exists = this.array[pos];
+            if (exists === key)
+                return this;
+            const delta = $.$hyoo_crowd_delta([], []);
+            if (pos > 0) {
+                const anchor = this.array[pos - 1];
+                delta.values.push(anchor);
+                delta.stamps.push(this.stamps.get(anchor));
+            }
+            delta.values.push(key);
+            delta.stamps.push(this.clock.generate());
+            this.apply(delta);
+            return this;
+        }
+        cut(key) {
+            var _a;
+            const stamp = (_a = this.stamps.get(key)) !== null && _a !== void 0 ? _a : 0;
+            if (stamp <= 0)
+                return this;
+            this.apply($.$hyoo_crowd_delta([key], [-this.clock.generate()]));
+            return this;
+        }
+        apply(delta) {
+            var _a;
+            const patch_array = [];
+            const patch_stamps = new Map();
+            for (let i = 0; i < delta.values.length; ++i) {
+                const key = delta.values[i];
+                const stamp = delta.stamps[i];
+                patch_stamps.set(key, stamp);
+                if (stamp > 0)
+                    patch_array.push(key);
+            }
+            for (let i = 0; i < delta.values.length; ++i) {
+                const current_key = delta.values[i];
+                const current_patch_stamp = delta.stamps[i];
+                const current_self_stamp = (_a = this.stamps.get(current_key)) !== null && _a !== void 0 ? _a : 0;
+                const current_patch_version = this.clock.version_from(current_patch_stamp);
+                if (this.version_item(current_key) >= current_patch_version)
+                    continue;
+                this.stamps.set(current_key, current_patch_stamp);
+                this.version_feed(current_patch_version);
+                if (current_patch_stamp <= 0) {
+                    if (current_self_stamp > 0) {
+                        this.array.splice(this.array.indexOf(current_key), 1);
+                    }
+                    continue;
+                }
+                for (let anchor = patch_array.indexOf(current_key) - 1;; anchor--) {
+                    const anchor_key = patch_array[anchor];
+                    if (anchor >= 0) {
+                        const anchor_self_version = this.version_item(anchor_key);
+                        if (anchor_self_version === 0)
+                            continue;
+                        if (anchor_self_version > this.clock.version_from(patch_stamps.get(anchor_key)))
+                            continue;
+                    }
+                    let next_pos = anchor_key !== undefined ? this.array.indexOf(anchor_key) + 1 : 0;
+                    while (next_pos < this.array.length) {
+                        if (this.version_item(this.array[next_pos]) <= current_patch_version)
+                            break;
+                        next_pos++;
+                    }
+                    if (current_self_stamp <= 0) {
+                        this.array.splice(next_pos, 0, current_key);
+                        break;
+                    }
+                    const current_pos = this.array.indexOf(current_key);
+                    if (current_pos === next_pos)
+                        break;
+                    if (current_pos > next_pos) {
+                        this.array.splice(next_pos, current_pos - next_pos + 1, current_key, ...this.array.slice(next_pos, current_pos));
+                    }
+                    else {
+                        this.array.splice(current_pos, next_pos - current_pos + 1, ...this.array.slice(current_pos + 1, next_pos + 1), current_key);
+                    }
+                    break;
+                }
+            }
+            return this;
+        }
+    }
+    $.$hyoo_crowd_list = $hyoo_crowd_list;
+})($ || ($ = {}));
+//list.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    const tokenizer = $.$mol_regexp.from({
+        token: {
+            'line-break': /(?:\r?\n|\r)/,
+            'Word-punctuation-spaces': /[A-ZА-ЯЁ0-9\u0301\u0331]*[a-zа-яё0-9\u0301\u0331]*[^A-ZА-ЯЁa-zа-яё0-9\u0301\u0331\s]*[^\S\n\r]?/,
+        },
+    });
+    class $hyoo_crowd_text extends $.$hyoo_crowd_dict.of({
+        flow: $.$hyoo_crowd_dict.of({ val: $.$hyoo_crowd_list }),
+        token: $.$hyoo_crowd_dict.of({ val: $.$hyoo_crowd_reg }),
+    }) {
+        get root() {
+            return this.for('flow').for(null);
+        }
+        get tokens() {
+            return this.root.items();
+        }
+        value_of(token) {
+            return this.for('token').for(token).str();
+        }
+        text(next) {
+            if (next === undefined) {
+                const tokens = this.for('token');
+                return this.tokens.map(id => tokens.for(id).str()).join('');
+            }
+            else {
+                this.splice_line(null, 0, this.root.count, next);
+                return next;
+            }
+        }
+        splice_line(id, from, to, text) {
+            var _a;
+            const flow = this.for('flow').for(id);
+            const token_ids = flow.items_internal;
+            const tokens = this.for('token');
+            const words = [...tokenizer.parse(text)];
+            while (from < to || words.length > 0) {
+                const prev = from < token_ids.length ? tokens.for(token_ids[from]).str() : null;
+                const next = words.length ? (_a = words[0].token) !== null && _a !== void 0 ? _a : words[0][0] : '';
+                if (prev === next) {
+                    ++from;
+                    words.shift();
+                }
+                else if (prev && next && (prev.slice(0, next.length) === next || next.slice(0, prev.length) === prev)) {
+                    tokens.for(token_ids[from]).str(next);
+                    ++from;
+                    words.shift();
+                }
+                else if (words.length > to - from) {
+                    let key;
+                    do {
+                        key = Math.floor(Math.random() * 1000000);
+                    } while (tokens.has(key));
+                    tokens.for(key).str(next);
+                    flow.insert(key, from);
+                    words.shift();
+                    ++from;
+                    ++to;
+                }
+                else if (words.length < to - from) {
+                    flow.cut(token_ids[from]);
+                    --to;
+                }
+                else {
+                    tokens.for(token_ids[from]).str(next);
+                    ++from;
+                    words.shift();
+                }
+            }
+            return this;
+        }
+        write(text, offset = -1, count = 0) {
+            if (offset < 0)
+                return this.splice_line(null, this.root.items_internal.length, 0, text);
+            const flow = this.for('flow').for(null);
+            const token_ids = flow.items_internal;
+            const tokens = this.for('token');
+            let from = 0;
+            let word = '';
+            while (true) {
+                if (from >= token_ids.length)
+                    break;
+                word = tokens.for(token_ids[from]).str();
+                if (offset <= word.length) {
+                    text = word.slice(0, offset) + text;
+                    count += offset;
+                    break;
+                }
+                offset -= word.length;
+                from++;
+            }
+            let to = from;
+            while (true) {
+                if (to >= token_ids.length)
+                    break;
+                word = tokens.for(token_ids[to]).str();
+                to++;
+                if (count < word.length) {
+                    text = text + word.slice(count);
+                    break;
+                }
+                count -= word.length;
+            }
+            this.splice_line(null, from, to, text);
+            return this;
+        }
+    }
+    $.$hyoo_crowd_text = $hyoo_crowd_text;
+})($ || ($ = {}));
+//text.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    class $hyoo_crowd_graph extends $.$hyoo_crowd_dict.of({
+        val: $.$hyoo_crowd_union.of({
+            atom: $.$hyoo_crowd_reg,
+            text: $.$hyoo_crowd_text,
+            edge: $.$hyoo_crowd_list,
+        })
+    }) {
+        value(key, next) {
+            var _a, _b, _c, _d, _e, _f;
+            const store = this.for(key);
+            if (next === undefined) {
+                return (_f = (_d = (_b = (_a = store.as('edge')) === null || _a === void 0 ? void 0 : _a.items()) !== null && _b !== void 0 ? _b : (_c = store.as('text')) === null || _c === void 0 ? void 0 : _c.text()) !== null && _d !== void 0 ? _d : (_e = store.as('atom')) === null || _e === void 0 ? void 0 : _e.value()) !== null && _f !== void 0 ? _f : null;
+            }
+            else {
+                if (Array.isArray(next))
+                    store.to('edge').items(next);
+                else if (typeof next === 'string')
+                    store.to('text').text(next);
+                else
+                    store.to('atom').value(next);
+                return next;
+            }
+        }
+        bool(key, next) {
+            return this.for(key).to('atom').bool(next);
+        }
+        numb(key, next) {
+            return this.for(key).to('atom').numb(next);
+        }
+        text(key, next) {
+            return this.for(key).to('text').text(next);
+        }
+        edge(key, next) {
+            return this.for(key).to('edge').items(next);
+        }
+    }
+    $.$hyoo_crowd_graph = $hyoo_crowd_graph;
+})($ || ($ = {}));
+//graph.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    class $mol_store_local_class extends $.$mol_store {
+        native() {
+            check: try {
+                const native = $.$mol_dom_context.localStorage;
+                if (!native)
+                    break check;
+                native.setItem('', '');
+                native.removeItem('');
+                return native;
+            }
+            catch (error) {
+                console.warn(error);
+            }
+            const dict = new Map();
+            return {
+                map: dict,
+                getItem: (key) => dict.get(key),
+                setItem: (key, value) => dict.set(key, value),
+                removeItem: (key) => dict.delete(key),
+            };
+        }
+        data() {
+            return $.$mol_fail(new Error('Forbidden for local storage'));
+        }
+        value(key, next, force) {
+            if (next === undefined)
+                return JSON.parse(this.native().getItem(key) || 'null');
+            if (next === null)
+                this.native().removeItem(key);
+            else
+                this.native().setItem(key, JSON.stringify(next));
+            return next;
         }
     }
     __decorate([
         $.$mol_mem
-    ], $mol_store_socket.prototype, "socket", null);
+    ], $mol_store_local_class.prototype, "native", null);
     __decorate([
         $.$mol_mem_key
-    ], $mol_store_socket.prototype, "value", null);
-    $.$mol_store_socket = $mol_store_socket;
+    ], $mol_store_local_class.prototype, "value", null);
+    $.$mol_store_local_class = $mol_store_local_class;
+    $.$mol_store_local = new $mol_store_local_class;
 })($ || ($ = {}));
-//socket.js.map
+//local.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    $.$mol_dom_context.addEventListener('storage', event => {
+        const store = $.$mol_store_local;
+        if (event.key) {
+            store.value(event.key, undefined, $.$mol_mem_force_cache);
+        }
+    });
+})($ || ($ = {}));
+//local.web.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    class $mol_store_shared extends $.$mol_store {
+        store(prefix) {
+            return new this.$.$hyoo_crowd_graph;
+        }
+        version_last(prefix, next) {
+            return next !== null && next !== void 0 ? next : this.store(prefix).clock.version_max;
+        }
+        request(prefix) {
+            this.socket();
+            $.$mol_fiber_defer(() => this.send(prefix, this.store(prefix).delta()));
+            return null;
+        }
+        value(key, next) {
+            let [prefix, ...tail] = key.split('/');
+            let suffix = tail.join('/');
+            if (!suffix) {
+                suffix = prefix;
+                prefix = '';
+            }
+            const store = this.store(prefix);
+            const prev = $.$mol_mem_cached(() => this.value(key));
+            this.request(prefix);
+            this.version_last(prefix);
+            if (next == undefined) {
+                const delta = this.$.$mol_store_local.value(prefix);
+                if (delta)
+                    store.apply(delta);
+                return store.value(suffix);
+            }
+            else {
+                const val = store.value(suffix, next);
+                $.$mol_fiber_defer(() => this.send(prefix, store.delta()));
+                this.$.$mol_store_local.value(prefix, store.delta());
+                return val;
+            }
+        }
+        sub(key, lens) {
+            const lens2 = super.sub(key, lens);
+            lens2.sub = (prefix, lens) => {
+                const lens3 = this.sub(key ? key + '/' + prefix : String(prefix), lens);
+                lens3.data_default = lens2.data_default && lens2.data_default[prefix] || lens3.data_default;
+                return lens3;
+            };
+            lens2.value = (suffix, next) => {
+                var _a;
+                return (_a = this.value(key ? key + '/' + suffix : String(suffix), next)) !== null && _a !== void 0 ? _a : (lens2.data_default && lens2.data_default[suffix]);
+            };
+            return lens2;
+        }
+        server() {
+            return `wss://sync-hyoo-ru.herokuapp.com/`;
+        }
+        socket() {
+            const atom = $.$mol_atom2.current;
+            const socket = new $.$mol_dom_context.WebSocket(this.server());
+            socket.onmessage = $.$mol_fiber.func(event => {
+                const message = JSON.parse(event.data);
+                if (!Array.isArray(message))
+                    return;
+                const [prefix, delta] = message;
+                if (typeof prefix !== 'string')
+                    return;
+                if (!delta)
+                    return;
+                const store = this.store(prefix);
+                store.apply(delta);
+                this.$.$mol_store_local.value(prefix, store.delta());
+                this.version_last(prefix, store.clock.version_max);
+            });
+            socket.onclose = socket.onerror = $.$mol_fiber.func(() => {
+                new this.$.$mol_after_timeout(5000, atom.fresh);
+            });
+            return socket;
+        }
+        send(key, next) {
+            const socket = this.socket();
+            if (socket.readyState === socket.CONNECTING) {
+                $.$mol_fiber_sync(() => new Promise(done => {
+                    socket.addEventListener('open', done);
+                }))();
+            }
+            const message = next === undefined ? [key] : [key, next];
+            socket.send(JSON.stringify(message));
+        }
+    }
+    __decorate([
+        $.$mol_mem_key
+    ], $mol_store_shared.prototype, "store", null);
+    __decorate([
+        $.$mol_mem_key
+    ], $mol_store_shared.prototype, "version_last", null);
+    __decorate([
+        $.$mol_mem_key
+    ], $mol_store_shared.prototype, "request", null);
+    __decorate([
+        $.$mol_mem_key
+    ], $mol_store_shared.prototype, "value", null);
+    __decorate([
+        $.$mol_mem_key
+    ], $mol_store_shared.prototype, "sub", null);
+    __decorate([
+        $.$mol_mem
+    ], $mol_store_shared.prototype, "socket", null);
+    __decorate([
+        $.$mol_fiber.method
+    ], $mol_store_shared.prototype, "send", null);
+    $.$mol_store_shared = $mol_store_shared;
+})($ || ($ = {}));
+//shared.js.map
 ;
 "use strict";
 var $;
@@ -3162,7 +4042,7 @@ var $;
             return Object.keys(this.data());
         }
         entity_new(...kind) {
-            const id = $.$mol_guid(8, id => id in this.data());
+            const id = $.$mol_guid(8);
             const entity = this.entity(id);
             entity.property('meta-kind').target_join(...kind);
             return entity;
@@ -4039,25 +4919,14 @@ var $;
             }
         }
         text(next) {
-            var _a, _b;
-            const lang = this.$.$mol_locale.lang();
+            var _a, _b, _c;
+            const lang = this.kind().property_locale()
+                ? this.$.$mol_locale.lang()
+                : 'en';
             if (next !== undefined) {
-                let value = this.data();
-                if (value && (typeof value === 'object')) {
-                    value = value['en'];
-                }
-                if (this.kind().property_locale()) {
-                    this.data(Object.assign(Object.assign({}, this.data()), { en: value, [lang]: next }));
-                }
-                else {
-                    this.data(next);
-                }
+                return this.value(lang, next);
             }
-            let value = (_a = this.data()) !== null && _a !== void 0 ? _a : this.value_default();
-            if (value && (typeof value === 'object')) {
-                value = (_b = value[lang]) !== null && _b !== void 0 ? _b : value['en'];
-            }
-            return String(value !== null && value !== void 0 ? value : '');
+            return String((_c = (_b = (_a = this.value(lang)) !== null && _a !== void 0 ? _a : this.value('en')) !== null && _b !== void 0 ? _b : this.value_default()) !== null && _c !== void 0 ? _c : '');
         }
         integer(next) {
             var _a;
@@ -4248,135 +5117,6 @@ var $;
     $.$mol_dimmer = $mol_dimmer;
 })($ || ($ = {}));
 //dimmer.view.tree.js.map
-;
-"use strict";
-//intersect.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    class $mol_regexp extends RegExp {
-        constructor(source, flags = '', groups = []) {
-            super(source, flags);
-            this.groups = groups;
-        }
-        get parse() {
-            const self = this;
-            return function* parsing(str, from = 0) {
-                while (from < str.length) {
-                    self.lastIndex = from;
-                    const res = self.exec(str);
-                    if (res === null) {
-                        yield { 0: str.substring(from) };
-                        return null;
-                    }
-                    if (from === self.lastIndex) {
-                        $.$mol_fail(new Error('Captured empty substring'));
-                    }
-                    const found = {};
-                    const skipped = str.slice(from, self.lastIndex - res[0].length);
-                    if (skipped)
-                        yield { 0: skipped };
-                    from = self.lastIndex;
-                    for (let i = 0; i < self.groups.length; ++i) {
-                        const group = self.groups[i];
-                        found[group] = found[group] || res[i + 1] || '';
-                    }
-                    yield found;
-                }
-            };
-        }
-        static repeat(source, min = 0, max = Number.POSITIVE_INFINITY) {
-            const regexp = $mol_regexp.from(source);
-            const upper = Number.isFinite(max) ? max : '';
-            return new $mol_regexp(`(?:${regexp.source}){${min},${upper}}?`, regexp.flags, regexp.groups);
-        }
-        static repeat_greedy(source, min = 0, max = Number.POSITIVE_INFINITY) {
-            const regexp = $mol_regexp.from(source);
-            const upper = Number.isFinite(max) ? max : '';
-            return new $mol_regexp(`(?:${regexp.source}){${min},${upper}}`, regexp.flags, regexp.groups);
-        }
-        static optional(source) {
-            return $mol_regexp.repeat_greedy(source, 0, 1);
-        }
-        static force_after(source) {
-            const regexp = $mol_regexp.from(source);
-            return new $mol_regexp(`(?=${regexp.source})`, regexp.flags, regexp.groups);
-        }
-        static forbid_after(source) {
-            const regexp = $mol_regexp.from(source);
-            return new $mol_regexp(`(?!${regexp.source})`, regexp.flags, regexp.groups);
-        }
-        static from(source, { ignoreCase, multiline } = {
-            ignoreCase: false,
-            multiline: false,
-        }) {
-            let flags = 'gu';
-            if (multiline)
-                flags += 'm';
-            if (ignoreCase)
-                flags += 'i';
-            if (typeof source === 'string') {
-                return new $mol_regexp(source.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), flags);
-            }
-            else if (source instanceof RegExp) {
-                if (source instanceof $mol_regexp)
-                    return source;
-                const test = new $mol_regexp('|' + source.source);
-                const groups = Array.from({ length: test.exec('').length - 1 }, (_, i) => String(i + 1));
-                return new $mol_regexp(source.source, source.flags, groups);
-            }
-            if (Array.isArray(source)) {
-                const sources = [];
-                const groups = [];
-                let index = 0;
-                for (const item of source) {
-                    const regexp = $mol_regexp.from(item);
-                    sources.push(regexp.source);
-                    for (let group of regexp.groups) {
-                        if (Number(group) >= 0) {
-                            groups.push(String(index++));
-                        }
-                        else {
-                            groups.push(group);
-                        }
-                    }
-                }
-                return new $mol_regexp(sources.join(''), flags, groups);
-            }
-            else {
-                const groups = [];
-                const chunks = Object.keys(source).map(name => {
-                    groups.push(name);
-                    const regexp = $mol_regexp.from(source[name]);
-                    groups.push(...regexp.groups);
-                    return `(${regexp.source})`;
-                });
-                return new $mol_regexp(`(?:${chunks.join('|')})`, flags, groups);
-            }
-        }
-        static char_code(code) {
-            return new $mol_regexp(`\\u${code.toString(16).padStart(4, '0')}`);
-        }
-        static byte_except(...forbidden) {
-            const regexp = forbidden.map(f => $mol_regexp.from(f).source).join('');
-            return new $mol_regexp(`[^${regexp}]`);
-        }
-    }
-    $mol_regexp.byte = $mol_regexp.from(/[\s\S]/);
-    $mol_regexp.digit = $mol_regexp.from(/\d/);
-    $mol_regexp.letter = $mol_regexp.from(/\w/);
-    $mol_regexp.space = $mol_regexp.from(/\s/);
-    $mol_regexp.tab = $mol_regexp.from(/\t/);
-    $mol_regexp.slash_back = $mol_regexp.from(/\\/);
-    $mol_regexp.word_break = $mol_regexp.from(/\b/);
-    $mol_regexp.line_end = $mol_regexp.from(/\r?\n/);
-    $mol_regexp.begin = $mol_regexp.from(/^/);
-    $mol_regexp.end = $mol_regexp.from(/$/);
-    $mol_regexp.or = $mol_regexp.from(/|/);
-    $.$mol_regexp = $mol_regexp;
-})($ || ($ = {}));
-//regexp.js.map
 ;
 "use strict";
 var $;
@@ -10131,7 +10871,7 @@ var $;
 (function ($) {
     class $hyoo_case extends $.$mol_book2 {
         Upstream() {
-            const obj = new this.$.$mol_store_socket();
+            const obj = new this.$.$mol_store_shared();
             return obj;
         }
         plugins() {
@@ -10178,7 +10918,9 @@ var $;
                         en: "Meta",
                         ru: "Мета"
                     },
-                    "meta-icon": "💥",
+                    "meta-icon": {
+                        en: "💥"
+                    },
                     "meta-description": {
                         en: "Kind that has other kinds as members",
                         ru: "Тип представителями которого являются другие типы"
@@ -10205,7 +10947,9 @@ var $;
                         en: "Entity",
                         ru: "Сущность"
                     },
-                    "meta-icon": "🌟",
+                    "meta-icon": {
+                        en: "🌟"
+                    },
                     "meta-description": {
                         en: "Base kind for all entity kinds",
                         ru: "Базовый тип для типов прикладных сущностей"
@@ -10223,7 +10967,9 @@ var $;
                     ]
                 },
                 property_type: {
-                    "meta-icon": "✨",
+                    "meta-icon": {
+                        en: "✨"
+                    },
                     "meta-kind": [
                         "meta"
                     ],
@@ -10258,7 +11004,9 @@ var $;
                         en: "Link to entity",
                         ru: "Связь с другим объектом"
                     },
-                    "meta-icon": "💫",
+                    "meta-icon": {
+                        en: "💫"
+                    },
                     "meta-properties": [
                         "meta-name",
                         "meta-description",
@@ -10290,7 +11038,9 @@ var $;
                         en: "Text",
                         ru: "Текст"
                     },
-                    "meta-icon": "📃",
+                    "meta-icon": {
+                        en: "📃"
+                    },
                     "meta-properties": [
                         "meta-name",
                         "meta-description",
@@ -10317,7 +11067,9 @@ var $;
                         en: "Integer",
                         ru: "Число"
                     },
-                    "meta-icon": "🎱",
+                    "meta-icon": {
+                        en: "🎱"
+                    },
                     "meta-properties": [
                         "meta-name",
                         "meta-description",
@@ -10343,7 +11095,9 @@ var $;
                         en: "Boolean",
                         ru: "Флаг"
                     },
-                    "meta-icon": "🚩",
+                    "meta-icon": {
+                        en: "🚩"
+                    },
                     "meta-properties": [
                         "meta-name",
                         "meta-description",
@@ -10680,7 +11434,9 @@ var $;
                     "meta-kind": [
                         "case"
                     ],
-                    "meta-icon": "💼",
+                    "meta-icon": {
+                        en: "💼"
+                    },
                     "meta-name": {
                         en: "Business case"
                     },
@@ -10734,7 +11490,9 @@ var $;
                     "meta-kind": [
                         "entity"
                     ],
-                    "meta-icon": "🏁",
+                    "meta-icon": {
+                        en: "🏁"
+                    },
                     "meta-name": {
                         en: "Language",
                         ru: "Язык"
@@ -10907,12 +11665,7 @@ var $;
                 ];
             }
             domain() {
-                const domain = super.domain();
-                domain.value = (key, next) => {
-                    var _a, _b;
-                    return (_b = (_a = null !== null && null !== void 0 ? null : this.Upstream().value(key, next)) !== null && _a !== void 0 ? _a : domain.data_default[key]) !== null && _b !== void 0 ? _b : { 'meta-kind': ['meta-kind'] };
-                };
-                return domain;
+                return this.Upstream().sub('', super.domain());
             }
             entity(id) {
                 return this.domain().entity(id);
