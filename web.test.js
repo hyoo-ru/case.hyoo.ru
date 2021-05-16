@@ -3109,15 +3109,60 @@ var $;
             $.$mol_assert_equal(regexp.exec('x5')[0], 'x');
         },
         'byte except'() {
-            const { char_except: byte_except, letter, tab } = $.$mol_regexp;
-            const name = byte_except(letter, tab);
+            const { char_except, letter, tab } = $.$mol_regexp;
+            const name = char_except(letter, tab);
             $.$mol_assert_equal(name.exec('a'), null);
             $.$mol_assert_equal(name.exec('\t'), null);
             $.$mol_assert_equal(name.exec('(')[0], '(');
         },
+        'unicode only'() {
+            const { unicode_only } = $.$mol_regexp;
+            const name = $.$mol_regexp.from([
+                unicode_only('Script', 'Cyrillic'),
+                unicode_only('Hex_Digit'),
+            ]);
+            $.$mol_assert_equal(name.exec('FF'), null);
+            $.$mol_assert_equal(name.exec('ФG'), null);
+            $.$mol_assert_equal(name.exec('ФF')[0], 'ФF');
+        },
     });
 })($ || ($ = {}));
 //regexp.test.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    $.$mol_test({
+        'empty string'() {
+            $.$mol_assert_like([...$.$hyoo_crowd_text_tokenizer.parse('')], []);
+        },
+        'new lines'() {
+            $.$mol_assert_like([...$.$hyoo_crowd_text_tokenizer.parse('\n\r\n')].map(t => t.token), ['\n', '\r\n']);
+        },
+        'emoji'() {
+            $.$mol_assert_like([...$.$hyoo_crowd_text_tokenizer.parse('😀😁')].map(t => t.token), ['😀', '😁']);
+        },
+        'emoji with modifier'() {
+            $.$mol_assert_like([...$.$hyoo_crowd_text_tokenizer.parse('👩🏿👩🏿')].map(t => t.token), ['👩🏿', '👩🏿']);
+        },
+        'combo emoji with modifier'() {
+            $.$mol_assert_like([...$.$hyoo_crowd_text_tokenizer.parse('👩🏿‍🤝‍🧑🏿👩🏿‍🤝‍🧑🏿')].map(t => t.token), ['👩🏿‍🤝‍🧑🏿', '👩🏿‍🤝‍🧑🏿']);
+        },
+        'word with spaces'() {
+            $.$mol_assert_like([...$.$hyoo_crowd_text_tokenizer.parse('foo1  bar2')].map(t => t.token), ['foo1 ', ' ', 'bar2']);
+        },
+        'word with diactric'() {
+            $.$mol_assert_like([...$.$hyoo_crowd_text_tokenizer.parse('Е́е́')].map(t => t.token), ['Е́е́']);
+        },
+        'word with punctuation'() {
+            $.$mol_assert_like([...$.$hyoo_crowd_text_tokenizer.parse('foo--bar')].map(t => t.token), ['foo--', 'bar']);
+        },
+        'CamelCase'() {
+            $.$mol_assert_like([...$.$hyoo_crowd_text_tokenizer.parse('Foo1BAR2')].map(t => t.token), ['Foo1', 'BAR2']);
+        },
+    });
+})($ || ($ = {}));
+//tokenizer.test.js.map
 ;
 "use strict";
 var $;

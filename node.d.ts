@@ -1201,7 +1201,32 @@ declare namespace $ {
 }
 
 declare namespace $ {
+    class $hyoo_crowd_list extends $hyoo_crowd_store {
+        protected clock_self: $hyoo_crowd_clock;
+        protected readonly array: $hyoo_crowd_delta_value[];
+        protected readonly stamps: Map<$hyoo_crowd_delta_value, number>;
+        get count(): number;
+        items<Key extends $hyoo_crowd_delta_value>(next?: Key[]): Key[];
+        get items_internal(): readonly $hyoo_crowd_delta_value[];
+        has(val: $hyoo_crowd_delta_value): boolean;
+        version_item(val: $hyoo_crowd_delta_value): number;
+        version_feed(version: number): void;
+        delta(clock?: $hyoo_crowd_clock): ReturnType<typeof $hyoo_crowd_delta>;
+        insert(key: $hyoo_crowd_delta_value, pos?: number): this;
+        cut(key: $hyoo_crowd_delta_value): this;
+        apply(delta: ReturnType<typeof $hyoo_crowd_delta>): this;
+    }
+}
+
+declare namespace $ {
     type $mol_type_intersect<Union> = (Union extends any ? (_: Union) => void : never) extends ((_: infer Intersection) => void) ? Intersection : never;
+}
+
+declare namespace $ {
+    type $mol_unicode_category = [$mol_unicode_category_binary] | ['General_Category', $mol_char_category_general] | ['Script', $mol_unicode_category_script] | ['Script_Extensions', $mol_unicode_category_script];
+    type $mol_unicode_category_binary = 'ASCII' | 'ASCII_Hex_Digit' | 'Alphabetic' | 'Any' | 'Assigned' | 'Bidi_Control' | 'Bidi_Mirrored' | 'Case_Ignorable' | 'Cased' | 'Changes_When_Casefolded' | 'Changes_When_Casemapped' | 'Changes_When_Lowercased' | 'Changes_When_NFKC_Casefolded' | 'Changes_When_Titlecased' | 'Changes_When_Uppercased' | 'Dash' | 'Default_Ignorable_Code_Point' | 'Deprecated' | 'Diacritic' | 'Emoji' | 'Emoji_Component' | 'Emoji_Modifier' | 'Emoji_Modifier_Base' | 'Emoji_Presentation' | 'Extended_Pictographic' | 'Extender' | 'Grapheme_Base' | 'Grapheme_Extend' | 'Hex_Digit' | 'IDS_Binary_Operator' | 'IDS_Trinary_Operator' | 'ID_Continue' | 'ID_Start' | 'Ideographic' | 'Join_Control' | 'Logical_Order_Exception' | 'Lowercase' | 'Math' | 'Noncharacter_Code_Point' | 'Pattern_Syntax' | 'Pattern_White_Space' | 'Quotation_Mark' | 'Radical' | 'Regional_Indicator' | 'Sentence_Terminal' | 'Soft_Dotted' | 'Terminal_Punctuation' | 'Unified_Ideograph' | 'Uppercase' | 'Variation_Selector' | 'White_Space' | 'XID_Continue' | 'XID_Start';
+    type $mol_char_category_general = 'Cased_Letter' | 'Close_Punctuation' | 'Connector_Punctuation' | 'Control' | 'Currency_Symbol' | 'Dash_Punctuation' | 'Decimal_Number' | 'Enclosing_Mark' | 'Final_Punctuation' | 'Format' | 'Initial_Punctuation' | 'Letter' | 'Letter_Number' | 'Line_Separator' | 'Lowercase_Letter' | 'Mark' | 'Math_Symbol' | 'Modifier_Letter' | 'Modifier_Symbol' | 'Nonspacing_Mark' | 'Number' | 'Open_Punctuation' | 'Other' | 'Other_Letter' | 'Other_Number' | 'Other_Punctuation' | 'Other_Symbol' | 'Paragraph_Separator' | 'Private_Use' | 'Punctuation' | 'Separator' | 'Space_Separator' | 'Spacing_Mark' | 'Surrogate' | 'Symbol' | 'Titlecase_Letter' | 'Unassigned' | 'Uppercase_Letter';
+    type $mol_unicode_category_script = 'Adlam' | 'Ahom' | 'Anatolian_Hieroglyphs' | 'Arabic' | 'Armenian' | 'Avestan' | 'Balinese' | 'Bamum' | 'Bassa_Vah' | 'Batak' | 'Bengali' | 'Bhaiksuki' | 'Bopomofo' | 'Brahmi' | 'Braille' | 'Buginese' | 'Buhid' | 'Canadian_Aboriginal' | 'Carian' | 'Caucasian_Albanian' | 'Chakma' | 'Cham' | 'Chorasmian' | 'Cherokee' | 'Common' | 'Coptic' | 'Cuneiform' | 'Cypriot' | 'Cyrillic' | 'Deseret' | 'Devanagari' | 'Dives_Akuru' | 'Dogra' | 'Duployan' | 'Egyptian_Hieroglyphs' | 'Elbasan' | 'Elymaic' | 'Ethiopic' | 'Georgian' | 'Glagolitic' | 'Gothic' | 'Grantha' | 'Greek' | 'Gujarati' | 'Gunjala_Gondi' | 'Gurmukhi' | 'Han' | 'Hangul' | 'Hanifi_Rohingya' | 'Hanunoo' | 'Hatran' | 'Hebrew' | 'Hiragana' | 'Imperial_Aramaic' | 'Inherited' | 'Inscriptional_Pahlavi' | 'Inscriptional_Parthian' | 'Javanese' | 'Kaithi' | 'Kannada' | 'Katakana' | 'Kayah_Li' | 'Kharoshthi' | 'Khitan_Small_Script' | 'Khmer' | 'Khojki' | 'Khudawadi' | 'Lao' | 'Latin' | 'Lepcha' | 'Limbu' | 'Linear_A' | 'Linear_B' | 'Lisu' | 'Lycian' | 'Lydian' | 'Mahajani' | 'Makasar' | 'Malayalam' | 'Mandaic' | 'Manichaean' | 'Marchen' | 'Medefaidrin' | 'Masaram_Gondi' | 'Meetei_Mayek' | 'Mende_Kikakui' | 'Meroitic_Cursive' | 'Meroitic_Hieroglyphs' | 'Miao' | 'Modi' | 'Mongolian' | 'Mro' | 'Multani' | 'Myanmar' | 'Nabataean' | 'Nandinagari' | 'New_Tai_Lue' | 'Newa' | 'Nko' | 'Nushu' | 'Nyiakeng_Puachue_Hmong' | 'Ogham' | 'Ol_Chiki' | 'Old_Hungarian' | 'Old_Italic' | 'Old_North_Arabian' | 'Old_Permic' | 'Old_Persian' | 'Old_Sogdian' | 'Old_South_Arabian' | 'Old_Turkic' | 'Oriya' | 'Osage' | 'Osmanya' | 'Pahawh_Hmong' | 'Palmyrene' | 'Pau_Cin_Hau' | 'Phags_Pa' | 'Phoenician' | 'Psalter_Pahlavi' | 'Rejang' | 'Runic' | 'Samaritan' | 'Saurashtra' | 'Sharada' | 'Shavian' | 'Siddham' | 'SignWriting' | 'Sinhala' | 'Sogdian' | 'Sora_Sompeng' | 'Soyombo' | 'Sundanese' | 'Syloti_Nagri' | 'Syriac' | 'Tagalog' | 'Tagbanwa' | 'Tai_Le' | 'Tai_Tham' | 'Tai_Viet' | 'Takri' | 'Tamil' | 'Tangut' | 'Telugu' | 'Thaana' | 'Thai' | 'Tibetan' | 'Tifinagh' | 'Tirhuta' | 'Ugaritic' | 'Vai' | 'Wancho' | 'Warang_Citi' | 'Yezidi' | 'Yi' | 'Zanabazar_Square';
 }
 
 declare namespace $ {
@@ -1230,6 +1255,8 @@ declare namespace $ {
         static forbid_after(source: $mol_regexp_source): $mol_regexp<Record<string, string>>;
         static from<Source extends $mol_regexp_source>(source: Source, { ignoreCase, multiline }?: Partial<Pick<RegExp, 'ignoreCase' | 'multiline'>>): $mol_regexp<$mol_regexp_groups<Source>>;
         static char_code(code: number): $mol_regexp<Record<string, string>>;
+        static unicode_only(...category: $mol_unicode_category): $mol_regexp<Record<string, string>>;
+        static unicode_except(...category: $mol_unicode_category): $mol_regexp<Record<string, string>>;
         static char_range(from: number, to: number): $mol_regexp<never>;
         static char_only(...allowed: readonly [$mol_regexp_source, ...$mol_regexp_source[]]): $mol_regexp<never>;
         static char_except(...forbidden: readonly [$mol_regexp_source, ...$mol_regexp_source[]]): $mol_regexp<never>;
@@ -1248,21 +1275,13 @@ declare namespace $ {
 }
 
 declare namespace $ {
-    class $hyoo_crowd_list extends $hyoo_crowd_store {
-        protected clock_self: $hyoo_crowd_clock;
-        protected readonly array: $hyoo_crowd_delta_value[];
-        protected readonly stamps: Map<$hyoo_crowd_delta_value, number>;
-        get count(): number;
-        items<Key extends $hyoo_crowd_delta_value>(next?: Key[]): Key[];
-        get items_internal(): readonly $hyoo_crowd_delta_value[];
-        has(val: $hyoo_crowd_delta_value): boolean;
-        version_item(val: $hyoo_crowd_delta_value): number;
-        version_feed(version: number): void;
-        delta(clock?: $hyoo_crowd_clock): ReturnType<typeof $hyoo_crowd_delta>;
-        insert(key: $hyoo_crowd_delta_value, pos?: number): this;
-        cut(key: $hyoo_crowd_delta_value): this;
-        apply(delta: ReturnType<typeof $hyoo_crowd_delta>): this;
-    }
+    let $hyoo_crowd_text_tokenizer: $mol_regexp<{
+        token: string;
+    } & Record<string, string> & {
+        "line-break": string;
+        emoji: string;
+        "Word-punctuation-space": string;
+    }>;
 }
 
 declare namespace $ {
@@ -1477,7 +1496,7 @@ declare namespace $ {
                     };
                     make<Instance>(this: new () => Instance): Instance;
                 };
-            }[Field_3 extends "flow" | "token" ? Field_3 : "flow" | "token"]>;
+            }[Field_3 extends "token" | "flow" ? Field_3 : "token" | "flow"]>;
             delta(clock?: $hyoo_crowd_clock): {
                 values: $hyoo_crowd_delta_value[];
                 stamps: number[];
@@ -2562,12 +2581,15 @@ declare namespace $ {
         enabled(): boolean;
         minimal_height(): number;
         autocomplete(): boolean;
+        auto(): readonly any[];
         field(): {
             disabled: boolean;
             value: any;
             placeholder: string;
             spellcheck: boolean;
             autocomplete: string;
+            selectionEnd: any;
+            selectionStart: any;
         };
         attr(): {
             maxlength: number;
@@ -2578,12 +2600,15 @@ declare namespace $ {
             keydown: (event?: any) => any;
         };
         plugins(): readonly any[];
+        selection_watcher(): any;
         disabled(): boolean;
         value(val?: any): any;
         value_changed(val?: any): any;
         hint(): string;
         spellcheck(): boolean;
         autocomplete_native(): string;
+        selection_end(val?: any): any;
+        selection_start(val?: any): any;
         length_max(): number;
         type(val?: any): any;
         event_change(event?: any): any;
@@ -2601,6 +2626,8 @@ declare namespace $.$$ {
         event_change(next?: Event): void;
         disabled(): boolean;
         autocomplete_native(): "on" | "off";
+        selection_watcher(): $mol_dom_listener;
+        selection_change(event: Event): void;
     }
 }
 
