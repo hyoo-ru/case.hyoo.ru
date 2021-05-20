@@ -1052,6 +1052,7 @@ declare namespace $ {
         data(next?: Data): Data;
         snapshot(next?: string): string;
         value<Key extends keyof Data>(key: Key, next?: Data[Key]): NonNullable<Data[Key]>;
+        selection<Key extends keyof Data>(key: Key, next?: number[]): number[];
         sub<Key extends keyof Data, Lens extends $mol_store<Data[Key]> = $mol_store<NonNullable<Data[Key]>>>(key: Key, lens?: Lens): NonNullable<Lens>;
         reset(): void;
         active(): boolean;
@@ -1540,9 +1541,11 @@ declare namespace $ {
     };
     export class $hyoo_crowd_text extends $hyoo_crowd_text_base {
         get root(): $hyoo_crowd_list;
-        get tokens(): string[];
-        value_of(token: string): string;
+        get tokens(): number[];
+        value_of(token: number): string;
         text(next?: string): string;
+        point_by_offset(offset: number): number[];
+        offset_by_point(point: number[]): number;
         splice_line(id: string | null, from: number, to: number, text: string): this;
         write(text: string, offset?: number, count?: number): this;
     }
@@ -1756,6 +1759,8 @@ declare namespace $ {
         version_last(prefix: string, next?: number): number;
         request(prefix: string): null;
         value<Key extends keyof $mol_store_shared_data>(key: Key, next?: $mol_store_shared_data[Key]): string | number | boolean | string[];
+        selection<Key extends keyof $mol_store_shared_data>(key: Key, next?: number[]): number[];
+        selection_range<Key extends keyof $mol_store_shared_data>(key: Key, next?: number[][]): number[][];
         sub<Key extends string, Lens extends $mol_store<any> = $mol_store<$mol_store_shared_data>>(key: Key, lens?: Lens): NonNullable<NonNullable<Lens>>;
         server(): string;
         socket(): WebSocket;
@@ -2581,6 +2586,7 @@ declare namespace $ {
         enabled(): boolean;
         minimal_height(): number;
         autocomplete(): boolean;
+        selection(val?: any): any;
         auto(): readonly any[];
         field(): {
             disabled: boolean;
@@ -2588,8 +2594,8 @@ declare namespace $ {
             placeholder: string;
             spellcheck: boolean;
             autocomplete: string;
-            selectionEnd: any;
-            selectionStart: any;
+            selectionEnd: number;
+            selectionStart: number;
         };
         attr(): {
             maxlength: number;
@@ -2607,8 +2613,8 @@ declare namespace $ {
         hint(): string;
         spellcheck(): boolean;
         autocomplete_native(): string;
-        selection_end(val?: any): any;
-        selection_start(val?: any): any;
+        selection_end(): number;
+        selection_start(): number;
         length_max(): number;
         type(val?: any): any;
         event_change(event?: any): any;
@@ -2628,6 +2634,8 @@ declare namespace $.$$ {
         autocomplete_native(): "on" | "off";
         selection_watcher(): $mol_dom_listener;
         selection_change(event: Event): void;
+        selection_start(): any;
+        selection_end(): any;
     }
 }
 
@@ -3078,6 +3086,7 @@ declare namespace $ {
         hint(): string;
         enabled(): boolean;
         length_max(): number;
+        selection(val?: any): any;
         Edit(): $$.$mol_string;
         row_numb(index: any): number;
         View(): $$.$mol_text_code;
