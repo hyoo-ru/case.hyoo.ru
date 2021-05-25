@@ -2406,8 +2406,7 @@ var $;
         numb() {
             return this.value();
         }
-        delta(clock = new $.$hyoo_crowd_clock) {
-            const delta = $.$hyoo_crowd_delta([], []);
+        delta(clock = new $.$hyoo_crowd_clock, delta = $.$hyoo_crowd_delta([], [])) {
             for (const store of this.stores.values()) {
                 const patch = store.delta(clock);
                 if (patch.values.length === 0)
@@ -2524,8 +2523,7 @@ var $;
             var _a;
             return this.clock.version_from((_a = this.stamps.get(val)) !== null && _a !== void 0 ? _a : 0);
         }
-        delta(clock = new $.$hyoo_crowd_clock) {
-            const delta = $.$hyoo_crowd_delta([], []);
+        delta(clock = new $.$hyoo_crowd_clock, delta = $.$hyoo_crowd_delta([], [])) {
             for (const [key, stamp] of this.stamps) {
                 if (!clock.is_new(stamp))
                     continue;

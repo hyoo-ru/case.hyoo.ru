@@ -1064,7 +1064,10 @@ declare namespace $ {
         clock: $hyoo_crowd_clock;
         static make<Instance>(this: new () => Instance): Instance;
         constructor(clock?: $hyoo_crowd_clock);
-        delta(clock?: $hyoo_crowd_clock): ReturnType<typeof $hyoo_crowd_delta>;
+        delta(clock?: $hyoo_crowd_clock, delta?: {
+            values: $hyoo_crowd_delta_value[];
+            stamps: number[];
+        }): ReturnType<typeof $hyoo_crowd_delta>;
         toJSON(): {
             values: $hyoo_crowd_delta_value[];
             stamps: number[];
@@ -1082,7 +1085,10 @@ declare namespace $ {
                 stores: Map<$hyoo_crowd_delta_value, InstanceType<Types[string]>>;
                 has(key: $hyoo_crowd_delta_value): boolean;
                 for<Field extends $hyoo_crowd_delta_value | Extract<keyof Types, string>>(key: Field): InstanceType<Types[Field extends keyof Types ? Field : keyof Types]>;
-                delta(clock?: $hyoo_crowd_clock): {
+                delta(clock?: $hyoo_crowd_clock, delta?: {
+                    values: $hyoo_crowd_delta_value[];
+                    stamps: number[];
+                }): {
                     values: $hyoo_crowd_delta_value[];
                     stamps: number[];
                 };
@@ -1104,7 +1110,10 @@ declare namespace $ {
         stores: Map<$hyoo_crowd_delta_value, InstanceType<Fields[string]>>;
         has(key: $hyoo_crowd_delta_value): boolean;
         for<Field extends Extract<keyof Fields, string> | $hyoo_crowd_delta_value>(key: Field): InstanceType<Fields[Field extends keyof Fields ? Field : keyof Fields]>;
-        delta(clock?: $hyoo_crowd_clock): {
+        delta(clock?: $hyoo_crowd_clock, delta?: {
+            values: $hyoo_crowd_delta_value[];
+            stamps: number[];
+        }): {
             values: $hyoo_crowd_delta_value[];
             stamps: number[];
         };
@@ -1121,7 +1130,10 @@ declare namespace $ {
         str(next?: string): string;
         numb(next?: number): number;
         bool(next?: boolean): boolean;
-        delta(clock?: $hyoo_crowd_clock): {
+        delta(clock?: $hyoo_crowd_clock, delta?: {
+            values: $hyoo_crowd_delta_value[];
+            stamps: number[];
+        }): {
             values: $hyoo_crowd_delta_value[];
             stamps: number[];
         };
@@ -1143,7 +1155,10 @@ declare namespace $ {
                 readonly type: keyof Types | null;
                 as<Type extends keyof Types>(type: Type): InstanceType<Types[Type]> | null;
                 to<Type_1 extends keyof Types>(type: Type_1, stamp?: number | undefined): InstanceType<Types[Type_1]>;
-                delta(clock?: $hyoo_crowd_clock): {
+                delta(clock?: $hyoo_crowd_clock, delta?: {
+                    values: $hyoo_crowd_delta_value[];
+                    stamps: number[];
+                }): {
                     values: $hyoo_crowd_delta_value[];
                     stamps: number[];
                 };
@@ -1167,7 +1182,10 @@ declare namespace $ {
         get type(): keyof Types | null;
         as<Type extends keyof Types>(type: Type): InstanceType<Types[Type]> | null;
         to<Type extends keyof Types>(type: Type, stamp?: number): InstanceType<Types[Type]>;
-        delta(clock?: $hyoo_crowd_clock): {
+        delta(clock?: $hyoo_crowd_clock, delta?: {
+            values: $hyoo_crowd_delta_value[];
+            stamps: number[];
+        }): {
             values: $hyoo_crowd_delta_value[];
             stamps: number[];
         };
@@ -1186,7 +1204,10 @@ declare namespace $ {
         has(val: $hyoo_crowd_delta_value): boolean;
         version_item(val: $hyoo_crowd_delta_value): number;
         version_feed(version: number): void;
-        delta(clock?: $hyoo_crowd_clock): ReturnType<typeof $hyoo_crowd_delta>;
+        delta(clock?: $hyoo_crowd_clock, delta?: {
+            values: $hyoo_crowd_delta_value[];
+            stamps: number[];
+        }): ReturnType<typeof $hyoo_crowd_delta>;
         insert(key: $hyoo_crowd_delta_value, pos?: number): this;
         cut(key: $hyoo_crowd_delta_value): this;
         apply(delta: ReturnType<typeof $hyoo_crowd_delta>): this;
@@ -1273,7 +1294,10 @@ declare namespace $ {
                         for<Field extends $hyoo_crowd_delta_value>(key: Field): InstanceType<{
                             val: typeof $hyoo_crowd_list;
                         }[Field extends "val" ? Field : "val"]>;
-                        delta(clock?: $hyoo_crowd_clock): {
+                        delta(clock?: $hyoo_crowd_clock, delta?: {
+                            values: $hyoo_crowd_delta_value[];
+                            stamps: number[];
+                        }): {
                             values: $hyoo_crowd_delta_value[];
                             stamps: number[];
                         };
@@ -1294,7 +1318,10 @@ declare namespace $ {
                             stores: Map<$hyoo_crowd_delta_value, InstanceType<Types[string]>>;
                             has(key: $hyoo_crowd_delta_value): boolean;
                             for<Field_1 extends $hyoo_crowd_delta_value | Extract<keyof Types, string>>(key: Field_1): InstanceType<Types[Field_1 extends keyof Types ? Field_1 : keyof Types]>;
-                            delta(clock?: $hyoo_crowd_clock): {
+                            delta(clock?: $hyoo_crowd_clock, delta?: {
+                                values: $hyoo_crowd_delta_value[];
+                                stamps: number[];
+                            }): {
                                 values: $hyoo_crowd_delta_value[];
                                 stamps: number[];
                             };
@@ -1324,7 +1351,10 @@ declare namespace $ {
                         for<Field_2 extends $hyoo_crowd_delta_value>(key: Field_2): InstanceType<{
                             val: typeof $hyoo_crowd_reg;
                         }[Field_2 extends "val" ? Field_2 : "val"]>;
-                        delta(clock?: $hyoo_crowd_clock): {
+                        delta(clock?: $hyoo_crowd_clock, delta?: {
+                            values: $hyoo_crowd_delta_value[];
+                            stamps: number[];
+                        }): {
                             values: $hyoo_crowd_delta_value[];
                             stamps: number[];
                         };
@@ -1345,7 +1375,10 @@ declare namespace $ {
                             stores: Map<$hyoo_crowd_delta_value, InstanceType<Types[string]>>;
                             has(key: $hyoo_crowd_delta_value): boolean;
                             for<Field_1 extends $hyoo_crowd_delta_value | Extract<keyof Types, string>>(key: Field_1): InstanceType<Types[Field_1 extends keyof Types ? Field_1 : keyof Types]>;
-                            delta(clock?: $hyoo_crowd_clock): {
+                            delta(clock?: $hyoo_crowd_clock, delta?: {
+                                values: $hyoo_crowd_delta_value[];
+                                stamps: number[];
+                            }): {
                                 values: $hyoo_crowd_delta_value[];
                                 stamps: number[];
                             };
@@ -1379,7 +1412,10 @@ declare namespace $ {
                         for<Field extends $hyoo_crowd_delta_value>(key: Field): InstanceType<{
                             val: typeof $hyoo_crowd_list;
                         }[Field extends "val" ? Field : "val"]>;
-                        delta(clock?: $hyoo_crowd_clock): {
+                        delta(clock?: $hyoo_crowd_clock, delta?: {
+                            values: $hyoo_crowd_delta_value[];
+                            stamps: number[];
+                        }): {
                             values: $hyoo_crowd_delta_value[];
                             stamps: number[];
                         };
@@ -1400,7 +1436,10 @@ declare namespace $ {
                             stores: Map<$hyoo_crowd_delta_value, InstanceType<Types[string]>>;
                             has(key: $hyoo_crowd_delta_value): boolean;
                             for<Field_1 extends $hyoo_crowd_delta_value | Extract<keyof Types, string>>(key: Field_1): InstanceType<Types[Field_1 extends keyof Types ? Field_1 : keyof Types]>;
-                            delta(clock?: $hyoo_crowd_clock): {
+                            delta(clock?: $hyoo_crowd_clock, delta?: {
+                                values: $hyoo_crowd_delta_value[];
+                                stamps: number[];
+                            }): {
                                 values: $hyoo_crowd_delta_value[];
                                 stamps: number[];
                             };
@@ -1430,7 +1469,10 @@ declare namespace $ {
                         for<Field_2 extends $hyoo_crowd_delta_value>(key: Field_2): InstanceType<{
                             val: typeof $hyoo_crowd_reg;
                         }[Field_2 extends "val" ? Field_2 : "val"]>;
-                        delta(clock?: $hyoo_crowd_clock): {
+                        delta(clock?: $hyoo_crowd_clock, delta?: {
+                            values: $hyoo_crowd_delta_value[];
+                            stamps: number[];
+                        }): {
                             values: $hyoo_crowd_delta_value[];
                             stamps: number[];
                         };
@@ -1451,7 +1493,10 @@ declare namespace $ {
                             stores: Map<$hyoo_crowd_delta_value, InstanceType<Types[string]>>;
                             has(key: $hyoo_crowd_delta_value): boolean;
                             for<Field_1 extends $hyoo_crowd_delta_value | Extract<keyof Types, string>>(key: Field_1): InstanceType<Types[Field_1 extends keyof Types ? Field_1 : keyof Types]>;
-                            delta(clock?: $hyoo_crowd_clock): {
+                            delta(clock?: $hyoo_crowd_clock, delta?: {
+                                values: $hyoo_crowd_delta_value[];
+                                stamps: number[];
+                            }): {
                                 values: $hyoo_crowd_delta_value[];
                                 stamps: number[];
                             };
@@ -1472,7 +1517,10 @@ declare namespace $ {
                     make<Instance>(this: new () => Instance): Instance;
                 };
             }[Field_3 extends "token" | "flow" ? Field_3 : "token" | "flow"]>;
-            delta(clock?: $hyoo_crowd_clock): {
+            delta(clock?: $hyoo_crowd_clock, delta?: {
+                values: $hyoo_crowd_delta_value[];
+                stamps: number[];
+            }): {
                 values: $hyoo_crowd_delta_value[];
                 stamps: number[];
             };
@@ -1493,7 +1541,10 @@ declare namespace $ {
                 stores: Map<$hyoo_crowd_delta_value, InstanceType<Types[string]>>;
                 has(key: $hyoo_crowd_delta_value): boolean;
                 for<Field_1 extends $hyoo_crowd_delta_value | Extract<keyof Types, string>>(key: Field_1): InstanceType<Types[Field_1 extends keyof Types ? Field_1 : keyof Types]>;
-                delta(clock?: $hyoo_crowd_clock): {
+                delta(clock?: $hyoo_crowd_clock, delta?: {
+                    values: $hyoo_crowd_delta_value[];
+                    stamps: number[];
+                }): {
                     values: $hyoo_crowd_delta_value[];
                     stamps: number[];
                 };
@@ -1550,7 +1601,10 @@ declare namespace $ {
                             text: typeof $hyoo_crowd_text;
                             edge: typeof $hyoo_crowd_list;
                         }[Type_1]>;
-                        delta(clock?: $hyoo_crowd_clock): {
+                        delta(clock?: $hyoo_crowd_clock, delta?: {
+                            values: $hyoo_crowd_delta_value[];
+                            stamps: number[];
+                        }): {
                             values: $hyoo_crowd_delta_value[];
                             stamps: number[];
                         };
@@ -1573,7 +1627,10 @@ declare namespace $ {
                             readonly type: keyof Types | null;
                             as<Type_2 extends keyof Types>(type: Type_2): InstanceType<Types[Type_2]> | null;
                             to<Type_3 extends keyof Types>(type: Type_3, stamp?: number | undefined): InstanceType<Types[Type_3]>;
-                            delta(clock?: $hyoo_crowd_clock): {
+                            delta(clock?: $hyoo_crowd_clock, delta?: {
+                                values: $hyoo_crowd_delta_value[];
+                                stamps: number[];
+                            }): {
                                 values: $hyoo_crowd_delta_value[];
                                 stamps: number[];
                             };
@@ -1617,7 +1674,10 @@ declare namespace $ {
                             text: typeof $hyoo_crowd_text;
                             edge: typeof $hyoo_crowd_list;
                         }[Type_1]>;
-                        delta(clock?: $hyoo_crowd_clock): {
+                        delta(clock?: $hyoo_crowd_clock, delta?: {
+                            values: $hyoo_crowd_delta_value[];
+                            stamps: number[];
+                        }): {
                             values: $hyoo_crowd_delta_value[];
                             stamps: number[];
                         };
@@ -1640,7 +1700,10 @@ declare namespace $ {
                             readonly type: keyof Types | null;
                             as<Type_2 extends keyof Types>(type: Type_2): InstanceType<Types[Type_2]> | null;
                             to<Type_3 extends keyof Types>(type: Type_3, stamp?: number | undefined): InstanceType<Types[Type_3]>;
-                            delta(clock?: $hyoo_crowd_clock): {
+                            delta(clock?: $hyoo_crowd_clock, delta?: {
+                                values: $hyoo_crowd_delta_value[];
+                                stamps: number[];
+                            }): {
                                 values: $hyoo_crowd_delta_value[];
                                 stamps: number[];
                             };
@@ -1661,7 +1724,10 @@ declare namespace $ {
                     make<Instance>(this: new () => Instance): Instance;
                 };
             }[Field extends "val" ? Field : "val"]>;
-            delta(clock?: $hyoo_crowd_clock): {
+            delta(clock?: $hyoo_crowd_clock, delta?: {
+                values: $hyoo_crowd_delta_value[];
+                stamps: number[];
+            }): {
                 values: $hyoo_crowd_delta_value[];
                 stamps: number[];
             };
@@ -1682,7 +1748,10 @@ declare namespace $ {
                 stores: Map<$hyoo_crowd_delta_value, InstanceType<Types_1[string]>>;
                 has(key: $hyoo_crowd_delta_value): boolean;
                 for<Field_1 extends $hyoo_crowd_delta_value | Extract<keyof Types_1, string>>(key: Field_1): InstanceType<Types_1[Field_1 extends keyof Types_1 ? Field_1 : keyof Types_1]>;
-                delta(clock?: $hyoo_crowd_clock): {
+                delta(clock?: $hyoo_crowd_clock, delta?: {
+                    values: $hyoo_crowd_delta_value[];
+                    stamps: number[];
+                }): {
                     values: $hyoo_crowd_delta_value[];
                     stamps: number[];
                 };
