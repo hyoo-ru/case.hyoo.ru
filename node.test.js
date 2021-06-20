@@ -4467,11 +4467,13 @@ var $;
                 store.apply(delta);
                 this.$.$mol_store_local.value(prefix, store.delta());
                 this.version_last(prefix, store.clock.version_max);
+                new $.$mol_after_timeout(1000, $.$mol_fiber_warp);
             });
-            socket.onclose = $.$mol_fiber.func(() => {
-                new this.$.$mol_after_timeout(5000, atom.fresh);
-            });
+            socket.onclose = () => this.scheduled_enforcer(null);
             return socket;
+        }
+        scheduled_enforcer(next) {
+            return new $.$mol_after_timeout(1000, $.$mol_fiber_warp);
         }
         send(key, next) {
             const socket = this.socket();
@@ -4511,6 +4513,9 @@ var $;
     __decorate([
         $.$mol_mem
     ], $mol_store_shared.prototype, "socket", null);
+    __decorate([
+        $.$mol_mem
+    ], $mol_store_shared.prototype, "scheduled_enforcer", null);
     __decorate([
         $.$mol_fiber.method
     ], $mol_store_shared.prototype, "send", null);
