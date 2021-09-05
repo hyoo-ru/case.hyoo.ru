@@ -1,23 +1,29 @@
 namespace $ {
 
-	export class $hyoo_case_entity extends $mol_store<
-		Record< string,
-			ReturnType< $hyoo_case_property['data'] >
-		>
-	> {
+	export class $hyoo_case_entity extends $mol_object2 {
 
 		id() { return '' }
 		domain() { return undefined as any as $hyoo_case_domain }
+		
+		@ $mol_mem
+		state() {
+			return this.domain().state().doc( 'entity' ).doc( this.id() )
+		}
 
+		base_data() {
+			return {} as any
+		}
+		
 		@ $mol_mem_key
 		property( id: string ) {
 
-			const store = new $hyoo_case_property
+			const property = new $hyoo_case_property
 			
-			store.id = $mol_const( id )
-			store.entity = $mol_const( this )
+			property.id = $mol_const( id )
+			property.entity = $mol_const( this )
+			property.base_data = ()=> this.base_data()[ id ]
 			
-			return this.sub( id , store )
+			return property
 		}
 
 		property_owner() {
@@ -33,11 +39,16 @@ namespace $ {
 		}
 
 		property_kind_id() {
-			return this.meta_kind()[0]!.id() as
+			return this.meta_kind()[0]?.id() as
 			| 'text'
 			| 'integer'
 			| 'boolean'
 			| 'link'
+			?? 'text'
+		}
+		
+		value( prop: string ) {
+			return this.state().sub( prop ).value() ?? this.base_data()[ prop ]
 		}
 
 		property_locale() {
@@ -73,7 +84,7 @@ namespace $ {
 		}
 
 		property_unit() {
-			return String( this.value( 'property-unit' ) )
+			return String( this.value( 'property-unit' ) || '' )
 		}
 
 		property_mutual() {

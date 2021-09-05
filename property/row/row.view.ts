@@ -46,16 +46,6 @@ namespace $.$$ {
 
 		@ $mol_mem
 		title_need() {
-			if( this.editable() ) return true
-			//if( this.type() === 'text' ) return false
-			if( this.add_allowed() ) return true
-			if( this.type() === 'link' ) {
-				if( !this.embed() ) {
-					if( this.property().links().length === 1 ) {
-						return false
-					}
-				}
-			}
 			return true
 		}
 
@@ -181,7 +171,7 @@ namespace $.$$ {
 
 		drop( index: number, event?: Event ) {
 			event?.preventDefault()
-			return this.property().target_tear( index )
+			return this.property().target_tear( this.property().links()[ index ] )
 		}
 
 		add_one( event: Event ) {
@@ -236,11 +226,17 @@ namespace $.$$ {
 
 			if( id ) {
 				
-				if( this.property().kind().property_max() === 1 ) {
-					this.property().target_tear_all()
+				const target_new = this.entity( id )
+				const prop = this.property()
+				prop.target_join( target_new )
+				
+				if( prop.kind().property_max() === 1 ) {
+					for( const target_old of prop.links() ) {
+						if( target_old === target_new ) continue
+						prop.target_tear( target_old )
+					}
 				}
 				
-				this.property().target_join( this.entity( id ) )
 			}
 			
 			return ''

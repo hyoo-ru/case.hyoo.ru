@@ -6,9 +6,6 @@ namespace $.$$ {
 
 		Config: {
 			padding: 0,
-			flex: {
-				grow: 1,
-			},
 		},
 
 		Snippet: {
@@ -17,6 +14,10 @@ namespace $.$$ {
 		
 		flex: {
 			basis: rem(30),
+		},
+		
+		Body: {
+			padding: 0,
 		},
 
 	} )

@@ -1,20 +1,29 @@
 namespace $ {
 
-	export class $hyoo_case_property extends $mol_store< any > {
+	export class $hyoo_case_property extends $mol_object2 {
 
 		id() { return '' }
 		entity() { return undefined as any as $hyoo_case_entity }
 
+		base_data() {
+			return {} as any
+		}
+		
 		domain() { return this.entity().domain() }
 		kind() { return this.domain().entity( this.id() ) }
 
+		@ $mol_mem
+		state() {
+			return this.entity().state().sub( this.id() )
+		}
+		
 		@ $mol_mem
 		filled() {
 			switch( this.kind().property_kind_id() ) {
 				case 'link': return this.links().length > 0
 				case 'text': return this.text().length > 0
-				case 'integer': return ( this.data() ?? this.value_default() ) != null
-				case 'boolean': return ( this.data() ?? this.value_default() ) != null
+				case 'integer': return ( this.state().value() ?? this.value_default() ) != null
+				case 'boolean': return ( this.state().value() ?? this.value_default() ) != null
 			}
 		}
 
@@ -26,13 +35,13 @@ namespace $ {
 				: 'en'
 
 			if( next !== undefined ) {
-				return this.value( lang, next )
+				return String( this.state().sub( lang ).value( next ) || '' )
 			}
 			
 			return String(
-				this.value( lang )
-				?? this.value( 'en' )
-				?? this.value_default()
+				this.state().sub( lang ).value()
+				?? this.state().sub( 'en' ).value()
+				?? ( this.value_default() ?? {} )[ lang ]
 				?? ''
 			)
 
@@ -40,13 +49,13 @@ namespace $ {
 
 		@ $mol_mem
 		integer( next? : number ) {
-			const data = this.data( next ) ?? this.value_default()
+			const data = this.state().value( next ) ?? this.value_default()
 			return Number( data )
 		}
 		
 		@ $mol_mem
 		bool( next? : boolean ) {
-			const data = this.data( next ) ?? this.value_default()
+			const data = this.state().value( next ) ?? this.value_default()
 			return Boolean( data || false )
 		}
 
@@ -56,15 +65,15 @@ namespace $ {
 			const domain = this.domain()
 			const arg = next === undefined ? undefined : next.map( item => item.id() )
 			
-			let val = this.data( arg )
-			if( !val || typeof val !== 'object' ) val = [] 	
+			let val = this.state().list( arg )
+			if( !val.length ) val = this.base_data() ?? []
 			
 			return ( val as string[] ).map( id => domain.entity( id ) )
 		}
 
 		value_default() {
 			const kind = this.kind()
-			return kind.property( `${ kind.property_kind_id() }-default` ).data()
+			return kind.property( `${ kind.property_kind_id() }-default` ).state().value() ?? this.base_data()
 		}
 
 		back( index: number ) {
@@ -98,23 +107,18 @@ namespace $ {
 
 		}
 
-		target_tear_all() {
-			while( this.links().length ) {
-				this.target_tear(0)
-			}
-		}
+		target_tear( target: $hyoo_case_entity ) {
 
-		target_tear( index: number ) {
+			let list = this.links()
 			
+			const index = list.indexOf( target )
 			if( index < 0 ) return
 
 			const back = this.back( index )
-			
-			const list = this.links().slice()
-			list.splice( index, 1 )
+			list = [ ... list.slice( 0 , index ), ... list.slice( index + 1 ) ]
 			this.links( list )
 
-			back.target_tear( back.links().indexOf( this.entity() ) )
+			back.target_tear( this.entity() )
 
 		}
 

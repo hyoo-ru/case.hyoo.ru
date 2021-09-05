@@ -51,11 +51,6 @@ namespace $.$$ {
 			]
 		}
 
-		@ $mol_mem
-		domain(): $hyoo_case_domain {
-			return this.Upstream().sub( '', super.domain() )
-		}
-
 		entity( id: string ) {
 			return this.domain().entity( id )
 		}
@@ -63,11 +58,6 @@ namespace $.$$ {
 		editable( id: string, next?: boolean ) {
 			const arg = next === undefined ? undefined : next ? 'edit' : '' 
 			return this.$.$mol_state_arg.value( id, arg ) === 'edit'
-		}
-
-		reset() {
-			this.domain().reset()
-			this.$.$mol_state_arg.dict({})
 		}
 
 	}

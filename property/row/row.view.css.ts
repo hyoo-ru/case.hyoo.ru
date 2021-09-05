@@ -20,37 +20,6 @@ namespace $.$$ {
 			},
 		},
 
-		$mol_string: {
-			background: {
-				color: 'transparent',
-			},
-			box: {
-				shadow: 'none',
-			},
-			':hover': {
-				background: {
-					color: $mol_theme.hover,
-				},
-			},
-			':focus': {
-				background: {
-					color: $mol_theme.field,
-				},
-				box: {
-					shadow: [
-						{
-							inset: true,
-							x: 0,
-							y: 0,
-							blur: 0,
-							spread: px(1),
-							color: $mol_theme.focus,
-						},
-					],
-				},
-			},
-		},
-
 		Numb: {
 			margin: [ 0, rem(.75) ],
 			flex: {

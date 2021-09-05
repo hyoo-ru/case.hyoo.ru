@@ -4,10 +4,6 @@ namespace $.$$ {
 
 	$mol_style_define( $hyoo_case, {
 
-		Reset: {
-			margin: $mol_gap.block,
-		},
-
 		Placeholder: {
 			flex: {
 				basis: rem(40),

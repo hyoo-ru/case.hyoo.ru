@@ -1,25 +1,26 @@
 namespace $ {
 
-	export class $hyoo_case_domain extends $mol_store<
-		Record< string,
-			ReturnType< $hyoo_case_entity['data'] >
-		>
-	> {
-
+	export class $hyoo_case_domain extends $mol_object2 {
+		
+		@ $mol_mem
+		state() {
+			return new $mol_state_shared
+		}
+		
+		base_data() {
+			return {} as any
+		}
+		
 		@ $mol_mem_key
 		entity( id : string ) {
 
-			const store = new $hyoo_case_entity({ 'meta-kind': [] })
+			const entity = new $hyoo_case_entity
 
-			store.id = $mol_const( id )
-			store.domain = $mol_const( this )
+			entity.id = $mol_const( id )
+			entity.domain = $mol_const( this )
+			entity.base_data = ()=> this.base_data()[ id ] ?? {}
 			
-			return this.sub( id , store )
-		}
-
-		@ $mol_mem
-		entity_list() {
-			return Object.keys( this.data() )
+			return entity
 		}
 
 		entity_new( ... kind: $hyoo_case_entity[] ) {
