@@ -260,7 +260,7 @@ namespace $.$$ {
 		
 		transfer_adopt( transfer : DataTransfer ) {
 
-			const id = transfer.getData( "text/uri-list" ).replace( /^.*#/, '' )
+			const id = transfer.getData( "text/uri-list" ).replace( /^.*#!/, '' )
 			if( !id ) return
 
 			const target = this.property().domain().entity( id )
