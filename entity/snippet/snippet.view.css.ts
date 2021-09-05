@@ -11,7 +11,6 @@ namespace $.$$ {
 			wrap: 'wrap',
 		},
 		
-		justifyContent: 'flex-end',
 		textAlign: 'left',
 
 	} )
