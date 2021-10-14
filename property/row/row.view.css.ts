@@ -5,6 +5,7 @@ namespace $.$$ {
 	$mol_style_define( $hyoo_case_property_row, {
 
 		alignItems: 'flex-start',
+		maxWidth: rem(60),
 		flex: {
 			wrap: 'wrap',
 		},
