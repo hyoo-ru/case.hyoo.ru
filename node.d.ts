@@ -14,6 +14,18 @@ declare namespace $ {
 }
 
 declare namespace $ {
+    var $mol_dom_context: typeof globalThis;
+}
+
+interface $node {
+    [key: string]: any;
+}
+declare var $node: $node;
+
+declare namespace $ {
+}
+
+declare namespace $ {
     let $mol_report_bugsnag: string;
 }
 
@@ -140,18 +152,6 @@ declare namespace $ {
         constructor(task: () => void);
         destructor(): void;
     }
-}
-
-declare namespace $ {
-    var $mol_dom_context: typeof globalThis;
-}
-
-interface $node {
-    [key: string]: any;
-}
-declare var $node: $node;
-
-declare namespace $ {
 }
 
 declare namespace $ {
@@ -484,7 +484,11 @@ declare namespace $ {
 }
 
 declare namespace $ {
-    function $mol_key<Value>(value: Value): string | Value;
+    function $mol_guid(length?: number, exists?: (id: string) => boolean): string;
+}
+
+declare namespace $ {
+    function $mol_key<Value>(value: Value): string;
 }
 
 declare namespace $ {
@@ -1314,10 +1318,6 @@ declare namespace $ {
         scheduled_enforcer(next?: null): $mol_after_timeout;
         send(key: string, next?: readonly $hyoo_crowd_chunk[]): void;
     }
-}
-
-declare namespace $ {
-    function $mol_guid(length?: number, exists?: (id: string) => boolean): string;
 }
 
 declare namespace $ {
