@@ -641,10 +641,16 @@ var $;
         static get promise() {
             if (this._promise)
                 return this._promise;
-            return this._promise = new Promise(done => requestAnimationFrame(() => {
-                this._promise = null;
-                done();
-            }));
+            return this._promise = new Promise(done => {
+                requestAnimationFrame(() => {
+                    this._promise = null;
+                    done();
+                });
+                setTimeout(() => {
+                    this._promise = null;
+                    done();
+                }, 100);
+            });
         }
         cancelled = false;
         promise;
@@ -8845,8 +8851,8 @@ var $;
     var $$;
     (function ($$) {
         class $mol_ghost extends $.$mol_ghost {
-            dom_node() {
-                const node = this.Sub().dom_node();
+            dom_node(next) {
+                const node = this.Sub().dom_node(next);
                 $.$mol_dom_render_attributes(node, this.attr_static());
                 $.$mol_dom_render_events(node, this.event());
                 return node;
@@ -8866,6 +8872,7 @@ var $;
                 const Sub = this.Sub();
                 const node = Sub.dom_tree();
                 this.dom_node_actual();
+                this.auto();
                 return node;
             }
             title() {

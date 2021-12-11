@@ -2613,7 +2613,7 @@ declare namespace $ {
 
 declare namespace $.$$ {
     class $mol_ghost extends $.$mol_ghost {
-        dom_node(): Element;
+        dom_node(next?: Element): Element;
         dom_node_actual(): Element;
         dom_tree(): Element;
         title(): string;
@@ -2646,7 +2646,7 @@ declare namespace $ {
 declare namespace $.$$ {
     class $mol_drop extends $.$mol_drop {
         status(next?: "ready" | "drag"): "ready" | "drag";
-        _target: EventTarget | null;
+        protected _target: EventTarget | null;
         enter(event: DragEvent): void;
         move(event: DragEvent): void;
         leave(event: DragEvent): void;
