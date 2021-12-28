@@ -384,9 +384,6 @@ var $;
             return this.name;
         }
         destructor() { }
-        [Symbol.toPrimitive](hint) {
-            return hint === 'number' ? this.valueOf() : this.toString();
-        }
         toString() {
             return this[Symbol.toStringTag] || this.constructor.name + '()';
         }
@@ -6903,6 +6900,456 @@ var $;
 "use strict";
 var $;
 (function ($) {
+    class $mol_text_code_token extends $.$mol_dimmer {
+        attr() {
+            return {
+                ...super.attr(),
+                mol_text_code_token_type: this.type()
+            };
+        }
+        type() {
+            return "";
+        }
+    }
+    $.$mol_text_code_token = $mol_text_code_token;
+    class $mol_text_code_token_link extends $mol_text_code_token {
+        dom_name() {
+            return "a";
+        }
+        type() {
+            return "code-link";
+        }
+        attr() {
+            return {
+                ...super.attr(),
+                href: this.haystack(),
+                target: "_blank"
+            };
+        }
+        haystack() {
+            return "";
+        }
+    }
+    $.$mol_text_code_token_link = $mol_text_code_token_link;
+})($ || ($ = {}));
+//token.view.tree.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        const { hsla } = $.$mol_style_func;
+        $.$mol_style_define($.$mol_text_code_token, {
+            display: 'inline',
+            textDecoration: 'none',
+            '@': {
+                mol_text_code_token_type: {
+                    'code-keyword': {
+                        color: hsla(0, 70, 50, 1),
+                    },
+                    'code-field': {
+                        color: hsla(300, 70, 50, 1),
+                    },
+                    'code-tag': {
+                        color: hsla(330, 70, 50, 1),
+                    },
+                    'code-global': {
+                        color: hsla(30, 80, 50, 1),
+                    },
+                    'code-decorator': {
+                        color: hsla(180, 40, 50, 1),
+                    },
+                    'code-punctuation': {
+                        color: hsla(0, 0, 50, 1),
+                    },
+                    'code-string': {
+                        color: hsla(90, 40, 50, 1),
+                    },
+                    'code-number': {
+                        color: hsla(60, 70, 50, 1),
+                    },
+                    'code-call': {
+                        color: hsla(270, 60, 50, 1),
+                    },
+                    'code-link': {
+                        color: hsla(210, 60, 50, 1),
+                    },
+                    'code-comment-inline': {
+                        opacity: .5,
+                    },
+                    'code-comment-block': {
+                        opacity: .5,
+                    },
+                    'code-docs': {
+                        opacity: .75,
+                    },
+                },
+            }
+        });
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+//token.view.css.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    class $mol_text_code_row extends $.$mol_paragraph {
+        text() {
+            return "";
+        }
+        minimal_height() {
+            return 24;
+        }
+        numb_showed() {
+            return true;
+        }
+        Numb() {
+            const obj = new this.$.$mol_view();
+            obj.sub = () => [
+                this.numb()
+            ];
+            return obj;
+        }
+        Token(id) {
+            const obj = new this.$.$mol_text_code_token();
+            obj.type = () => this.token_type(id);
+            obj.haystack = () => this.token_text(id);
+            obj.needle = () => this.highlight();
+            return obj;
+        }
+        Token_link(id) {
+            const obj = new this.$.$mol_text_code_token_link();
+            obj.haystack = () => this.token_text(id);
+            obj.needle = () => this.highlight();
+            return obj;
+        }
+        numb() {
+            return 0;
+        }
+        token_type(id) {
+            return "";
+        }
+        token_text(id) {
+            return "";
+        }
+        highlight() {
+            return "";
+        }
+    }
+    __decorate([
+        $.$mol_mem
+    ], $mol_text_code_row.prototype, "Numb", null);
+    __decorate([
+        $.$mol_mem_key
+    ], $mol_text_code_row.prototype, "Token", null);
+    __decorate([
+        $.$mol_mem_key
+    ], $mol_text_code_row.prototype, "Token_link", null);
+    $.$mol_text_code_row = $mol_text_code_row;
+})($ || ($ = {}));
+//row.view.tree.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    class $mol_syntax2 {
+        lexems;
+        constructor(lexems) {
+            this.lexems = lexems;
+            for (let name in lexems) {
+                this.rules.push({
+                    name: name,
+                    regExp: lexems[name],
+                    size: RegExp('^$|' + lexems[name].source).exec('').length - 1,
+                });
+            }
+            const parts = '(' + this.rules.map(rule => rule.regExp.source).join(')|(') + ')';
+            this.regexp = RegExp(`([\\s\\S]*?)(?:(${parts})|$(?![^]))`, 'gm');
+        }
+        rules = [];
+        regexp;
+        tokenize(text, handle) {
+            let end = 0;
+            lexing: while (end < text.length) {
+                const start = end;
+                this.regexp.lastIndex = start;
+                var found = this.regexp.exec(text);
+                end = this.regexp.lastIndex;
+                if (start === end)
+                    throw new Error('Empty token');
+                var prefix = found[1];
+                if (prefix)
+                    handle('', prefix, [], start);
+                var suffix = found[2];
+                if (!suffix)
+                    continue;
+                let offset = 4;
+                for (let rule of this.rules) {
+                    if (found[offset - 1]) {
+                        handle(rule.name, suffix, found.slice(offset, offset + rule.size), start + prefix.length);
+                        continue lexing;
+                    }
+                    offset += rule.size + 1;
+                }
+                $.$mol_fail(new Error('$mol_syntax2 is broken'));
+            }
+        }
+        parse(text, handlers) {
+            this.tokenize(text, (name, ...args) => handlers[name](...args));
+        }
+    }
+    $.$mol_syntax2 = $mol_syntax2;
+})($ || ($ = {}));
+//syntax2.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    $.$mol_syntax2_md_flow = new $.$mol_syntax2({
+        'quote': /^((?:(?:> )(?:[^]*?)$(\r?\n?))+)([\n\r]*)/,
+        'header': /^(#+)(\s*)(.*?)$([\n\r]*)/,
+        'list': /^((?:(?:\s?[*+-]|\d+\.)\s+(?:[^]*?)$(?:\r?\n?))+)((?:\r?\n)*)/,
+        'code': /^(```\s*)([\w.-]*)[\r\n]+([^]*?)^(```)$([\n\r]*)/,
+        'code-indent': /^((?:(?:  |\t)(?:[^]*?)$([\n\r]*))+)/,
+        'table': /((?:^\|.+?$\r?\n)+)([\n\r]*)/,
+        'block': /^(.*?(?:\r?\n.+?)*)$((?:\r?\n)*)/,
+    });
+    $.$mol_syntax2_md_line = new $.$mol_syntax2({
+        'strong': /\*\*(.+?)\*\*/,
+        'emphasis': /\*(?!\s)(.+?)\*/,
+        'code3': /```(.+?)```/,
+        'code': /`(.+?)`/,
+        'strike': /~~(.+?)~~/,
+        'text-link': /\[(.*?(?:\[.*?\].*?)*)\]\((.*?)\)/,
+        'image-link': /!\[([^\[\]]*?)\]\((.*?)\)/,
+    });
+    $.$mol_syntax2_md_code = new $.$mol_syntax2({
+        'code-docs': /\/\/\/.*?$/,
+        'code-comment-block': /(?:\/\*[^]*?\*\/|\/\+[^]*?\+\/|<![^]*?>)/,
+        'code-link': /(?:\w+:\/\/|#|\?)\S+?(?=\s|\\\\|""|$)/,
+        'code-comment-inline': /\/\/.*?$/,
+        'code-string': /(?:".*?"|'.*?'|`.*?`|\/.+?\/[gmi]*\b|(?:^|[ \t])\\[^\n]*\n)/,
+        'code-number': /[+-]?(?:\d*\.)?\d+\w*/,
+        'code-call': /\.?\w+(?=\()/,
+        'code-field': /(?:\.\w+|[\w-]+\??\s*:(?!\/\/))/,
+        'code-keyword': /\b(throw|readonly|unknown|keyof|typeof|never|from|class|interface|type|function|extends|implements|module|namespace|import|export|include|require|var|let|const|for|do|while|until|in|of|new|if|then|else|switch|case|this|return|async|await|try|catch|break|continue|get|set|public|private|protected|string|boolean|number|null|undefined|true|false|void)\b/,
+        'code-global': /[$]+\w*|\b[A-Z][a-z0-9]+[A-Z]\w*/,
+        'code-decorator': /@\s*\S+/,
+        'code-tag': /<\/?[\w-]+\/?>?|&\w+;/,
+        'code-punctuation': /[\-\[\]\{\}\(\)<=>~!\?@#%&\*_\+\\\/\|;:\.,\^]+/,
+    });
+})($ || ($ = {}));
+//md.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        const { rem } = $.$mol_style_unit;
+        $.$mol_style_define($$.$mol_text_code_row, {
+            display: 'block',
+            Numb: {
+                textAlign: 'right',
+                color: $.$mol_theme.shade,
+                width: rem(3),
+                padding: {
+                    right: rem(1.5),
+                },
+                margin: {
+                    left: rem(-3),
+                },
+                display: 'inline-block',
+                whiteSpace: 'nowrap',
+                userSelect: 'none',
+            },
+        });
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+//row.view.css.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        class $mol_text_code_row extends $.$mol_text_code_row {
+            maximal_width() {
+                return this.text().length * this.letter_width();
+            }
+            tokens(path) {
+                const tokens = [];
+                const text = (path.length > 0)
+                    ? this.tokens(path.slice(0, path.length - 1))[path[path.length - 1]].found.slice(1, -1)
+                    : this.text();
+                this.$.$mol_syntax2_md_code.tokenize(text, (name, found, chunks) => tokens.push({ name, found, chunks }));
+                return tokens;
+            }
+            sub() {
+                return [
+                    ...this.numb_showed() ? [this.Numb()] : [],
+                    ...this.row_content([])
+                ];
+            }
+            row_content(path) {
+                return this.tokens(path).map((t, i) => this.Token([...path, i]));
+            }
+            Token(path) {
+                return this.token_type(path) === 'code-link' ? this.Token_link(path) : super.Token(path);
+            }
+            token_type(path) {
+                return this.tokens([...path.slice(0, path.length - 1)])[path[path.length - 1]].name;
+            }
+            token_content(path) {
+                const tokens = this.tokens([...path.slice(0, path.length - 1)]);
+                const token = tokens[path[path.length - 1]];
+                switch (token.name) {
+                    case 'code-string': return [
+                        token.found[0],
+                        ...this.row_content(path),
+                        token.found[token.found.length - 1],
+                    ];
+                    default: return [token.found];
+                }
+            }
+            token_text(path) {
+                const tokens = this.tokens([...path.slice(0, path.length - 1)]);
+                const token = tokens[path[path.length - 1]];
+                return token.found;
+            }
+            *view_find(check, path = []) {
+                if (check(this, this.text())) {
+                    yield [...path, this];
+                }
+            }
+        }
+        __decorate([
+            $.$mol_mem_key
+        ], $mol_text_code_row.prototype, "tokens", null);
+        __decorate([
+            $.$mol_mem_key
+        ], $mol_text_code_row.prototype, "row_content", null);
+        __decorate([
+            $.$mol_mem_key
+        ], $mol_text_code_row.prototype, "token_type", null);
+        __decorate([
+            $.$mol_mem_key
+        ], $mol_text_code_row.prototype, "token_content", null);
+        __decorate([
+            $.$mol_mem_key
+        ], $mol_text_code_row.prototype, "token_text", null);
+        $$.$mol_text_code_row = $mol_text_code_row;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+//row.view.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    class $mol_text_code extends $.$mol_list {
+        attr() {
+            return {
+                ...super.attr(),
+                mol_text_code_sidebar_showed: this.sidebar_showed()
+            };
+        }
+        text() {
+            return "";
+        }
+        text_lines() {
+            return [];
+        }
+        Row(id) {
+            const obj = new this.$.$mol_text_code_row();
+            obj.numb_showed = () => this.sidebar_showed();
+            obj.numb = () => this.row_numb(id);
+            obj.text = () => this.row_text(id);
+            obj.highlight = () => this.highlight();
+            return obj;
+        }
+        sidebar_showed() {
+            return false;
+        }
+        row_numb(id) {
+            return 0;
+        }
+        row_text(id) {
+            return "";
+        }
+        highlight() {
+            return "";
+        }
+    }
+    __decorate([
+        $.$mol_mem_key
+    ], $mol_text_code.prototype, "Row", null);
+    $.$mol_text_code = $mol_text_code;
+})($ || ($ = {}));
+//code.view.tree.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        const { rem } = $.$mol_style_unit;
+        $.$mol_style_define($$.$mol_text_code, {
+            padding: $.$mol_gap.text,
+            whiteSpace: 'pre-wrap',
+            font: {
+                family: 'monospace',
+            },
+            '@': {
+                'mol_text_code_sidebar_showed': {
+                    true: {
+                        margin: {
+                            left: rem(3),
+                        },
+                    },
+                },
+            },
+        });
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+//code.view.css.js.map
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        class $mol_text_code extends $.$mol_text_code {
+            text_lines() {
+                return this.text().split('\n');
+            }
+            rows() {
+                return this.text_lines().map((_, index) => this.Row(index + 1));
+            }
+            row_text(index) {
+                return this.text_lines()[index - 1];
+            }
+            row_numb(index) {
+                return index;
+            }
+        }
+        __decorate([
+            $.$mol_mem
+        ], $mol_text_code.prototype, "text_lines", null);
+        __decorate([
+            $.$mol_mem
+        ], $mol_text_code.prototype, "rows", null);
+        __decorate([
+            $.$mol_mem_key
+        ], $mol_text_code.prototype, "row_text", null);
+        $$.$mol_text_code = $mol_text_code;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+//code.view.js.map
+;
+"use strict";
+var $;
+(function ($) {
     class $mol_plugin extends $.$mol_view {
         dom_node(next) {
             const node = next || $.$mol_owning_get(this, $.$mol_view).dom_node();
@@ -7191,456 +7638,6 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    class $mol_text_code_token extends $.$mol_dimmer {
-        attr() {
-            return {
-                ...super.attr(),
-                mol_text_code_token_type: this.type()
-            };
-        }
-        type() {
-            return "";
-        }
-    }
-    $.$mol_text_code_token = $mol_text_code_token;
-    class $mol_text_code_token_link extends $mol_text_code_token {
-        dom_name() {
-            return "a";
-        }
-        type() {
-            return "code-link";
-        }
-        attr() {
-            return {
-                ...super.attr(),
-                href: this.haystack(),
-                target: "_blank"
-            };
-        }
-        haystack() {
-            return "";
-        }
-    }
-    $.$mol_text_code_token_link = $mol_text_code_token_link;
-})($ || ($ = {}));
-//token.view.tree.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        const { hsla } = $.$mol_style_func;
-        $.$mol_style_define($.$mol_text_code_token, {
-            display: 'inline',
-            textDecoration: 'none',
-            '@': {
-                mol_text_code_token_type: {
-                    'code-keyword': {
-                        color: hsla(0, 70, 50, 1),
-                    },
-                    'code-field': {
-                        color: hsla(300, 70, 50, 1),
-                    },
-                    'code-tag': {
-                        color: hsla(330, 70, 50, 1),
-                    },
-                    'code-global': {
-                        color: hsla(30, 80, 50, 1),
-                    },
-                    'code-decorator': {
-                        color: hsla(180, 40, 50, 1),
-                    },
-                    'code-punctuation': {
-                        color: hsla(0, 0, 50, 1),
-                    },
-                    'code-string': {
-                        color: hsla(90, 40, 50, 1),
-                    },
-                    'code-number': {
-                        color: hsla(60, 70, 50, 1),
-                    },
-                    'code-call': {
-                        color: hsla(270, 60, 50, 1),
-                    },
-                    'code-link': {
-                        color: hsla(210, 60, 50, 1),
-                    },
-                    'code-comment-inline': {
-                        opacity: .5,
-                    },
-                    'code-comment-block': {
-                        opacity: .5,
-                    },
-                    'code-docs': {
-                        opacity: .75,
-                    },
-                },
-            }
-        });
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-//token.view.css.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    class $mol_text_code_row extends $.$mol_paragraph {
-        text() {
-            return "";
-        }
-        minimal_height() {
-            return 24;
-        }
-        numb_showed() {
-            return true;
-        }
-        Numb() {
-            const obj = new this.$.$mol_view();
-            obj.sub = () => [
-                this.numb()
-            ];
-            return obj;
-        }
-        Token(id) {
-            const obj = new this.$.$mol_text_code_token();
-            obj.type = () => this.token_type(id);
-            obj.haystack = () => this.token_text(id);
-            obj.needle = () => this.highlight();
-            return obj;
-        }
-        Token_link(id) {
-            const obj = new this.$.$mol_text_code_token_link();
-            obj.haystack = () => this.token_text(id);
-            obj.needle = () => this.highlight();
-            return obj;
-        }
-        numb() {
-            return 0;
-        }
-        token_type(id) {
-            return "";
-        }
-        token_text(id) {
-            return "";
-        }
-        highlight() {
-            return "";
-        }
-    }
-    __decorate([
-        $.$mol_mem
-    ], $mol_text_code_row.prototype, "Numb", null);
-    __decorate([
-        $.$mol_mem_key
-    ], $mol_text_code_row.prototype, "Token", null);
-    __decorate([
-        $.$mol_mem_key
-    ], $mol_text_code_row.prototype, "Token_link", null);
-    $.$mol_text_code_row = $mol_text_code_row;
-})($ || ($ = {}));
-//row.view.tree.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    class $mol_syntax2 {
-        lexems;
-        constructor(lexems) {
-            this.lexems = lexems;
-            for (let name in lexems) {
-                this.rules.push({
-                    name: name,
-                    regExp: lexems[name],
-                    size: RegExp('^$|' + lexems[name].source).exec('').length - 1,
-                });
-            }
-            const parts = '(' + this.rules.map(rule => rule.regExp.source).join(')|(') + ')';
-            this.regexp = RegExp(`([\\s\\S]*?)(?:(${parts})|$(?![^]))`, 'gm');
-        }
-        rules = [];
-        regexp;
-        tokenize(text, handle) {
-            let end = 0;
-            lexing: while (end < text.length) {
-                const start = end;
-                this.regexp.lastIndex = start;
-                var found = this.regexp.exec(text);
-                end = this.regexp.lastIndex;
-                if (start === end)
-                    throw new Error('Empty token');
-                var prefix = found[1];
-                if (prefix)
-                    handle('', prefix, [], start);
-                var suffix = found[2];
-                if (!suffix)
-                    continue;
-                let offset = 4;
-                for (let rule of this.rules) {
-                    if (found[offset - 1]) {
-                        handle(rule.name, suffix, found.slice(offset, offset + rule.size), start + prefix.length);
-                        continue lexing;
-                    }
-                    offset += rule.size + 1;
-                }
-                $.$mol_fail(new Error('$mol_syntax2 is broken'));
-            }
-        }
-        parse(text, handlers) {
-            this.tokenize(text, (name, ...args) => handlers[name](...args));
-        }
-    }
-    $.$mol_syntax2 = $mol_syntax2;
-})($ || ($ = {}));
-//syntax2.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    $.$mol_syntax2_md_flow = new $.$mol_syntax2({
-        'quote': /^((?:(?:> )(?:[^]*?)$(\r?\n?))+)([\n\r]*)/,
-        'header': /^(#+)(\s*)(.*?)$([\n\r]*)/,
-        'list': /^((?:(?:\s?[*+-]|\d+\.)\s+(?:[^]*?)$(?:\r?\n?))+)((?:\r?\n)*)/,
-        'code': /^(```\s*)([\w.-]*)[\r\n]+([^]*?)^(```)$([\n\r]*)/,
-        'code-indent': /^((?:(?:  |\t)(?:[^]*?)$([\n\r]*))+)/,
-        'table': /((?:^\|.+?$\r?\n)+)([\n\r]*)/,
-        'block': /^(.*?(?:\r?\n.+?)*)$((?:\r?\n)*)/,
-    });
-    $.$mol_syntax2_md_line = new $.$mol_syntax2({
-        'strong': /\*\*(.+?)\*\*/,
-        'emphasis': /\*(?!\s)(.+?)\*/,
-        'code3': /```(.+?)```/,
-        'code': /`(.+?)`/,
-        'strike': /~~(.+?)~~/,
-        'text-link': /\[(.*?(?:\[.*?\].*?)*)\]\((.*?)\)/,
-        'image-link': /!\[([^\[\]]*?)\]\((.*?)\)/,
-    });
-    $.$mol_syntax2_md_code = new $.$mol_syntax2({
-        'code-docs': /\/\/\/.*?$/,
-        'code-comment-block': /(?:\/\*[^]*?\*\/|\/\+[^]*?\+\/|<![^]*?>)/,
-        'code-link': /(?:\w+:|#|\?|\/)\S+?(?=\s|\\\\|""|$)/,
-        'code-comment-inline': /\/\/.*?$/,
-        'code-string': /(?:".*?"|'.*?'|`.*?`|\/.+?\/[gmi]*\b|(?:^|[ \t])\\[^\n]*\n)/,
-        'code-number': /[+-]?(?:\d*\.)?\d+\w*/,
-        'code-call': /\.?\w+(?=\()/,
-        'code-field': /(?:\.\w+|[\w-]+\??\s*:(?!\/\/))/,
-        'code-keyword': /\b(throw|readonly|unknown|keyof|typeof|never|from|class|interface|type|function|extends|implements|module|namespace|import|export|include|require|var|let|const|for|do|while|until|in|of|new|if|then|else|switch|case|this|return|async|await|try|catch|break|continue|get|set|public|private|protected|string|boolean|number|null|undefined|true|false|void)\b/,
-        'code-global': /[$]+\w*|\b[A-Z][a-z0-9]+[A-Z]\w*/,
-        'code-decorator': /@\s*\S+/,
-        'code-tag': /<\/?[\w-]+\/?>?|&\w+;/,
-        'code-punctuation': /[\-\[\]\{\}\(\)<=>`~!\?@#%&\*_\+\\\/\|'";:\.,\^]+/,
-    });
-})($ || ($ = {}));
-//md.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        const { rem } = $.$mol_style_unit;
-        $.$mol_style_define($$.$mol_text_code_row, {
-            display: 'block',
-            Numb: {
-                textAlign: 'right',
-                color: $.$mol_theme.shade,
-                width: rem(3),
-                padding: {
-                    right: rem(1.5),
-                },
-                margin: {
-                    left: rem(-3),
-                },
-                display: 'inline-block',
-                whiteSpace: 'nowrap',
-                userSelect: 'none',
-            },
-        });
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-//row.view.css.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        class $mol_text_code_row extends $.$mol_text_code_row {
-            maximal_width() {
-                return this.text().length * this.letter_width();
-            }
-            tokens(path) {
-                const tokens = [];
-                const text = (path.length > 0)
-                    ? this.tokens(path.slice(0, path.length - 1))[path[path.length - 1]].found.slice(1, -1)
-                    : this.text();
-                this.$.$mol_syntax2_md_code.tokenize(text, (name, found, chunks) => tokens.push({ name, found, chunks }));
-                return tokens;
-            }
-            sub() {
-                return [
-                    ...this.numb_showed() ? [this.Numb()] : [],
-                    ...this.row_content([])
-                ];
-            }
-            row_content(path) {
-                return this.tokens(path).map((t, i) => this.Token([...path, i]));
-            }
-            Token(path) {
-                return this.token_type(path) === 'code-link' ? this.Token_link(path) : super.Token(path);
-            }
-            token_type(path) {
-                return this.tokens([...path.slice(0, path.length - 1)])[path[path.length - 1]].name;
-            }
-            token_content(path) {
-                const tokens = this.tokens([...path.slice(0, path.length - 1)]);
-                const token = tokens[path[path.length - 1]];
-                switch (token.name) {
-                    case 'code-string': return [
-                        token.found[0],
-                        ...this.row_content(path),
-                        token.found[token.found.length - 1],
-                    ];
-                    default: return [token.found];
-                }
-            }
-            token_text(path) {
-                const tokens = this.tokens([...path.slice(0, path.length - 1)]);
-                const token = tokens[path[path.length - 1]];
-                return token.found;
-            }
-            *view_find(check, path = []) {
-                if (check(this, this.text())) {
-                    yield [...path, this];
-                }
-            }
-        }
-        __decorate([
-            $.$mol_mem_key
-        ], $mol_text_code_row.prototype, "tokens", null);
-        __decorate([
-            $.$mol_mem_key
-        ], $mol_text_code_row.prototype, "row_content", null);
-        __decorate([
-            $.$mol_mem_key
-        ], $mol_text_code_row.prototype, "token_type", null);
-        __decorate([
-            $.$mol_mem_key
-        ], $mol_text_code_row.prototype, "token_content", null);
-        __decorate([
-            $.$mol_mem_key
-        ], $mol_text_code_row.prototype, "token_text", null);
-        $$.$mol_text_code_row = $mol_text_code_row;
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-//row.view.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    class $mol_text_code extends $.$mol_list {
-        attr() {
-            return {
-                ...super.attr(),
-                mol_text_code_sidebar_showed: this.sidebar_showed()
-            };
-        }
-        text() {
-            return "";
-        }
-        text_lines() {
-            return [];
-        }
-        Row(id) {
-            const obj = new this.$.$mol_text_code_row();
-            obj.numb_showed = () => this.sidebar_showed();
-            obj.numb = () => this.row_numb(id);
-            obj.text = () => this.row_text(id);
-            obj.highlight = () => this.highlight();
-            return obj;
-        }
-        sidebar_showed() {
-            return false;
-        }
-        row_numb(id) {
-            return 0;
-        }
-        row_text(id) {
-            return "";
-        }
-        highlight() {
-            return "";
-        }
-    }
-    __decorate([
-        $.$mol_mem_key
-    ], $mol_text_code.prototype, "Row", null);
-    $.$mol_text_code = $mol_text_code;
-})($ || ($ = {}));
-//code.view.tree.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        const { rem } = $.$mol_style_unit;
-        $.$mol_style_define($$.$mol_text_code, {
-            padding: $.$mol_gap.text,
-            whiteSpace: 'pre-wrap',
-            font: {
-                family: 'monospace',
-            },
-            '@': {
-                'mol_text_code_sidebar_showed': {
-                    true: {
-                        margin: {
-                            left: rem(3),
-                        },
-                    },
-                },
-            },
-        });
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-//code.view.css.js.map
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        class $mol_text_code extends $.$mol_text_code {
-            text_lines() {
-                return this.text().split('\n');
-            }
-            rows() {
-                return this.text_lines().map((_, index) => this.Row(index + 1));
-            }
-            row_text(index) {
-                return this.text_lines()[index - 1];
-            }
-            row_numb(index) {
-                return index;
-            }
-        }
-        __decorate([
-            $.$mol_mem
-        ], $mol_text_code.prototype, "text_lines", null);
-        __decorate([
-            $.$mol_mem
-        ], $mol_text_code.prototype, "rows", null);
-        __decorate([
-            $.$mol_mem_key
-        ], $mol_text_code.prototype, "row_text", null);
-        $$.$mol_text_code = $mol_text_code;
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-//code.view.js.map
-;
-"use strict";
-var $;
-(function ($) {
     class $mol_textarea extends $.$mol_view {
         attr() {
             return {
@@ -7699,8 +7696,7 @@ var $;
             return [];
         }
         Edit() {
-            const obj = new this.$.$mol_string();
-            obj.dom_name = () => "textarea";
+            const obj = new this.$.$mol_textarea_edit();
             obj.value = (val) => this.value(val);
             obj.hint = () => this.hint();
             obj.enabled = () => this.enabled();
@@ -7746,13 +7742,25 @@ var $;
         $.$mol_mem
     ], $mol_textarea.prototype, "View", null);
     $.$mol_textarea = $mol_textarea;
+    class $mol_textarea_edit extends $.$mol_string {
+        dom_name() {
+            return "textarea";
+        }
+        field() {
+            return {
+                ...super.field(),
+                scrollTop: 0
+            };
+        }
+    }
+    $.$mol_textarea_edit = $mol_textarea_edit;
 })($ || ($ = {}));
 //textarea.view.tree.js.map
 ;
 "use strict";
 var $;
 (function ($) {
-    $.$mol_style_attach("mol/textarea/textarea.view.css", "[mol_textarea] {\n\tflex: 1 0 auto;\n\tdisplay: flex;\n\tflex-direction: column;\n\tposition: relative;\n\tz-index: 0;\n\tvertical-align: top;\n\tmin-height: max-content;\n\twhite-space: pre-wrap;\n}\n\n[mol_textarea_view] {\n\tpointer-events: none;\n\tz-index: 1;\n\twhite-space: inherit;\n}\n[mol_textarea_clickable] > [mol_textarea_view] {\n\tpointer-events: all;\n}\n\n[mol_textarea_edit] {\n\tfont-family: monospace;\n\tz-index: -1 !important;\n\tpadding: var(--mol_gap_text);\n\tposition: absolute;\n\tleft: 0;\n\ttop: 0;\n\twidth: 100%;\n\theight: 100%;\n\tcolor: transparent;\n\tcaret-color: var(--mol_theme_text);\n\tresize: none;\n\ttext-align: inherit;\n\twhite-space: inherit;\n\tborder-radius: inherit;\n\ttab-size: 4;\n\toverflow-anchor: none;\n}\n\n[mol_textarea_sidebar_showed] [mol_textarea_edit] {\n\tleft: 3rem;\n\twidth: calc( 100% - 3rem );\n}\n");
+    $.$mol_style_attach("mol/textarea/textarea.view.css", "[mol_textarea] {\n\tflex: 1 0 auto;\n\tdisplay: flex;\n\tflex-direction: column;\n\tposition: relative;\n\tz-index: 0;\n\tvertical-align: top;\n\tmin-height: max-content;\n\twhite-space: pre-wrap;\n}\n\n[mol_textarea_view] {\n\tpointer-events: none;\n\tz-index: 1;\n\twhite-space: inherit;\n}\n[mol_textarea_clickable] > [mol_textarea_view] {\n\tpointer-events: all;\n}\n\n[mol_textarea_edit] {\n\tfont-family: monospace;\n\tz-index: -1 !important;\n\tpadding: var(--mol_gap_text);\n\tposition: absolute;\n\tleft: 0;\n\ttop: 0;\n\twidth: 100%;\n\theight: 100%;\n\tcolor: transparent;\n\tcaret-color: var(--mol_theme_text);\n\tresize: none;\n\ttext-align: inherit;\n\twhite-space: inherit;\n\tborder-radius: inherit;\n\ttab-size: 4;\n\toverflow-anchor: none;\n}\n\n[mol_textarea_edit]:focus {\n\tcolor: transparent;\n}\n\n[mol_textarea_sidebar_showed] [mol_textarea_edit] {\n\tleft: 3rem;\n\twidth: calc( 100% - 3rem );\n}\n");
 })($ || ($ = {}));
 //textarea.view.css.js.map
 ;

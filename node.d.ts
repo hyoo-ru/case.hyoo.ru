@@ -138,7 +138,6 @@ declare namespace $ {
         static [Symbol.toPrimitive](): any;
         static toString(): any;
         destructor(): void;
-        [Symbol.toPrimitive](hint: string): any;
         toString(): any;
         toJSON(): any;
     }
@@ -1979,6 +1978,146 @@ declare namespace $.$$ {
 }
 
 declare namespace $ {
+    class $mol_text_code_token extends $mol_dimmer {
+        attr(): {
+            mol_text_code_token_type: string;
+        };
+        type(): string;
+    }
+    class $mol_text_code_token_link extends $mol_text_code_token {
+        dom_name(): string;
+        type(): string;
+        attr(): {
+            href: string;
+            target: string;
+            mol_text_code_token_type: string;
+        };
+        haystack(): string;
+    }
+}
+
+declare namespace $.$$ {
+}
+
+declare namespace $ {
+    class $mol_text_code_row extends $mol_paragraph {
+        text(): string;
+        minimal_height(): number;
+        numb_showed(): boolean;
+        Numb(): $mol_view;
+        Token(id: any): $mol_text_code_token;
+        Token_link(id: any): $mol_text_code_token_link;
+        numb(): number;
+        token_type(id: any): string;
+        token_text(id: any): string;
+        highlight(): string;
+    }
+}
+
+declare namespace $ {
+    class $mol_syntax2<Lexems extends {
+        [name: string]: RegExp;
+    }> {
+        lexems: Lexems;
+        constructor(lexems: Lexems);
+        rules: {
+            regExp: RegExp;
+            name: string;
+            size: number;
+        }[];
+        regexp: RegExp;
+        tokenize(text: string, handle: (name: string, found: string, chunks: string[], offset: number) => void): void;
+        parse(text: string, handlers: {
+            [key in keyof Lexems | '']: (found: string, chunks: string[], offset: number) => void;
+        }): void;
+    }
+}
+
+declare namespace $ {
+    var $mol_syntax2_md_flow: $mol_syntax2<{
+        quote: RegExp;
+        header: RegExp;
+        list: RegExp;
+        code: RegExp;
+        'code-indent': RegExp;
+        table: RegExp;
+        block: RegExp;
+    }>;
+    var $mol_syntax2_md_line: $mol_syntax2<{
+        strong: RegExp;
+        emphasis: RegExp;
+        code3: RegExp;
+        code: RegExp;
+        strike: RegExp;
+        'text-link': RegExp;
+        'image-link': RegExp;
+    }>;
+    const $mol_syntax2_md_code: $mol_syntax2<{
+        'code-docs': RegExp;
+        'code-comment-block': RegExp;
+        'code-link': RegExp;
+        'code-comment-inline': RegExp;
+        'code-string': RegExp;
+        'code-number': RegExp;
+        'code-call': RegExp;
+        'code-field': RegExp;
+        'code-keyword': RegExp;
+        'code-global': RegExp;
+        'code-decorator': RegExp;
+        'code-tag': RegExp;
+        'code-punctuation': RegExp;
+    }>;
+}
+
+declare namespace $.$$ {
+}
+
+declare namespace $.$$ {
+    class $mol_text_code_row extends $.$mol_text_code_row {
+        maximal_width(): number;
+        tokens(path: number[]): readonly {
+            name: string;
+            found: string;
+            chunks: string[];
+        }[];
+        sub(): $mol_view[];
+        row_content(path: number[]): $mol_text_code_token[];
+        Token(path: number[]): $mol_text_code_token;
+        token_type(path: number[]): string;
+        token_content(path: number[]): (string | $mol_text_code_token)[];
+        token_text(path: number[]): string;
+        view_find(check: (path: $mol_view, text?: string) => boolean, path?: $mol_view[]): Generator<$mol_view[]>;
+    }
+}
+
+declare namespace $ {
+    class $mol_text_code extends $mol_list {
+        attr(): {
+            mol_text_code_sidebar_showed: boolean;
+        };
+        text(): string;
+        text_lines(): readonly string[];
+        Row(id: any): $$.$mol_text_code_row;
+        sidebar_showed(): boolean;
+        row_numb(id: any): number;
+        row_text(id: any): string;
+        highlight(): string;
+    }
+}
+
+declare namespace $.$$ {
+}
+
+declare namespace $.$$ {
+    class $mol_text_code extends $.$mol_text_code {
+        text_lines(): readonly string[];
+        rows(): $mol_text_code_row[];
+        row_text(index: number): string;
+        row_numb(index: number): number;
+    }
+}
+
+declare namespace $ {
     class $mol_plugin extends $mol_view {
         dom_node(next?: Element): Element;
         attr_static(): {
@@ -2173,146 +2312,6 @@ declare namespace $.$$ {
 }
 
 declare namespace $ {
-    class $mol_text_code_token extends $mol_dimmer {
-        attr(): {
-            mol_text_code_token_type: string;
-        };
-        type(): string;
-    }
-    class $mol_text_code_token_link extends $mol_text_code_token {
-        dom_name(): string;
-        type(): string;
-        attr(): {
-            href: string;
-            target: string;
-            mol_text_code_token_type: string;
-        };
-        haystack(): string;
-    }
-}
-
-declare namespace $.$$ {
-}
-
-declare namespace $ {
-    class $mol_text_code_row extends $mol_paragraph {
-        text(): string;
-        minimal_height(): number;
-        numb_showed(): boolean;
-        Numb(): $mol_view;
-        Token(id: any): $mol_text_code_token;
-        Token_link(id: any): $mol_text_code_token_link;
-        numb(): number;
-        token_type(id: any): string;
-        token_text(id: any): string;
-        highlight(): string;
-    }
-}
-
-declare namespace $ {
-    class $mol_syntax2<Lexems extends {
-        [name: string]: RegExp;
-    }> {
-        lexems: Lexems;
-        constructor(lexems: Lexems);
-        rules: {
-            regExp: RegExp;
-            name: string;
-            size: number;
-        }[];
-        regexp: RegExp;
-        tokenize(text: string, handle: (name: string, found: string, chunks: string[], offset: number) => void): void;
-        parse(text: string, handlers: {
-            [key in keyof Lexems | '']: (found: string, chunks: string[], offset: number) => void;
-        }): void;
-    }
-}
-
-declare namespace $ {
-    var $mol_syntax2_md_flow: $mol_syntax2<{
-        quote: RegExp;
-        header: RegExp;
-        list: RegExp;
-        code: RegExp;
-        'code-indent': RegExp;
-        table: RegExp;
-        block: RegExp;
-    }>;
-    var $mol_syntax2_md_line: $mol_syntax2<{
-        strong: RegExp;
-        emphasis: RegExp;
-        code3: RegExp;
-        code: RegExp;
-        strike: RegExp;
-        'text-link': RegExp;
-        'image-link': RegExp;
-    }>;
-    const $mol_syntax2_md_code: $mol_syntax2<{
-        'code-docs': RegExp;
-        'code-comment-block': RegExp;
-        'code-link': RegExp;
-        'code-comment-inline': RegExp;
-        'code-string': RegExp;
-        'code-number': RegExp;
-        'code-call': RegExp;
-        'code-field': RegExp;
-        'code-keyword': RegExp;
-        'code-global': RegExp;
-        'code-decorator': RegExp;
-        'code-tag': RegExp;
-        'code-punctuation': RegExp;
-    }>;
-}
-
-declare namespace $.$$ {
-}
-
-declare namespace $.$$ {
-    class $mol_text_code_row extends $.$mol_text_code_row {
-        maximal_width(): number;
-        tokens(path: number[]): readonly {
-            name: string;
-            found: string;
-            chunks: string[];
-        }[];
-        sub(): $mol_view[];
-        row_content(path: number[]): $mol_text_code_token[];
-        Token(path: number[]): $mol_text_code_token;
-        token_type(path: number[]): string;
-        token_content(path: number[]): (string | $mol_text_code_token)[];
-        token_text(path: number[]): string;
-        view_find(check: (path: $mol_view, text?: string) => boolean, path?: $mol_view[]): Generator<$mol_view[]>;
-    }
-}
-
-declare namespace $ {
-    class $mol_text_code extends $mol_list {
-        attr(): {
-            mol_text_code_sidebar_showed: boolean;
-        };
-        text(): string;
-        text_lines(): readonly string[];
-        Row(id: any): $$.$mol_text_code_row;
-        sidebar_showed(): boolean;
-        row_numb(id: any): number;
-        row_text(id: any): string;
-        highlight(): string;
-    }
-}
-
-declare namespace $.$$ {
-}
-
-declare namespace $.$$ {
-    class $mol_text_code extends $.$mol_text_code {
-        text_lines(): readonly string[];
-        rows(): $mol_text_code_row[];
-        row_text(index: number): string;
-        row_numb(index: number): number;
-    }
-}
-
-declare namespace $ {
     class $mol_textarea extends $mol_view {
         attr(): {
             mol_textarea_clickable: boolean;
@@ -2332,10 +2331,23 @@ declare namespace $ {
         enabled(): boolean;
         length_max(): number;
         selection(val?: any): readonly number[];
-        Edit(): $$.$mol_string;
+        Edit(): $mol_textarea_edit;
         row_numb(index: any): number;
         highlight(): string;
         View(): $$.$mol_text_code;
+    }
+    class $mol_textarea_edit extends $mol_string {
+        dom_name(): string;
+        field(): {
+            scrollTop: number;
+            disabled: boolean;
+            value: string;
+            placeholder: string;
+            spellcheck: boolean;
+            autocomplete: string;
+            selectionEnd: number;
+            selectionStart: number;
+        };
     }
 }
 
@@ -3510,7 +3522,7 @@ declare namespace $.$$ {
         col_head_content(colId: string): readonly string[];
         rows(): readonly $mol_view[];
         cells(row_id: string[]): readonly $mol_view[];
-        col_type(col_id: string): "number" | "text" | "branch";
+        col_type(col_id: string): "text" | "number" | "branch";
         Cell(id: {
             row: string[];
             col: string;
