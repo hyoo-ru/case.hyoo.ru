@@ -350,7 +350,7 @@ $mol_pick $mol_pop
 		minimal_width 40
 		minimal_height 40
 		enabled <= trigger_enabled true
-		checked?event <=> showed?event
+		checked?val <=> showed?val
 		sub <= trigger_content /$mol_view_content
 		hint <= hint \
 
@@ -553,9 +553,21 @@ $hyoo_case_entity_page $mol_page
 			entity <= entity
 			editable <= editable
 
-$mol_frame $mol_scroll
+$mol_embed_native $mol_scroll
+	dom_name \object
+	window null
+	attr *
+		^
+		data <= uri?val \
+		type <= mime \
+	sub /
+		<= title?val \
+
+$mol_frame $mol_embed_native
 	dom_name \iframe
 	attr *
+		data null
+		type null
 		src <= uri?val \
 		srcdoc <= html null
 		allow <= allow \
