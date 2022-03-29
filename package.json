@@ -329,9 +329,9 @@
     "$hyoo_case_case.view.tree"
   ],
   "dependencies": {
+    "colorette": "*",
     "jsdom": "*",
     "fake-indexeddb": "*",
-    "colorette": "*",
     "chokidar": "*"
   }
 }
