@@ -140,10 +140,11 @@ $mol_button $mol_view
 		disabled <= disabled false
 		role \button
 		tabindex <= tab_index 0
-		title <= hint_or_error <= hint \
+		title <= hint \
 	sub /$mol_view_content
 		<= title
 	Speck $mol_speck
+		value <= error \
 
 $mol_button_typed $mol_button
 
@@ -474,7 +475,6 @@ $mol_number $mol_view
 			sub / <= inc_icon $mol_icon_plus
 
 $mol_pop $mol_view
-	event * keydown?event <=> keydown?event null
 	showed?val false
 	align_vert \
 	align_hor \
@@ -498,6 +498,9 @@ $mol_pop_bubble $mol_scroll
 		tabindex 0
 
 $mol_pick $mol_pop
+	event *
+		^
+		keydown?event <=> keydown?event null
 	Anchor <= Trigger $mol_check
 		minimal_width 40
 		minimal_height 40
