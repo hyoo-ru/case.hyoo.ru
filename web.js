@@ -8356,6 +8356,7 @@ var $;
         Code_line(id) {
             const obj = new this.$.$mol_text_code_row();
             obj.numb_showed = () => false;
+            obj.highlight = () => this.highlight();
             obj.text = () => this.line_text(id);
             return obj;
         }
