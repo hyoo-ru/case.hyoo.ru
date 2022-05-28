@@ -167,6 +167,7 @@
     "$mol_support",
     "$hyoo_case_property_row",
     "$mol_textarea",
+    "$mol_stack",
     "$mol_text_code",
     "$mol_text",
     "$mol_grid",
