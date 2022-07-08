@@ -10814,15 +10814,14 @@ var $;
         }
         attr() {
             return {
+                ...super.attr(),
                 data: null,
                 type: null,
                 src: this.uri(),
                 srcdoc: this.html(),
-                allow: this.allow()
+                allow: this.allow(),
+                allowFullscreen: this.fullscreen()
             };
-        }
-        fullscreen() {
-            return true;
         }
         accelerometer() {
             return true;
@@ -10849,6 +10848,9 @@ var $;
         }
         allow() {
             return "";
+        }
+        fullscreen() {
+            return true;
         }
     }
     __decorate([
