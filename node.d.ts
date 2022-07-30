@@ -1823,6 +1823,7 @@ declare namespace $ {
         event_click(event?: any): any;
         event(): {
             click: (event?: any) => any;
+            dblclick: (event?: any) => any;
             keydown: (event?: any) => any;
         };
         attr(): {
@@ -1834,6 +1835,7 @@ declare namespace $ {
         sub(): readonly $mol_view_content[];
         Speck(): $mol_speck;
         event_activate(event?: any): any;
+        clicks(event?: any): any;
         event_key_press(event?: any): any;
         disabled(): boolean;
         tab_index(): number;
