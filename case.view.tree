@@ -267,7 +267,7 @@ $hyoo_case $mol_book2
 				\link
 				\text
 				\integer
-			integer-default Infinity
+			integer-default +Infinity
 		property-locale *
 			meta-kind / \boolean
 			meta-name *
