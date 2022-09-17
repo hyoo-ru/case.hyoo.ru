@@ -6492,7 +6492,7 @@ var $;
             return 7;
         }
         width_limit() {
-            return Infinity;
+            return +Infinity;
         }
         sub() {
             return [
@@ -8801,7 +8801,7 @@ var $;
             return "text";
         }
         length_max() {
-            return Infinity;
+            return +Infinity;
         }
         type(val) {
             if (val !== undefined)
@@ -8966,7 +8966,7 @@ var $;
             return true;
         }
         length_max() {
-            return Infinity;
+            return +Infinity;
         }
         selection(val) {
             if (val !== undefined)
@@ -9149,7 +9149,8 @@ var $;
         value(val) {
             if (val !== undefined)
                 return val;
-            return NaN;
+            const obj = new this.$.NaN();
+            return obj;
         }
         sub() {
             return [
@@ -10684,7 +10685,7 @@ var $;
             return "";
         }
         length_max() {
-            return Infinity;
+            return +Infinity;
         }
         bool(val) {
             if (val !== undefined)
@@ -12497,7 +12498,7 @@ var $;
                         "text",
                         "integer"
                     ],
-                    "integer-default": Infinity
+                    "integer-default": +Infinity
                 },
                 "property-locale": {
                     "meta-kind": [

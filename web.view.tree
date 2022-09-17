@@ -40,7 +40,7 @@ $mol_page $mol_view
 $mol_paragraph $mol_view
 	line_height 24
 	letter_width 7
-	width_limit Infinity
+	width_limit +Infinity
 	sub / <= title
 
 $mol_dimmer $mol_paragraph
@@ -273,7 +273,7 @@ $mol_string $mol_view
 		inputMode <= keyboard \text
 	attr *
 		^
-		maxlength <= length_max Infinity
+		maxlength <= length_max +Infinity
 		type <= type?val \text
 	event *
 		^
@@ -296,7 +296,7 @@ $mol_textarea $mol_stack
 			value?val <=> value?val \
 			hint <= hint \ 
 			enabled <= enabled true
-			length_max <= length_max Infinity
+			length_max <= length_max +Infinity
 			selection?val <=> selection?val /number
 		<= View $mol_text_code
 			text <= value
@@ -515,7 +515,7 @@ $hyoo_case_property_row $mol_view
 	Text $mol_textarea
 		hint <= text_hint \…
 		value?val <=> text?val \
-		length_max <= length_max Infinity
+		length_max <= length_max +Infinity
 		sidebar_showed false
 	Bool $mol_check_box
 		checked?val <=> bool?val false
@@ -903,7 +903,7 @@ $hyoo_case $mol_book2
 				\link
 				\text
 				\integer
-			integer-default Infinity
+			integer-default +Infinity
 		property-locale *
 			meta-kind / \boolean
 			meta-name *
