@@ -576,7 +576,7 @@ declare namespace $ {
         plugins(): readonly $mol_view[];
         view_find(check: (path: $mol_view, text?: string) => boolean, path?: $mol_view[]): Generator<$mol_view[]>;
         force_render(path: Set<$mol_view>): void;
-        ensure_visible(view: $mol_view, align?: ScrollLogicalPosition): Promise<void>;
+        ensure_visible(view: $mol_view, align?: ScrollLogicalPosition): void;
         bring(): void;
     }
     type $mol_view_all = $mol_type_pick<$, typeof $mol_view>;
@@ -2590,7 +2590,7 @@ declare namespace $ {
     class $mol_number extends $mol_view {
         precision_view(): number;
         precision_change(): number;
-        value(val?: any): any;
+        value(val?: any): number;
         sub(): readonly any[];
         precision(): number;
         value_string(val?: any): string;
@@ -2616,7 +2616,7 @@ declare namespace $.$$ {
     class $mol_number extends $.$mol_number {
         event_dec(next?: Event): void;
         event_inc(next?: Event): void;
-        value_string(next?: string): any;
+        value_string(next?: string): string;
     }
 }
 
