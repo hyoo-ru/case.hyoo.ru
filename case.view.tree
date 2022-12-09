@@ -193,6 +193,8 @@ $hyoo_case $mol_book2
 			property-mutual / \meta-members
 			property-min 1
 			property-max 1
+			property-suggest true
+			property-populate true
 		meta-members *
 			meta-kind / \link
 			meta-name *

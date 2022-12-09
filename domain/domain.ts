@@ -4,7 +4,7 @@ namespace $ {
 		
 		@ $mol_mem
 		state() {
-			return new $mol_state_shared
+			return new $hyoo_sync_yard
 		}
 		
 		base_data() {
@@ -23,9 +23,10 @@ namespace $ {
 			return entity
 		}
 
+		@ $mol_action
 		entity_new( ... kind: $hyoo_case_entity[] ) {
-			const id = $mol_guid( 8 )//, id => id in this.data() )
-			const entity = this.entity( id )
+			const land = this.state().land_grab( [''], ['0_0'] )
+			const entity = this.entity( land.id() )
 			entity.property( 'meta-kind' ).target_join( ... kind )
 			return entity
 		}

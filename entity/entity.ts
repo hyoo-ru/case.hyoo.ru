@@ -7,7 +7,11 @@ namespace $ {
 		
 		@ $mol_mem
 		state() {
-			return this.domain().state().doc( 'entity' ).doc( this.id() )
+			
+			const id = $mol_int62_string_ensure( this.id() )
+			if( !id ) return null
+			
+			return this.domain().state().land( id ).chief
 		}
 
 		base_data() {
@@ -35,7 +39,9 @@ namespace $ {
 		}
 
 		meta_kind() {
-			return this.property( 'meta-kind' ).links()
+			const kinds = this.property( 'meta-kind' ).links()
+			if( kinds.length ) return kinds
+			return [ this.domain().entity( 'meta' ) ]
 		}
 
 		property_kind_id() {
@@ -48,7 +54,7 @@ namespace $ {
 		}
 		
 		value( prop: string ) {
-			return this.state().sub( prop ).value() ?? this.base_data()[ prop ]
+			return this.state()?.sub( prop, $hyoo_crowd_reg ).value() ?? this.base_data()[ prop ]
 		}
 
 		property_locale() {

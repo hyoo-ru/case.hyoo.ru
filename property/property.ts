@@ -14,7 +14,17 @@ namespace $ {
 
 		@ $mol_mem
 		state() {
-			return this.entity().state().sub( this.id() )
+			return this.entity().state()?.sub( this.id(), $hyoo_crowd_reg )
+		}
+		
+		@ $mol_mem
+		state_list() {
+			return this.entity().state()?.sub( this.id(), $hyoo_crowd_list )
+		}
+		
+		@ $mol_mem
+		state_locale() {
+			return this.entity().state()?.sub( this.id(), $hyoo_crowd_dict )
 		}
 		
 		@ $mol_mem
@@ -22,8 +32,8 @@ namespace $ {
 			switch( this.kind().property_kind_id() ) {
 				case 'link': return this.links().length > 0
 				case 'text': return this.text().length > 0
-				case 'integer': return ( this.state().value() ?? this.value_default() ) != null
-				case 'boolean': return ( this.state().value() ?? this.value_default() ) != null
+				case 'integer': return ( this.state()?.value() ?? this.value_default() ) != null
+				case 'boolean': return ( this.state()?.value() ?? this.value_default() ) != null
 			}
 		}
 
@@ -35,12 +45,12 @@ namespace $ {
 				: 'en'
 
 			if( next !== undefined ) {
-				return String( this.state().sub( lang ).value( next ) || '' )
+				return String( this.state_locale()?.sub( lang, $hyoo_crowd_reg ).value( next ) ?? next ?? '' )
 			}
 			
 			return String(
-				this.state().sub( lang ).value()
-				?? this.state().sub( 'en' ).value()
+				this.state_locale()?.sub( lang, $hyoo_crowd_reg ).value()
+				?? this.state_locale()?.sub( 'en', $hyoo_crowd_reg ).value()
 				?? ( this.value_default() ?? {} )[ lang ]
 				?? ''
 			)
@@ -49,13 +59,13 @@ namespace $ {
 
 		@ $mol_mem
 		integer( next? : number ) {
-			const data = this.state().value( next ) ?? this.value_default()
+			const data = this.state()?.value( next ) ?? next ?? this.value_default()
 			return Number( data )
 		}
 		
 		@ $mol_mem
 		bool( next? : boolean ) {
-			const data = this.state().value( next ) ?? this.value_default()
+			const data = this.state()?.value( next ) ?? next ?? this.value_default()
 			return Boolean( data || false )
 		}
 
@@ -65,15 +75,15 @@ namespace $ {
 			const domain = this.domain()
 			const arg = next === undefined ? undefined : next.map( item => item.id() )
 			
-			let val = this.state().list( arg )
-			if( !val.length ) val = this.base_data() ?? []
+			let val = this.state_list()?.list( arg )
+			if( !val || !val.length ) val = arg ?? this.base_data() ?? []
 			
 			return ( val as string[] ).map( id => domain.entity( id ) )
 		}
 
 		value_default() {
 			const kind = this.kind()
-			return kind.property( `${ kind.property_kind_id() }-default` ).state().value() ?? this.base_data()
+			return kind.property( `${ kind.property_kind_id() }-default` ).state()?.value() ?? this.base_data()
 		}
 
 		back( index: number ) {
