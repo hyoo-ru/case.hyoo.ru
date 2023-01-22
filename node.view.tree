@@ -12,6 +12,7 @@ $mol_book2 $mol_scroll
 	sub <= pages /$mol_view
 	minimal_width 0
 	Placeholder $mol_view
+	Gap* $mol_view
 
 $mol_page $mol_view
 	dom_name \article
@@ -467,6 +468,10 @@ $mol_drop $mol_ghost
 	attr * mol_drop_status <= status?val \ready
 	adopt?transfer *
 	receive?transfer null
+	allow /
+		\link
+		\copy
+		\move
 
 $mol_drag $mol_ghost
 	event *
