@@ -8919,6 +8919,8 @@ var $;
                 const from = el.selectionStart;
                 const to = el.selectionEnd;
                 el.value = this.value_changed(el.value);
+                if (to === null)
+                    return;
                 el.selectionEnd = to;
                 el.selectionStart = from;
                 this.selection_change(next);
@@ -8947,9 +8949,15 @@ var $;
                 el.selectionStart = from;
             }
             selection_start() {
+                const el = this.dom_node();
+                if (el.selectionStart === null)
+                    return undefined;
                 return this.selection()[0];
             }
             selection_end() {
+                const el = this.dom_node();
+                if (el.selectionEnd === null)
+                    return undefined;
                 return this.selection()[1];
             }
         }
@@ -9305,6 +9313,9 @@ var $;
         precision() {
             return 1;
         }
+        type() {
+            return "tel";
+        }
         value_string(val) {
             if (val !== undefined)
                 return val;
@@ -9321,7 +9332,7 @@ var $;
         }
         String() {
             const obj = new this.$.$mol_string();
-            obj.type = () => "tel";
+            obj.type = () => this.type();
             obj.value = (val) => this.value_string(val);
             obj.hint = () => this.hint();
             obj.enabled = () => this.string_enabled();
