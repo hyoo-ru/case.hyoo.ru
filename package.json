@@ -164,14 +164,24 @@
     "$mol_locale",
     "$mol_file",
     "$mol_compare_array",
+    "$hyoo_lingua_translate",
+    "$hyoo_lingua",
+    "$mol_huggingface",
+    "$mol_data_record",
+    "$mol_type_partial_undefined",
+    "$mol_type_partial",
+    "$mol_type_merge",
+    "$mol_type_equals",
+    "$mol_data_array",
+    "$mol_data_string",
+    "$mol_fetch",
+    "$mol_dom_parse",
     "$mol_page",
     "$hyoo_case_entity_snippet",
     "$hyoo_case_property_snippet",
     "$mol_dimmer",
     "$mol_paragraph",
     "$mol_regexp",
-    "$mol_type_merge",
-    "$mol_type_equals",
     "$mol_type_intersect",
     "$mol_unicode",
     "$mol_link",
@@ -249,6 +259,7 @@
   ],
   "dependencies": {
     "jsdom": "*",
-    "chokidar": "*"
+    "chokidar": "*",
+    "undici": "*"
   }
 }
