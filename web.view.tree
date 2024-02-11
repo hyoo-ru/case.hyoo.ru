@@ -1,6 +1,6 @@
 $mol_scroll $mol_view
-	scroll_top?val 0
-	scroll_left?val 0
+	scroll_top? 0
+	scroll_left? 0
 	field *
 		^
 		tabIndex <= tabindex -1
@@ -33,8 +33,10 @@ $mol_page $mol_view
 				<= Tools $mol_view
 					sub <= tools /$mol_view_content
 		<= Body $mol_scroll
-			scroll_top?val => body_scroll_top?val
-			sub <= body /$mol_view_content
+			scroll_top? => body_scroll_top?
+			sub <= body_content /
+				<= Body_content $mol_view
+					sub <= body /$mol_view
 		<= Foot $mol_view
 			dom_name \footer
 			sub <= foot /$mol_view
@@ -78,6 +80,9 @@ $hyoo_case_entity_snippet $mol_view
 $mol_link $mol_view
 	uri \
 	dom_name \a
+	uri_off \
+	uri_native null
+	external false
 	attr *
 		^
 		href <= uri_toggle \
@@ -85,6 +90,7 @@ $mol_link $mol_view
 		target <= target \_self
 		download <= file_name \
 		mol_link_current <= current false
+		rel <= relation \
 	sub /$mol_view_content
 		<= title
 	arg *
@@ -276,15 +282,16 @@ $mol_string $mol_view
 	enabled true
 	minimal_height 40
 	autocomplete false
-	selection?val /number
+	selection? /number
 		0
 		0
 	auto /
 		<= selection_watcher null
+		<= error_report null
 	field *
 		^
 		disabled <= disabled false
-		value <= value_changed?val <=> value?val \
+		value <= value_changed? <=> value? \
 		placeholder <= hint_visible <= hint \
 		spellcheck <= spellcheck true
 		autocomplete <= autocomplete_native \
@@ -295,7 +302,7 @@ $mol_string $mol_view
 	attr *
 		^
 		maxlength <= length_max +Infinity
-		type <= type?val \text
+		type <= type? \text
 	event *
 		^
 		input?event <=> event_change?event null
@@ -307,29 +314,29 @@ $mol_string $mol_view
 $mol_textarea $mol_stack
 	attr *
 		^
-		mol_textarea_clickable <= clickable?val false
+		mol_textarea_clickable <= clickable? false
 		mol_textarea_sidebar_showed <= sidebar_showed false
 	event *
 		keydown?event <=> press?event null
 		pointermove?event <=> hover?event null
 	sub /
 		<= Edit $mol_textarea_edit
-			value?val <=> value?val \
+			value? <=> value? \
 			hint <= hint \ 
 			enabled <= enabled true
 			spellcheck <= spellcheck true
 			length_max <= length_max +Infinity
-			selection?val <=> selection?val /number
+			selection? <=> selection? /number
 			bring => bring
 			submit? <=> submit? null
-			submit_with_ctrl true
+			submit_with_ctrl <= submit_with_ctrl true
 		<= View $mol_text_code
 			text <= value
 			render_visible_only false
 			row_numb* <= row_numb* 0
 			sidebar_showed <= sidebar_showed
 			highlight <= highlight \
-	symbols_alt *
+	symbols_alt *string
 		comma \<
 		period \>
 		dash \−
@@ -337,6 +344,7 @@ $mol_textarea $mol_stack
 		graveAccent \́
 		forwardSlash \÷
 		E \€
+		V \✔
 		X \×
 		C \©
 		P \§
@@ -351,7 +359,9 @@ $mol_textarea $mol_stack
 		bracketOpen \[
 		bracketClose \]
 		slashBack \|
-	symbols_alt_shift *
+	symbols_alt_ctrl *string
+		space \ 
+	symbols_alt_shift *string
 		V \✅
 		X \❌
 		O \⭕
@@ -396,9 +406,10 @@ $mol_number $mol_view
 			- \ we don't want native number controls in mobile devices
 			- \ https://stackoverflow.com/questions/3790935/can-i-hide-the-html5-number-input-s-spin-box
 			type <= type \tel
-			value?val <=> value_string?val \
+			value? <=> value_string? \
 			hint <= hint \ 
 			enabled <= string_enabled <= enabled
+			submit? <=> submit? null
 		<= Dec $mol_button_minor
 			event_click? <=> event_dec? null
 			enabled <= dec_enabled <= enabled
@@ -416,11 +427,11 @@ $mol_check_expand $mol_check
 	style *
 		^
 		paddingLeft <= level_style \0px
-	checked?val <=> expanded?val false
+	checked? <=> expanded? false
 	enabled <= expandable false
 
 $mol_pop $mol_view
-	showed?val false
+	showed? false
 	align_vert \
 	align_hor \
 	prefer \vert
@@ -451,25 +462,24 @@ $mol_pick $mol_pop
 		minimal_width 40
 		minimal_height 40
 		enabled <= trigger_enabled true
-		checked?val <=> showed?val
+		checked? <=> showed?
+		clicks? <=> clicks? null
 		sub <= trigger_content /$mol_view_content
 			<= title
 		hint <= hint \
 
-$mol_icon_dots_vertical $mol_icon path \M12,16C13.1,16 14,16.9 14,18C14,19.1 13.1,20 12,20C10.9,20 10,19.1 10,18C10,16.9 10.9,16 12,16M12,10C13.1,10 14,10.9 14,12C14,13.1 13.1,14 12,14C10.9,14 10,13.1 10,12C10,10.9 10.9,10 12,10M12,4C13.1,4 14,4.9 14,6C14,7.1 13.1,8 12,8C10.9,8 10,7.1 10,6C10,4.9 10.9,4 12,4Z
-
 $mol_nav $mol_plugin
-	cycle?val false
+	cycle? false
 	-
 	mod_ctrl false
 	mod_shift false
 	mod_alt false
 	-
-	keys_x?val /
-	keys_y?val /
+	keys_x? /
+	keys_y? /
 	-
-	current_x?val null
-	current_y?val null
+	current_x? null
+	current_y? null
 	-
 	event_up?event null
 	event_down?event null
@@ -479,17 +489,56 @@ $mol_nav $mol_plugin
 		^
 		keydown?event <=> event_key?event null
 
+$mol_search $mol_pop
+	query? \
+	suggests /string
+	plugins /$mol_plugin
+		^
+		<= Hotkey $mol_hotkey
+			key * escape? <=> clear? null
+		<= Nav $mol_nav
+			keys_y <= nav_components /$mol_view
+			current_y?component <=> nav_focused?component null
+	showed? <=> suggests_showed? false
+	align_hor \right
+	Anchor $mol_view
+		sub <= anchor_content /
+			<= Query $mol_string
+				value? <=> query? \
+				hint <= hint @ \Search...
+				submit?event <=> submit?event null
+				enabled <= enabled true
+				keyboard <= keyboard \search
+				enter <= enter \search
+				bring => bring
+			<= Clear $mol_button_minor
+				hint @ \Clear
+				click?event <=> clear?event null
+				sub /
+					<= Clear_icon $mol_icon_cross
+	bubble_content /$mol_view_content
+		<= Menu $mol_list
+			rows <= menu_items /$mol_view
+	Suggest* $mol_button_minor
+		click?event <=> suggest_select*?event null
+		sub <= suggest_content* /$mol_view_content
+			<= Suggest_label* $mol_dimmer
+				haystack <= suggest_label* \
+				needle <= query? \
+
+$mol_icon_dots_vertical $mol_icon path \M12,16C13.1,16 14,16.9 14,18C14,19.1 13.1,20 12,20C10.9,20 10,19.1 10,18C10,16.9 10.9,16 12,16M12,10C13.1,10 14,10.9 14,12C14,13.1 13.1,14 12,14C10.9,14 10,13.1 10,12C10,10.9 10.9,10 12,10M12,4C13.1,4 14,4.9 14,6C14,7.1 13.1,8 12,8C10.9,8 10,7.1 10,6C10,4.9 10.9,4 12,4Z
+
 $mol_select $mol_pick
-	dictionary?val *
+	dictionary? *
 	options /string
-	value?val \
+	value? \
 	option_label_default \
 	Option_row* $mol_button_minor
 		event_click?event <=> event_select*?event null
 		sub <= option_content* /
 			<= Option_label* $mol_dimmer
 				haystack <= option_label* \
-				needle <= filter_pattern?val \
+				needle <= filter_pattern? \
 	No_options $mol_view
 		sub /
 			<= no_options_message @ \No options
@@ -498,16 +547,17 @@ $mol_select $mol_pick
 		<= Nav $mol_nav
 			keys_y <= nav_components /$mol_view
 			current_y?component <=> option_focused?component null
-			cycle?val <=> nav_cycle?val true
+			cycle? <=> nav_cycle? true
 	hint @ \Pick..
 	bubble_content /
 		<= Filter
-		<= Bubble_pane $mol_scroll sub /
-			<= Menu $mol_list
-				rows <= menu_content /$mol_view
-	Filter $mol_string
-		value?val <=> filter_pattern?val \
-		hint @ \Filter..
+		<= Bubble_pane $mol_scroll
+			sub /
+				<= Menu $mol_list
+					rows <= menu_content /$mol_view
+	Filter $mol_search
+		query? <=> filter_pattern? \
+		hint <= filter_hint @ \Filter..
 		submit?event <=> submit?event null
 		enabled <= enabled true
 	Trigger_icon $mol_icon_dots_vertical
@@ -522,13 +572,13 @@ $mol_drop $mol_ghost
 		dragover?event <=> move?event null
 		dragleave?event <=> leave?event null
 		drop?event <=> drop?event null
-	attr * mol_drop_status <= status?val \ready
+	attr * mol_drop_status <= status? \ready
 	adopt?transfer *
 	receive?transfer null
 	allow /
-		\link
 		\copy
 		\move
+		\link
 
 $mol_drag $mol_ghost
 	event *
@@ -537,7 +587,7 @@ $mol_drag $mol_ghost
 		dragend?event <=> drag_end?event <=> end?event null
 	attr *
 		draggable true
-		mol_drag_status <= status?val \ready
+		mol_drag_status <= status? \ready
 	transfer *
 		text/plain \
 		text/html \
@@ -576,17 +626,17 @@ $hyoo_case_property_row $mol_view
 			value?val <=> pick?val \
 			options <= pick_options /string
 			filter_pattern => pick_query
-			option_content!id /
-				<= Pick_option!id $hyoo_case_entity_snippet
-					entity <= entity!id $hyoo_case_entity
+			option_content* /
+				<= Pick_option* $hyoo_case_entity_snippet
+					entity <= entity* $hyoo_case_entity
 					highlight <= pick_query
-			option_label!id <= pick_option_title!id \
+			option_label* <= pick_option_title* \
 		<= Content $mol_list rows <= content /
-	Add_option!id $mol_button_minor
-		click?event <=> add!id?event null
+	Add_option* $mol_button_minor
+		click?event <=> add*?event null
 		sub /
-			<= Add_option_snippet!id $hyoo_case_entity_snippet
-				entity <= entity!id $hyoo_case_entity
+			<= Add_option_snippet* $hyoo_case_entity_snippet
+				entity <= entity* $hyoo_case_entity
 	Text $mol_textarea
 		hint <= text_hint \…
 		value?val <=> text?val \
@@ -597,30 +647,30 @@ $hyoo_case_property_row $mol_view
 	Numb $mol_number
 		hint \NaN
 		value?val <=> numb?val 0
-	Link_row!id $mol_view
+	Link_row* $mol_view
 		minimal_height 40
-		sub <= link_content!id /
-			<= Link_drag!id $mol_drag
+		sub <= link_content* /
+			<= Link_drag* $mol_drag
 				transfer *
-					text/plain <= link_title!id \
-					text/html <= link_html!id \
-					text/uri-list <= link_uri!id \
-				Sub <= Link_drop!id $mol_drop
+					text/plain <= link_title* \
+					text/html <= link_html* \
+					text/uri-list <= link_uri* \
+				Sub <= Link_drop* $mol_drop
 					adopt?transfer <=> transfer_adopt?transfer null
-					receive?obj <=> receive_before!id?obj null
-					Sub <= Link_view!id $mol_view
-			<= Drop!id $mol_button_minor
+					receive?obj <=> receive_before*?obj null
+					Sub <= Link_view* $mol_view
+			<= Drop* $mol_button_minor
 				hint @ \Drop link
-				click?event <=> drop!id?event null
+				click?event <=> drop*?event null
 				sub /
-					<= Drop_icon!id $mol_icon_cross
-	Link_link!id $mol_link
-		arg <= link_arg!id *
+					<= Drop_icon* $mol_icon_cross
+	Link_link* $mol_link
+		arg <= link_arg* *
 		sub /
-			<= Link_snippet!id $hyoo_case_entity_snippet
-				entity <= link_entity!id $hyoo_case_entity
-	Link_form!id $hyoo_case_entity_form
-		entity <= link_entity!id $hyoo_case_entity
+			<= Link_snippet* $hyoo_case_entity_snippet
+				entity <= link_entity* $hyoo_case_entity
+	Link_form* $hyoo_case_entity_form
+		entity <= link_entity* $hyoo_case_entity
 		editable <= editable
 
 
@@ -663,7 +713,7 @@ $hyoo_case_entity_page $mol_page
 			editable <= editable
 
 $mol_embed_native $mol_scroll
-	uri?val \
+	uri? \
 	dom_name \object
 	window null
 	attr *
@@ -684,7 +734,7 @@ $mol_frame $mol_embed_native
 		^
 		data null
 		type null
-		src <= uri?val \about:config
+		src <= uri? \about:config
 		srcdoc <= html null
 		allow <= allow \
 		- allowfullscreen <=
@@ -700,19 +750,21 @@ $mol_frame $mol_embed_native
 $mol_theme_auto $mol_plugin
 	attr * mol_theme <= theme \
 
-$mol_icon_github_circle $mol_icon path \M12,2C6.48,2 2,6.48 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12C22,6.48 17.52,2 12,2Z
+$mol_icon_script $mol_icon path \M17.8,20C17.4,21.2 16.3,22 15,22H5C3.3,22 2,20.7 2,19V18H5L14.2,18C14.6,19.2 15.7,20 17,20H17.8M19,2H8C6.3,2 5,3.3 5,5V16H16V17C16,17.6 16.4,18 17,18H18V5C18,4.4 18.4,4 19,4C19.6,4 20,4.4 20,5V6H22V5C22,3.3 20.7,2 19,2Z
+
+$mol_icon_script_text $mol_icon path \M17.8,20C17.4,21.2 16.3,22 15,22H5C3.3,22 2,20.7 2,19V18H5L14.2,18C14.6,19.2 15.7,20 17,20H17.8M19,2C20.7,2 22,3.3 22,5V6H20V5C20,4.4 19.6,4 19,4C18.4,4 18,4.4 18,5V18H17C16.4,18 16,17.6 16,17V16H5V5C5,3.3 6.3,2 8,2H19M8,6V8H15V6H8M8,10V12H14V10H8Z
 
 $mol_link_source $mol_link
 	hint @ \Source code
 	sub /
-		<= Icon $mol_icon_github_circle
+		<= Icon $mol_icon_script_text
 
 $mol_icon_brightness_6 $mol_icon path \M12,18V6C15.31,6 18,8.69 18,12C18,15.31 15.31,18 12,18M20,15.31L23.31,12L20,8.69V4H15.31L12,0.69L8.69,4H4V8.69L0.69,12L4,15.31V20H8.69L12,23.31L15.31,20H20V15.31Z
 
 $mol_lights_toggle $mol_check_icon
 	Icon <= Lights_icon $mol_icon_brightness_6
 	hint @ \Toggle lights
-	checked?val <=> lights?val false
+	checked? <=> lights? false
 
 $hyoo_case $mol_book2
 	plugins /
