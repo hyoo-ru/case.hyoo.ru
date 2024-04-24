@@ -22,7 +22,7 @@ $hyoo_case_entity_page $mol_page
 			hint @ \Close page
 			arg <= close_arg *
 			sub /
-				<= Close_icon $mol_icon_cross
+				<= Close_icon $mol_icon_close
 	body /
 		<= Form $hyoo_case_entity_form
 			entity <= entity

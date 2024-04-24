@@ -64,7 +64,7 @@ $hyoo_case_property_row $mol_view
 				hint @ \Drop link
 				click?event <=> drop!id?event null
 				sub /
-					<= Drop_icon!id $mol_icon_cross
+					<= Drop_icon!id $mol_icon_close
 	Link_link!id $mol_link
 		arg <= link_arg!id *
 		sub /
