@@ -243,17 +243,17 @@ namespace $.$$ {
 
 		}
 
-		link_title( index: string ) {
+		override link_title( index: number ) {
 			const target = this.property().links()[ index ]
 			return `#${ target.id() }`
 		}
 		
-		link_html( index: string ) {
+		link_html( index: number ) {
 			const target = this.property().links()[ index ]
 			return `#${ target.id() }`
 		}
 		
-		link_uri( index: string ) {
+		link_uri( index: number ) {
 			const target = this.property().links()[ index ]
 			return this.$.$mol_state_arg.make_link({ [ target.id() ]: '' })
 		}

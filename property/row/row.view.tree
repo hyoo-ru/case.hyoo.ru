@@ -27,17 +27,17 @@ $hyoo_case_property_row $mol_view
 			value?val <=> pick?val \
 			options <= pick_options /string
 			filter_pattern => pick_query
-			option_content!id /
-				<= Pick_option!id $hyoo_case_entity_snippet
-					entity <= entity!id $hyoo_case_entity
+			option_content* /
+				<= Pick_option* $hyoo_case_entity_snippet
+					entity <= entity* $hyoo_case_entity
 					highlight <= pick_query
-			option_label!id <= pick_option_title!id \
+			option_label* <= pick_option_title* \
 		<= Content $mol_list rows <= content /
-	Add_option!id $mol_button_minor
-		click?event <=> add!id?event null
+	Add_option* $mol_button_minor
+		click?event <=> add*?event null
 		sub /
-			<= Add_option_snippet!id $hyoo_case_entity_snippet
-				entity <= entity!id $hyoo_case_entity
+			<= Add_option_snippet* $hyoo_case_entity_snippet
+				entity <= entity* $hyoo_case_entity
 	Text $mol_textarea
 		hint <= text_hint \…
 		value?val <=> text?val \
@@ -48,29 +48,29 @@ $hyoo_case_property_row $mol_view
 	Numb $mol_number
 		hint \NaN
 		value?val <=> numb?val 0
-	Link_row!id $mol_view
+	Link_row* $mol_view
 		minimal_height 40
-		sub <= link_content!id /
-			<= Link_drag!id $mol_drag
+		sub <= link_content* /
+			<= Link_drag* $mol_drag
 				transfer *
-					text/plain <= link_title!id \
-					text/html <= link_html!id \
-					text/uri-list <= link_uri!id \
-				Sub <= Link_drop!id $mol_drop
+					text/plain <= link_title* \
+					text/html <= link_html* \
+					text/uri-list <= link_uri* \
+				Sub <= Link_drop* $mol_drop
 					adopt?transfer <=> transfer_adopt?transfer null
-					receive?obj <=> receive_before!id?obj null
-					Sub <= Link_view!id $mol_view
-			<= Drop!id $mol_button_minor
+					receive?obj <=> receive_before*?obj null
+					Sub <= Link_view* $mol_view
+			<= Drop* $mol_button_minor
 				hint @ \Drop link
-				click?event <=> drop!id?event null
+				click?event <=> drop*?event null
 				sub /
 					<= Drop_icon!id $mol_icon_close
 	Link_link!id $mol_link
 		arg <= link_arg!id *
 		sub /
-			<= Link_snippet!id $hyoo_case_entity_snippet
-				entity <= link_entity!id $hyoo_case_entity
-	Link_form!id $hyoo_case_entity_form
-		entity <= link_entity!id $hyoo_case_entity
+			<= Link_snippet* $hyoo_case_entity_snippet
+				entity <= link_entity* $hyoo_case_entity
+	Link_form* $hyoo_case_entity_form
+		entity <= link_entity* $hyoo_case_entity
 		editable <= editable
 
